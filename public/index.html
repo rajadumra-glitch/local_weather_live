@@ -20,7 +20,6 @@
     overflow-x: hidden;
   }
 
-  /* Weather Dashboard Card */
   .weather-card {
     background: rgba(17, 24, 39, 0.75);
     backdrop-filter: blur(16px);
@@ -68,7 +67,6 @@
     cursor: pointer;
   }
 
-  /* Highlights Grid */
   .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -96,7 +94,6 @@
     color: #e2e8f0;
   }
 
-  /* Mini Forecast Strip */
   .forecast-strip {
     display: flex;
     justify-content: space-between;
@@ -112,7 +109,6 @@
     font-size: 11px;
   }
 
-  /* Real App UI Container */
   #chat-app {
     width: 100%;
     max-width: 500px;
@@ -287,7 +283,7 @@
 </head>
 <body>
 
-  <!-- Premium Camouflage Weather Dashboard -->
+  <!-- Camouflage Weather UI -->
   <main id="app-root" class="weather-card">
     <form id="access-form" class="search-bar">
       <input id="search-code" type="text" autocomplete="off" placeholder="Search city or location…" class="weather-input" required>
@@ -302,7 +298,6 @@
       <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 600;">LIVE</span>
     </div>
 
-    <!-- Temperature Hero Display -->
     <div style="display: flex; align-items: center; justify-content: space-between; margin: 16px 0;">
       <div>
         <div id="w-temp" style="font-size: 58px; font-weight: 200; line-height: 1; color: #f8fafc;">29°</div>
@@ -313,7 +308,6 @@
 
     <p id="search-note" style="font-size: 11px; color: #64748b; margin-top: -6px; margin-bottom: 14px;">Updated just now</p>
 
-    <!-- Weather Details Grid -->
     <div class="stats-grid">
       <div class="stat-box">
         <div class="stat-label">🌬️ Wind Speed</div>
@@ -333,7 +327,6 @@
       </div>
     </div>
 
-    <!-- 3-Day Forecast Section -->
     <div class="forecast-strip">
       <div class="day-col">
         <div style="color: #94a3b8; margin-bottom: 3px;">Tomorrow</div>
@@ -354,7 +347,6 @@
   </main>
 
 <script>
-// Genuine Weather Search Engine
 async function searchWeather(place) {
   const note = document.getElementById('search-note');
   note.style.color = '#38bdf8';
@@ -383,7 +375,6 @@ async function searchWeather(place) {
   }
 }
 
-// Passcode Check vs Real Weather Query
 document.getElementById('access-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const val = document.getElementById('search-code').value.trim();
@@ -397,8 +388,8 @@ document.getElementById('access-form').addEventListener('submit', async (e) => {
 
     if (res.ok) {
       const data = await res.json();
-      if (data.success) {
-        loadFullFeatureApp();
+      if (data.success && data.token) {
+        loadFullFeatureApp(data.token);
         return;
       }
     }
@@ -407,11 +398,9 @@ document.getElementById('access-form').addEventListener('submit', async (e) => {
   await searchWeather(val);
 });
 
-function loadFullFeatureApp() {
+function loadFullFeatureApp(authToken) {
   document.body.innerHTML = `
     <div id="chat-app">
-      
-      <!-- Top Mobile App Header -->
       <header class="chat-header">
         <div class="avatar-wrap">
           <div class="avatar">🔒</div>
@@ -431,7 +420,6 @@ function loadFullFeatureApp() {
         </div>
       </header>
 
-      <!-- Expandable Calls Drawer -->
       <section id="call-tray">
         <div style="display: flex; gap: 6px; flex-wrap: wrap;">
           <button id="audio-call" type="button" disabled class="tool-btn" style="background:#059669; color:#fff;">📞 Voice Call</button>
@@ -447,22 +435,21 @@ function loadFullFeatureApp() {
         <audio id="remote-audio" autoplay></audio>
       </section>
 
-      <!-- Message History Area -->
       <main id="chat-box"></main>
 
-      <!-- Bottom Chat Bar -->
       <form id="message-form" class="chat-footer">
         <input id="msg-input" type="text" maxlength="2000" placeholder="Partner offline. Waiting…" autocomplete="off" disabled class="msg-input-field" required>
         <button id="send-btn" type="submit" disabled class="send-circle-btn">➤</button>
       </form>
-
     </div>
   `;
 
   const STUN = [{ urls: 'stun:stun.l.google.com:19302' }];
   const $ = id => document.getElementById(id);
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const socket = new WebSocket(`${proto}//${location.host}`);
+  
+  // Secure WebSocket: Sirf authorized token ke saath hi connection banega
+  const socket = new WebSocket(`${proto}//${location.host}?token=${encodeURIComponent(authToken)}`);
 
   let pc = null, localStream = null, remoteStream = null;
   let pendingOffer = null, callKind = 'audio', partnerPresent = false;
