@@ -2,81 +2,247 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Live Weather Forecast & Air Quality</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  
+  :root {
+    --bg-main: #0c1017;
+    --card-bg: #161b22;
+    --border-color: #21262d;
+    --accent: #238636;
+    --text-primary: #f0f6fc;
+    --text-muted: #8b949e;
+  }
+
   body {
-    background-color: #0b0f19;
-    color: #f8fafc;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    min-height: 100vh;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    height: 100vh;
+    height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 12px;
-    user-select: none;
+    overflow: hidden;
   }
-  .card {
-    background-color: #111827;
+
+  /* Weather Camouflage Screen */
+  .weather-card {
+    background: #111827;
     border: 1px solid #1f2937;
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    border-radius: 24px;
+    width: 90%;
+    max-width: 360px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
   }
-  .input-box {
-    background-color: #1f2937;
+
+  .weather-input {
+    background: #0b0f19;
     border: 1px solid #374151;
     border-radius: 12px;
-    padding: 12px 16px;
-    color: #ffffff;
-    font-size: 14px;
-    outline: none;
+    padding: 12px 14px;
+    color: #fff;
     width: 100%;
-    transition: 0.2s;
+    outline: none;
+    font-size: 14px;
   }
-  .input-box:focus {
-    border-color: #38bdf8;
+
+  /* Real App UI Container */
+  #chat-app {
+    width: 100%;
+    max-width: 500px;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: #090d16;
+    position: relative;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
   }
-  .btn {
-    border: none;
-    border-radius: 12px;
-    padding: 10px 18px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: 0.2s;
-    color: #ffffff;
-    display: inline-flex;
+
+  /* WhatsApp/Telegram Style Top Bar */
+  .chat-header {
+    height: 58px;
+    background: #131b26;
+    border-bottom: 1px solid #1f293d;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    flex-shrink: 0;
+    z-index: 20;
+  }
+
+  .avatar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: bold;
+    font-size: 15px;
+    border: 1px solid #3b82f6;
   }
-  .btn-primary { background-color: #0284c7; }
-  .btn-primary:hover { background-color: #0369a1; }
 
-  /* Chat Box Custom Scrollbar */
-  #chat-box::-webkit-scrollbar {
-    width: 5px;
+  .online-indicator {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #eab308;
+    display: inline-block;
+    margin-right: 4px;
   }
-  #chat-box::-webkit-scrollbar-thumb {
-    background: #374151;
-    border-radius: 4px;
+
+  /* Compact Calling Action Tray (Slide Down) */
+  #call-tray {
+    display: none;
+    background: #101725;
+    border-bottom: 1px solid #1f2a3e;
+    padding: 10px 12px;
+    flex-shrink: 0;
+    animation: slideDown 0.2s ease-out;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Chat Messages Stream */
+  #chat-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #080c14;
+    background-image: radial-gradient(#151d2d 1px, transparent 1px);
+    background-size: 20px 20px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Modern Bubble Styles */
+  .msg-row {
+    display: flex;
+    width: 100%;
+  }
+  .msg-row.me { justify-content: flex-end; }
+  .msg-row.them { justify-content: flex-start; }
+
+  .bubble {
+    max-width: 78%;
+    padding: 8px 12px 6px 12px;
+    font-size: 14.5px;
+    line-height: 1.4;
+    word-break: break-word;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .msg-row.me .bubble {
+    background: #005c4b;
+    color: #e9edef;
+    border-radius: 14px 14px 2px 14px;
+  }
+
+  .msg-row.them .bubble {
+    background: #202c33;
+    color: #e9edef;
+    border-radius: 14px 14px 14px 2px;
+  }
+
+  .bubble-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.55);
+    margin-top: 2px;
+  }
+
+  /* Keyboard-Safe Fixed Bottom Bar */
+  .chat-footer {
+    min-height: 56px;
+    background: #131b26;
+    border-top: 1px solid #1f293d;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .msg-input-field {
+    flex: 1;
+    background: #1f2c3f;
+    border: 1px solid #2d3f5a;
+    border-radius: 22px;
+    padding: 10px 16px;
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+  }
+
+  .send-circle-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #00a884;
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .send-circle-btn:disabled {
+    background: #233138;
+    color: #53646f;
+    cursor: not-allowed;
+  }
+
+  .tool-btn {
+    background: #1f2a3e;
+    border: 1px solid #2b3b55;
+    color: #cbd5e1;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
   }
 </style>
 </head>
 <body>
 
-  <!-- Masking Interface: Normal Weather Screen -->
-  <main id="app-root" class="card" style="width: 100%; max-width: 360px; padding: 24px; text-align: center;">
+  <!-- Camouflage Weather UI -->
+  <main id="app-root" class="weather-card">
     <form id="access-form" style="display: flex; gap: 8px; margin-bottom: 20px;">
-      <input id="search-code" type="text" autocomplete="off" placeholder="Search city or district…" class="input-box" required>
-      <button type="submit" class="btn btn-primary">Search</button>
+      <input id="search-code" type="text" autocomplete="off" placeholder="Search city or district…" class="weather-input" required>
+      <button type="submit" style="background:#0284c7; border:none; color:#fff; border-radius:12px; padding:0 14px; font-weight:600;">Search</button>
     </form>
     <p id="search-note" style="font-size: 11px; color: #64748b; margin-top: -12px; margin-bottom: 16px;">Place ka naam likhkar search karein.</p>
     
-    <div style="font-size: 60px; margin-bottom: 8px;">🌤️</div>
-    <h2 id="w-city" style="font-size: 22px; font-weight: bold;">New Delhi, IN</h2>
-    <p id="w-desc" style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Clear sky • Current Weather</p>
-    <div id="w-temp" style="font-size: 54px; font-weight: 300; margin: 12px 0;">29°C</div>
+    <div style="font-size: 55px; margin-bottom: 6px;">🌤️</div>
+    <h2 id="w-city" style="font-size: 20px; font-weight: 700;">New Delhi, IN</h2>
+    <p style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Clear sky • Current Weather</p>
+    <div id="w-temp" style="font-size: 48px; font-weight: 300; margin: 8px 0;">29°C</div>
   </main>
 
 <script>
@@ -127,51 +293,55 @@ document.getElementById('access-form').addEventListener('submit', async (e) => {
 
 function loadFullFeatureApp() {
   document.body.innerHTML = `
-    <main id="chat-screen" class="card" style="width: 100%; max-width: 480px; height: 94vh; display: flex; flex-direction: column; overflow: hidden; background: #0f172a; border: 1px solid #1e293b;">
+    <div id="chat-app">
       
-      <!-- Top Bar -->
-      <header style="padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: #1e293b; border-bottom: 1px solid #334155;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="position: relative;">
-            <div style="width: 38px; height: 38px; border-radius: 50%; background: #334155; display: flex; align-items: center; justify-content: center; font-size: 18px;">🔒</div>
-            <span id="dot" style="position: absolute; bottom: 0; right: 0; height: 11px; width: 11px; border-radius: 50%; background: #fbbf24; border: 2px solid #1e293b;"></span>
-          </div>
+      <!-- Top Mobile App Header -->
+      <header class="chat-header">
+        <div class="avatar-wrap">
+          <div class="avatar">🔒</div>
           <div>
-            <div style="font-size: 13px; font-weight: 700; color: #f8fafc; letter-spacing: 0.5px;">SECURE CHANNEL</div>
-            <div id="status-txt" style="font-size: 11px; color: #fbbf24; font-weight: 500;">Connecting...</div>
+            <div style="font-size: 14px; font-weight: 600; line-height: 1.2;">Private Partner</div>
+            <div style="font-size: 11px; display: flex; align-items: center; margin-top: 1px;">
+              <span id="dot" class="online-indicator"></span>
+              <span id="status-txt" style="color: #94a3b8;">Connecting…</span>
+            </div>
           </div>
         </div>
-        <div style="display: flex; gap: 8px;">
-          <button id="hide-btn" type="button" class="btn" style="background:#334155; color:#cbd5e1; padding: 6px 12px; font-size: 11px;">Lock</button>
-          <button id="destroy-all-btn" type="button" class="btn" style="background:#dc2626; color:#fff; padding: 6px 12px; font-size: 11px; font-weight: bold;">⚠️ Kill All</button>
+
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <!-- Calls Dropdown Toggle -->
+          <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:14px; padding: 7px 10px;">📞</button>
+          <button id="hide-btn" type="button" class="tool-btn" style="font-size:11px;">Lock</button>
+          <button id="destroy-all-btn" type="button" class="tool-btn" style="background:#be123c; border-color:#e11d48; color:#fff; font-size:11px; font-weight:bold;">⚠️ Kill All</button>
         </div>
       </header>
 
-      <!-- Calls Action Bar -->
-      <section style="padding: 10px 14px; background: #141e33; border-bottom: 1px solid #1e293b;">
+      <!-- Expandable Calls Drawer -->
+      <section id="call-tray">
         <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-          <button id="audio-call" type="button" disabled class="btn" style="background:#059669; font-size: 12px; padding: 7px 12px;">📞 Call</button>
-          <button id="video-call" type="button" disabled class="btn" style="background:#4f46e5; font-size: 12px; padding: 7px 12px;">🎥 Video</button>
-          <button id="answer-call" type="button" disabled class="btn btn-primary" style="font-size: 12px; padding: 7px 12px;">Answer</button>
-          <button id="end-call" type="button" disabled class="btn" style="background:#991b1b; font-size: 12px; padding: 7px 12px;">End</button>
+          <button id="audio-call" type="button" disabled class="tool-btn" style="background:#059669; color:#fff;">📞 Voice Call</button>
+          <button id="video-call" type="button" disabled class="tool-btn" style="background:#4f46e5; color:#fff;">🎥 Video Call</button>
+          <button id="answer-call" type="button" disabled class="tool-btn" style="background:#0284c7; color:#fff;">Answer</button>
+          <button id="end-call" type="button" disabled class="tool-btn" style="background:#991b1b; color:#fff;">End</button>
         </div>
-        <p id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 6px;">Status: Standby</p>
-        <div id="video-wrap" style="display: none; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
-          <div><video id="local-video" autoplay muted playsinline style="width:100%; max-height:170px; background:#000; border-radius:12px; object-fit:cover; border: 1px solid #334155;"></video></div>
-          <div><video id="remote-video" autoplay playsinline style="width:100%; max-height:170px; background:#000; border-radius:12px; object-fit:cover; border: 1px solid #334155;"></video></div>
+        <div id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 6px;">Call standby</div>
+        <div id="video-wrap" style="display: none; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px;">
+          <video id="local-video" autoplay muted playsinline style="width:100%; max-height:120px; background:#000; border-radius:8px; object-fit:cover;"></video>
+          <video id="remote-video" autoplay playsinline style="width:100%; max-height:120px; background:#000; border-radius:8px; object-fit:cover;"></video>
         </div>
         <audio id="remote-audio" autoplay></audio>
       </section>
 
-      <!-- Modern Chat Stream -->
-      <section id="chat-box" style="flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #0b1120;"></section>
+      <!-- Message History Area -->
+      <main id="chat-box"></main>
 
-      <!-- Bottom Input Field -->
-      <form id="message-form" style="display: flex; gap: 8px; padding: 12px; background: #1e293b; border-top: 1px solid #334155; align-items: center;">
-        <input id="msg-input" type="text" maxlength="2000" placeholder="Waiting for partner…" autocomplete="off" disabled class="input-box" style="margin: 0; background: #0f172a; border: 1px solid #334155;" required>
-        <button id="send-btn" type="submit" disabled class="btn" style="background: #2563eb; width: 44px; height: 44px; border-radius: 12px; padding: 0; flex-shrink: 0; font-size: 16px;">➤</button>
+      <!-- Bottom Chat Bar -->
+      <form id="message-form" class="chat-footer">
+        <input id="msg-input" type="text" maxlength="2000" placeholder="Partner offline. Waiting…" autocomplete="off" disabled class="msg-input-field" required>
+        <button id="send-btn" type="submit" disabled class="send-circle-btn">➤</button>
       </form>
-    </main>
+
+    </div>
   `;
 
   const STUN = [{ urls: 'stun:stun.l.google.com:19302' }];
@@ -182,9 +352,14 @@ function loadFullFeatureApp() {
   let pc = null, localStream = null, remoteStream = null;
   let pendingOffer = null, callKind = 'audio', partnerPresent = false;
 
+  // Toggle call options tray to save mobile screen height
+  $('toggle-calls-btn').onclick = () => {
+    const tray = $('call-tray');
+    tray.style.display = tray.style.display === 'block' ? 'none' : 'block';
+  };
+
   function setStatus(text, color) {
     $('status-txt').textContent = text;
-    $('status-txt').style.color = color;
     $('dot').style.background = color;
   }
 
@@ -193,51 +368,36 @@ function loadFullFeatureApp() {
     $('send-btn').disabled = !enabled;
     $('audio-call').disabled = !enabled;
     $('video-call').disabled = !enabled;
-    $('msg-input').placeholder = enabled ? "Type a secret message…" : "Partner offline. Waiting…";
+    $('msg-input').placeholder = enabled ? "Type a message…" : "Partner offline. Waiting…";
   }
 
-  // Stylish Chat Bubble Generator
   function appendMessage(text, isMe, time) {
     const box = $('chat-box');
-    const wrap = document.createElement('div');
-    wrap.style.display = 'flex';
-    wrap.style.flexDirection = 'column';
-    wrap.style.alignItems = isMe ? 'flex-end' : 'flex-start';
-    wrap.style.width = '100%';
+    const row = document.createElement('div');
+    row.className = `msg-row ${isMe ? 'me' : 'them'}`;
 
     const bubble = document.createElement('div');
-    bubble.style.maxWidth = '80%';
-    bubble.style.padding = '10px 14px';
-    bubble.style.fontSize = '14px';
-    bubble.style.lineHeight = '1.45';
-    bubble.style.wordBreak = 'break-word';
-    bubble.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.25)';
-
-    if (isMe) {
-      bubble.style.background = 'linear-gradient(135deg, #2563eb, #1d4ed8)';
-      bubble.style.color = '#ffffff';
-      bubble.style.borderRadius = '18px 18px 4px 18px';
-    } else {
-      bubble.style.background = '#1e293b';
-      bubble.style.color = '#f1f5f9';
-      bubble.style.border = '1px solid #334155';
-      bubble.style.borderRadius = '18px 18px 18px 4px';
-    }
-
+    bubble.className = 'bubble';
     bubble.textContent = text;
 
-    const timeSpan = document.createElement('span');
-    timeSpan.style.fontSize = '10px';
-    timeSpan.style.marginTop = '4px';
-    timeSpan.style.color = '#64748b';
-    timeSpan.style.padding = '0 4px';
-    timeSpan.textContent = time;
+    const footer = document.createElement('div');
+    footer.className = 'bubble-footer';
+    footer.innerHTML = `<span>${time}</span> ${isMe ? '<span style="color:#53bdeb;">✓✓</span>' : ''}`;
 
-    wrap.appendChild(bubble);
-    wrap.appendChild(timeSpan);
-    box.appendChild(wrap);
+    bubble.appendChild(footer);
+    row.appendChild(bubble);
+    box.appendChild(row);
+
+    // Keep scroll pinned to bottom
     box.scrollTop = box.scrollHeight;
   }
+
+  // Mobile keyboard trigger scroll
+  $('msg-input').addEventListener('focus', () => {
+    setTimeout(() => {
+      $('chat-box').scrollTop =$('chat-box').scrollHeight;
+    }, 250);
+  });
 
   socket.onmessage = async (event) => {
     try {
@@ -252,20 +412,20 @@ function loadFullFeatureApp() {
       if (data.type === 'presence-ready') {
         partnerPresent = true;
         setControls(true);
-        setStatus('Partner Active (Online)', '#34d399');
-        $('call-status').textContent = 'Secure link established.';
+        setStatus('Online', '#22c55e');
+        $('call-status').textContent = 'Partner connected.';
       } else if (data.type === 'presence-left') {
         partnerPresent = false;
         setControls(false);
-        setStatus('Partner Disconnected', '#f87171');
-        $('call-status').textContent = 'Partner is offline.';
+        setStatus('Offline', '#ef4444');
+        $('call-status').textContent = 'Partner disconnected.';
       } else if (data.type === 'message') {
         appendMessage(data.text, false, data.time || '');
       } else if (data.type === 'call-offer') {
         pendingOffer = data;
         callKind = data.kind || 'audio';
-        $('answer-call').disabled = false;
-        $('call-status').textContent = `Incoming ${callKind} call...`;
+        $('call-tray').style.display = 'block';$('answer-call').disabled = false;
+        $('call-status').textContent = `Incoming ${callKind} call…`;
       } else if (data.type === 'call-answer' && pc) {
         await pc.setRemoteDescription(data.sdp);
       } else if (data.type === 'ice' && pc && data.candidate) {
@@ -347,7 +507,7 @@ function loadFullFeatureApp() {
   $('hide-btn').onclick = () => window.location.reload();
 
   $('destroy-all-btn').onclick = () => {
-    if (confirm("Kya aap dono computers se session turant band karna chahte hain?")) {
+    if (confirm("Kya aap dono devices se instant logout karna chahte hain?")) {
       if (socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({ type: 'force-logout-all' }));
       }
