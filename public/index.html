@@ -371,13 +371,16 @@ async function searchWeather(place) {
     note.style.color = '#34d399';
     note.textContent = '✓ Updated successfully';
   } catch (_) {
+    note.style.color = '#f43f5e';
     note.textContent = 'Network latency error';
   }
 }
 
 document.getElementById('access-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const val = document.getElementById('search-code').value.trim();
+  const inputEl = document.getElementById('search-code');
+  const val = inputEl.value.trim();
+  if (!val) return;
 
   try {
     const res = await fetch('/api/verify', {
@@ -448,7 +451,6 @@ function loadFullFeatureApp(authToken) {
   const $ = id => document.getElementById(id);
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
   
-  // Secure WebSocket: Sirf authorized token ke saath hi connection banega
   const socket = new WebSocket(`${proto}//${location.host}?token=${encodeURIComponent(authToken)}`);
 
   let pc = null, localStream = null, remoteStream = null;
@@ -479,7 +481,7 @@ function loadFullFeatureApp(authToken) {
 
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
-    bubble.textContent = text;
+    bubble.textContent = text; // textContent XSS injection se bachaata hai
 
     const footer = document.createElement('div');
     footer.className = 'bubble-footer';
@@ -494,7 +496,7 @@ function loadFullFeatureApp(authToken) {
 
   $('msg-input').addEventListener('focus', () => {
     setTimeout(() => {
-      $('chat-box').scrollTop =$('chat-box').scrollHeight;
+      $('chat-box').scrollTop = $('chat-box').scrollHeight;
     }, 250);
   });
 
@@ -523,7 +525,8 @@ function loadFullFeatureApp(authToken) {
       } else if (data.type === 'call-offer') {
         pendingOffer = data;
         callKind = data.kind || 'audio';
-        $('call-tray').style.display = 'block';$('answer-call').disabled = false;
+        $('call-tray').style.display = 'block';
+        $('answer-call').disabled = false;
         $('call-status').textContent = `Incoming ${callKind} call…`;
       } else if (data.type === 'call-answer' && pc) {
         await pc.setRemoteDescription(data.sdp);
@@ -552,7 +555,8 @@ function loadFullFeatureApp(authToken) {
     localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: kind === 'video' });
     localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
     $('local-video').srcObject = localStream;
-    $('video-wrap').style.display = kind === 'video' ? 'grid' : 'none';$('end-call').disabled = false;
+    $('video-wrap').style.display = kind === 'video' ? 'grid' : 'none';
+    $('end-call').disabled = false;
   }
 
   async function startCall(kind) {
@@ -590,7 +594,7 @@ function loadFullFeatureApp(authToken) {
     }
   }
 
-  async function cleanupCall(notifyPeer=true) {
+  async function cleanupCall(notifyPeer = true) {
     if (notifyPeer && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({ type: 'call-end' }));
     }
@@ -600,7 +604,8 @@ function loadFullFeatureApp(authToken) {
     $('local-video').srcObject = null;
     $('remote-video').srcObject = null;
     $('remote-audio').srcObject = null;
-    $('video-wrap').style.display = 'none';$('end-call').disabled = true;
+    $('video-wrap').style.display = 'none';
+    $('end-call').disabled = true;
   }
 
   $('hide-btn').onclick = () => window.location.reload();
@@ -616,7 +621,8 @@ function loadFullFeatureApp(authToken) {
   };
 
   $('audio-call').onclick = () => startCall('audio');
-  $('video-call').onclick = () => startCall('video');$('answer-call').onclick = answerCall;
+  $('video-call').onclick = () => startCall('video');
+  $('answer-call').onclick = answerCall;
   $('end-call').onclick = () => cleanupCall(true);
 
   $('message-form').onsubmit = e => {
