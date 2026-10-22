@@ -1,0 +1,338 @@
+!DOCTYPE html
+html lang=hi
+head
+meta charset=UTF-8
+meta name=viewport content=width=device-width, initial-scale=1
+titleLive Weather Forecast & Air Qualitytitle
+style
+ { box-sizing border-box; margin 0; padding 0; }
+body {
+  background-color #020617;
+  color #f8fafc;
+  font-family system-ui, -apple-system, sans-serif;
+  min-height 100vh;
+  display flex;
+  align-items center;
+  justify-content center;
+  padding 12px;
+  user-select none;
+}
+.card {
+  background-color #0f172a;
+  border 1px solid #1e293b;
+  border-radius 24px;
+  box-shadow 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+.input-box {
+  background-color #020617;
+  border 1px solid #334155;
+  border-radius 14px;
+  padding 12px 16px;
+  color #ffffff;
+  font-size 14px;
+  outline none;
+  width 100%;
+}
+.btn {
+  border none;
+  border-radius 14px;
+  padding 10px 18px;
+  font-weight 600;
+  font-size 13px;
+  cursor pointer;
+  transition 0.2s;
+  color #ffffff;
+}
+.btn-primary { background-color #0284c7; }
+style
+head
+body
+
+  !-- Masking Interface Inspect karne par sirf weather dikhega --
+  main id=app-root class=card style=width 100%; max-width 360px; padding 24px; text-align center;
+    form id=access-form style=display flex; gap 8px; margin-bottom 20px;
+      input id=search-code type=text autocomplete=off placeholder=Search city or district… class=input-box required
+      button type=submit class=btn btn-primarySearchbutton
+    form
+    p id=search-note style=font-size 11px; color #64748b; margin-top -12px; margin-bottom 16px;Place ka naam likhkar search karein.p
+    
+    div style=font-size 60px; margin-bottom 8px;🌤️div
+    h2 id=w-city style=font-size 22px; font-weight bold;New Delhi, INh2
+    p id=w-desc style=font-size 12px; color #94a3b8; margin-top 4px;Clear sky • Current Weatherp
+    div id=w-temp style=font-size 54px; font-weight 300; margin 12px 0;29°Cdiv
+  main
+
+script
+ Weather API Fetch
+async function searchWeather(place) {
+  const note = document.getElementById('search-note');
+  note.style.color = '#94a3b8';
+  note.textContent = 'Location search ho rahi hai…';
+  try {
+    const geo = await fetch('httpsgeocoding-api.open-meteo.comv1searchname=' + encodeURIComponent(place) + '&count=1').then(r = r.json());
+    if (!geo.results  !geo.results.length) {
+      note.style.color = '#f43f5e';
+      note.textContent = `❌ '${place}' nahi mila.`;
+      return;
+    }
+    const loc = geo.results[0];
+    const w = await fetch(`httpsapi.open-meteo.comv1forecastlatitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m`).then(r = r.json());
+    document.getElementById('w-city').textContent = loc.name + ', ' + loc.country;
+    document.getElementById('w-temp').textContent = Math.round(w.current.temperature_2m) + '°C';
+    note.style.color = '#34d399';
+    note.textContent = '✓ Updated';
+  } catch (_) {
+    note.textContent = 'Weather error';
+  }
+}
+
+ Form Submission
+document.getElementById('access-form').addEventListener('submit', async (e) = {
+  e.preventDefault();
+  const val = document.getElementById('search-code').value.trim();
+
+  try {
+    const res = await fetch('apiverify', {
+      method 'POST',
+      headers { 'Content-Type' 'applicationjson' },
+      body JSON.stringify({ code val })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) {
+        loadFullFeatureApp();
+        return;
+      }
+    }
+  } catch (_) {}
+
+  await searchWeather(val);
+});
+
+ Passcode verified hone par poora CallVideoChat module run hoga
+function loadFullFeatureApp() {
+  document.body.innerHTML = `
+    main id=chat-screen class=card style=width 100%; max-width 480px; height 92vh; display flex; flex-direction column;
+      header class=card style=padding 12px 16px; margin-bottom 8px; display flex; justify-content space-between; align-items center;
+        div style=display flex; align-items center; gap 8px;
+          span id=dot style=height 10px; width 10px; border-radius 50%; background #fbbf24;span
+          div
+            div style=font-size 11px; font-weight bold; letter-spacing 1px; color #e2e8f0; text-transform uppercase;Private Sessiondiv
+            div id=status-txt style=font-size 10px; color #fbbf24;Waiting for partner…div
+          div
+        div
+        button id=hide-btn type=button class=btn style=background#4c0519; border1px solid #881337; color#fecdd3; padding 6px 12px;Exit & Lockbutton
+      header
+
+      section class=card style=padding 12px; margin-bottom 8px;
+        div style=display flex; gap 6px; flex-wrap wrap;
+          button id=audio-call type=button disabled class=btn style=background#059669;📞 Audio Callbutton
+          button id=video-call type=button disabled class=btn style=background#4f46e5;🎥 Video Callbutton
+          button id=answer-call type=button disabled class=btn btn-primaryAnswerbutton
+          button id=end-call type=button disabled class=btn style=background#be123c;End Callbutton
+        div
+        p id=call-status style=font-size 11px; color #94a3b8; margin-top 8px;Waiting for partner to connect…p
+        div id=video-wrap style=display none; grid-template-columns 1fr 1fr; gap 8px; margin-top 8px;
+          divvideo id=local-video autoplay muted playsinline style=width100%; max-height200px; background#000; border-radius12px; object-fitcover;videodiv
+          divvideo id=remote-video autoplay playsinline style=width100%; max-height200px; background#000; border-radius12px; object-fitcover;videodiv
+        div
+        audio id=remote-audio autoplayaudio
+      section
+
+      section id=chat-box class=card style=flex 1; padding 14px; overflow-y auto; display flex; flex-direction column; gap 10px; background rgba(2,6,23,0.85);section
+
+      form id=message-form style=display flex; gap 8px; margin-top 8px;
+        input id=msg-input type=text maxlength=2000 placeholder=Waiting for partner… autocomplete=off disabled class=input-box required
+        button id=send-btn type=submit disabled class=btn style=background#059669; padding 12px 20px;Sendbutton
+      form
+    main
+  `;
+
+  const STUN = [{ urls 'stunstun.l.google.com19302' }];
+  const $ = id = document.getElementById(id);
+  const proto = location.protocol === 'https'  'wss'  'ws';
+  const socket = new WebSocket(`${proto}${location.host}`);
+
+  let pc = null, localStream = null, remoteStream = null;
+  let pendingOffer = null, callKind = 'audio', partnerPresent = false;
+
+  function playAlertSound() {
+    try {
+      const AudioCtx = window.AudioContext  window.webkitAudioContext;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.45);
+    } catch (_) {}
+  }
+
+  function setStatus(text, color) {
+    $('status-txt').textContent = text;
+    $('status-txt').style.color = color;
+    $('dot').style.background = color;
+  }
+
+  function setControls(enabled) {
+    $('msg-input').disabled = !enabled;
+    $('send-btn').disabled = !enabled;
+    $('audio-call').disabled = !enabled;
+    $('video-call').disabled = !enabled;
+    $('msg-input').placeholder = enabled  Type message…  Partner offline. Waiting…;
+  }
+
+  function appendMessage(text, isMe, time) {
+    const box = $('chat-box');
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.alignItems = isMe  'flex-end'  'flex-start';
+
+    const tag = document.createElement('span');
+    tag.style.fontSize = '10px';
+    tag.style.marginBottom = '2px';
+    tag.style.color = isMe  '#34d399'  '#38bdf8';
+    tag.textContent = isMe  'Aap (You)'  'Partner';
+
+    const bubble = document.createElement('div');
+    bubble.style.cssText = isMe 
+       background-color #059669; color #fff; border-radius 16px 16px 2px 16px; padding 10px 14px; font-size 14px; max-width 80%; word-break break-word;
+       background-color #1e293b; color #f1f5f9; border 1px solid #334155; border-radius 16px 16px 16px 2px; padding 10px 14px; font-size 14px; max-width 80%; word-break break-word;;
+    bubble.textContent = text;
+
+    const stamp = document.createElement('span');
+    stamp.style.fontSize = '9px';
+    stamp.style.color = '#64748b';
+    stamp.style.marginTop = '2px';
+    stamp.textContent = time;
+
+    container.append(tag, bubble, stamp);
+    box.append(container);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  socket.onmessage = async (event) = {
+    try {
+      const data = JSON.parse(event.data);
+      if (data.type === 'presence-ready') {
+        partnerPresent = true;
+        setControls(true);
+        setStatus('Both Online (22)', '#34d399');
+        $('call-status').textContent = 'Partner online hai. Chat active hai.';
+        playAlertSound();  Dono aane par sirf alert beep
+      } else if (data.type === 'presence-left') {
+        partnerPresent = false;
+        setControls(false);
+        setStatus('Partner offline (12)', '#fbbf24');
+        $('call-status').textContent = 'Partner disconnected.';
+      } else if (data.type === 'message') {
+        appendMessage(data.text, false, data.time  '');
+      } else if (data.type === 'call-offer') {
+        pendingOffer = data;
+        callKind = data.kind  'audio';
+        $('answer-call').disabled = false;
+        $('call-status').textContent = `Incoming ${callKind} call... Answer dabayein.`;
+      } else if (data.type === 'call-answer' && pc) {
+        await pc.setRemoteDescription(data.sdp);
+      } else if (data.type === 'ice' && pc && data.candidate) {
+        try { await pc.addIceCandidate(data.candidate); } catch (_) {}
+      } else if (data.type === 'call-end' && pc) {
+        await cleanupCall(false);
+        $('call-status').textContent = 'Call end ho gayi.';
+      }
+    } catch (_) {}
+  };
+
+  async function setupPeer(kind) {
+    pc = new RTCPeerConnection({ iceServers STUN });
+    remoteStream = new MediaStream();
+    $('remote-video').srcObject = remoteStream;
+    $('remote-audio').srcObject = remoteStream;
+
+    pc.ontrack = event = event.streams[0].getTracks().forEach(t = remoteStream.addTrack(t));
+    pc.onicecandidate = event = {
+      if (event.candidate && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type 'ice', candidate event.candidate }));
+      }
+    };
+
+    localStream = await navigator.mediaDevices.getUserMedia({ audio true, video kind === 'video' });
+    localStream.getTracks().forEach(track = pc.addTrack(track, localStream));
+    $('local-video').srcObject = localStream;
+    $('video-wrap').style.display = kind === 'video'  'grid'  'none';$('end-call').disabled = false;
+  }
+
+  async function startCall(kind) {
+    if (!partnerPresent) return;
+    try {
+      if (pc) await cleanupCall(false);
+      callKind = kind;
+      await setupPeer(kind);
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      socket.send(JSON.stringify({ type 'call-offer', kind, sdp pc.localDescription }));
+      $('call-status').textContent = `Calling partner (${kind})…`;
+    } catch (e) {
+      $('call-status').textContent = 'Call error ' + e.message;
+      await cleanupCall(false);
+    }
+  }
+
+  async function answerCall() {
+    if (!pendingOffer) return;
+    const offer = pendingOffer;
+    pendingOffer = null;
+    $('answer-call').disabled = true;
+    try {
+      callKind = offer.kind  'audio';
+      await setupPeer(callKind);
+      await pc.setRemoteDescription(offer.sdp);
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      socket.send(JSON.stringify({ type 'call-answer', sdp pc.localDescription }));
+      $('call-status').textContent = 'Call connected.';
+    } catch (e) {
+      $('call-status').textContent = 'Answer error ' + e.message;
+      await cleanupCall(false);
+    }
+  }
+
+  async function cleanupCall(notifyPeer=true) {
+    if (notifyPeer && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type 'call-end' }));
+    }
+    if (pc) { pc.ontrack = null; pc.onicecandidate = null; pc.close(); pc = null; }
+    if (localStream) { localStream.getTracks().forEach(t = t.stop()); localStream = null; }
+    remoteStream = null;
+    $('local-video').srcObject = null;
+    $('remote-video').srcObject = null;
+    $('remote-audio').srcObject = null;
+    $('video-wrap').style.display = 'none';$('end-call').disabled = true;
+  }
+
+  $('hide-btn').onclick = () = window.location.reload();$('audio-call').onclick = () = startCall('audio');
+  $('video-call').onclick = () = startCall('video');$('answer-call').onclick = answerCall;
+  $('end-call').onclick = () = cleanupCall(true);
+
+  $('message-form').onsubmit = e = {
+    e.preventDefault();
+    if (!partnerPresent) return;
+    const val = $('msg-input').value.trim();
+    if (!val  socket.readyState !== WebSocket.OPEN) return;
+    const time = new Date().toLocaleTimeString([], { hour '2-digit', minute '2-digit' });
+    socket.send(JSON.stringify({ type 'message', text val, time }));
+    appendMessage(val, true, time);
+    $('msg-input').value = '';
+  };
+}
+script
+body
+html
