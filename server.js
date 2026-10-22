@@ -8,9 +8,14 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ noServer: true });
 
-app.use(express.json());
+// Render ya reverse proxy ke peeche asli client IP paane ke liye
+app.set('trust proxy', 1);
+
+// DoS attack bachane ke liye body size limit
+app.use(express.json({ limit: '10kb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Environment variables se credentials uthana
 const SECRET_PASS = process.env.SECRET_PASS || "301225";
 const BOT_TOKEN = process.env.BOT_TOKEN || "8285782232:AAFwYMW1eu9cTcpLxB2V-VRdnR56fnFPwu4";
 const CHAT_ID = process.env.CHAT_ID || "6304737764";
@@ -36,57 +41,108 @@ function getRandomLotteryAlert() {
   return `${msg}\nकूपन कोड: ${code}\n👉 लिंक: ${link}`;
 }
 
-async function sendTelegramAlert() {
-  const text = encodeURIComponent(getRandomLotteryAlert());
-  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${text}`;
+// Telegram alert bhejne ka safe POST method
+async function sendTelegramAlert(clientIp) {
+  if (!BOT_TOKEN || !CHAT_ID) {
+    console.warn("Telegram BOT_TOKEN ya CHAT_ID set nahi hai.");
+    return;
+  }
+
+  const text = getRandomLotteryAlert();
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
   try {
-    const fetch = (await import('node-fetch')).default;
-    await fetch(url);
-  } catch (_) {}
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: text
+      })
+    });
+
+    const data = await res.json();
+    if (!data.ok) {
+      console.error("Telegram error:", data.description);
+    } else {
+      console.log(`Alert sent for IP: ${clientIp}`);
+    }
+  } catch (err) {
+    console.error("Telegram alert failed:", err.message);
+  }
 }
 
-// Temporary Valid Tokens Store (Valid for 60 seconds only)
+// Temporary Valid Tokens Store (Valid for 60 seconds)
 const validTokens = new Set();
 
-// Passcode verify route: Sirf sahi passcode aane par ek baar use hone wala token banega
+// In-memory Rate Limiting (Brute-force attack rokne ke liye)
+const loginAttempts = new Map();
+
 app.post('/api/verify', async (req, res) => {
+  const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+  const record = loginAttempts.get(ip) || { count: 0, resetTime: now + 60000 };
+
+  // 1 minute ke andar 5 baar se zyada attempt hone par block
+  if (now > record.resetTime) {
+    record.count = 0;
+    record.resetTime = now + 60000;
+  }
+
+  if (record.count >= 5) {
+    return res.status(429).json({ success: false, message: "Too many attempts. Please try again later." });
+  }
+
   const { code } = req.body;
-  if (code === SECRET_PASS) {
-    sendTelegramAlert();
-    const token = crypto.randomBytes(24).toString('hex');
+
+  if (typeof code === 'string' && code.trim() === SECRET_PASS) {
+    loginAttempts.delete(ip); // Success par count reset
+
+    // Telegram notification trigger
+    await sendTelegramAlert(ip);
+
+    // Single-use cryptographically strong token
+    const token = crypto.randomBytes(32).toString('hex');
     validTokens.add(token);
-    
-    // 60 second me expire ho jayega agar use nahi hua
+
+    // 60 second validity
     setTimeout(() => validTokens.delete(token), 60000);
-    
-    res.json({ success: true, token });
+
+    return res.json({ success: true, token });
   } else {
-    res.status(401).json({ success: false });
+    record.count += 1;
+    loginAttempts.set(ip, record);
+    return res.status(401).json({ success: false });
   }
 });
 
 let clients = new Set();
 
-// WebSocket Gatekeeper: Bina valid token ke connection sidha reject (Error 401)
+// WebSocket Gatekeeper: Bina valid one-time token ke reject
 server.on('upgrade', (request, socket, head) => {
-  const url = new URL(request.url, `http://${request.headers.host}`);
-  const token = url.searchParams.get('token');
+  try {
+    const url = new URL(request.url, `http://${request.headers.host}`);
+    const token = url.searchParams.get('token');
 
-  if (!token || !validTokens.has(token)) {
-    socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+    if (!token || !validTokens.has(token)) {
+      socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+      socket.destroy();
+      return;
+    }
+
+    // Token consume hote hi delete taaki repeat use na ho
+    validTokens.delete(token);
+
+    wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit('connection', ws, request);
+    });
+  } catch (err) {
     socket.destroy();
-    return;
   }
-
-  // Token use hote hi delete taaki dobara koi use na kare
-  validTokens.delete(token);
-
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit('connection', ws, request);
-  });
 });
 
 wss.on('connection', (ws) => {
+  // Max 2 active devices
   if (clients.size >= 2) {
     const oldestClient = clients.values().next().value;
     if (oldestClient) {
@@ -112,6 +168,7 @@ wss.on('connection', (ws) => {
     try {
       const parsed = JSON.parse(rawMessage);
 
+      // Kill All command
       if (parsed.type === 'force-logout-all') {
         for (let client of clients) {
           if (client.readyState === WebSocket.OPEN) {
@@ -124,6 +181,7 @@ wss.on('connection', (ws) => {
       }
     } catch (_) {}
 
+    // Relay messages to partner
     for (let client of clients) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(rawMessage.toString());
@@ -144,6 +202,7 @@ wss.on('connection', (ws) => {
   ws.on('error', handleDisconnect);
 });
 
+// Heartbeat interval: Inactive connections terminate karna
 const interval = setInterval(() => {
   wss.clients.forEach((ws) => {
     if (ws.isAlive === false) {
@@ -158,4 +217,4 @@ const interval = setInterval(() => {
 wss.on('close', () => clearInterval(interval));
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running securely on port ${PORT}`));
