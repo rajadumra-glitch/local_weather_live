@@ -3,52 +3,113 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Live Weather Forecast & Air Quality</title>
+<title>AtmoLive • Weather Forecast & Air Quality</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   
-  :root {
-    --bg-main: #0c1017;
-    --card-bg: #161b22;
-    --border-color: #21262d;
-    --accent: #238636;
-    --text-primary: #f0f6fc;
-    --text-muted: #8b949e;
-  }
-
   body {
-    background-color: var(--bg-main);
-    color: var(--text-primary);
+    background: radial-gradient(circle at 50% 10%, #1e293b 0%, #090d16 100%);
+    color: #f8fafc;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    height: 100vh;
-    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    padding: 14px;
+    overflow-x: hidden;
   }
 
-  /* Weather Camouflage Screen */
+  /* Weather Dashboard Card */
   .weather-card {
-    background: #111827;
-    border: 1px solid #1f2937;
-    border-radius: 24px;
-    width: 90%;
-    max-width: 360px;
-    padding: 24px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    background: rgba(17, 24, 39, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 28px;
+    width: 100%;
+    max-width: 380px;
+    padding: 24px 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  }
+
+  .search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
   }
 
   .weather-input {
-    background: #0b0f19;
-    border: 1px solid #374151;
-    border-radius: 12px;
-    padding: 12px 14px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 12px 42px 12px 14px;
     color: #fff;
     width: 100%;
     outline: none;
     font-size: 14px;
+    transition: 0.2s;
+  }
+
+  .weather-input:focus {
+    border-color: #38bdf8;
+    background: rgba(15, 23, 42, 0.95);
+  }
+
+  .search-submit-btn {
+    position: absolute;
+    right: 6px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 16px;
+    padding: 6px 8px;
+    cursor: pointer;
+  }
+
+  /* Highlights Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 18px 0;
+  }
+
+  .stat-box {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 10px 12px;
+    text-align: left;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 2px;
+  }
+
+  .stat-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e2e8f0;
+  }
+
+  /* Mini Forecast Strip */
+  .forecast-strip {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(15, 23, 42, 0.4);
+    border-radius: 14px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .day-col {
+    text-align: center;
+    font-size: 11px;
   }
 
   /* Real App UI Container */
@@ -64,7 +125,6 @@
     box-shadow: 0 0 50px rgba(0,0,0,0.8);
   }
 
-  /* WhatsApp/Telegram Style Top Bar */
   .chat-header {
     height: 58px;
     background: #131b26;
@@ -105,7 +165,6 @@
     margin-right: 4px;
   }
 
-  /* Compact Calling Action Tray (Slide Down) */
   #call-tray {
     display: none;
     background: #101725;
@@ -120,7 +179,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Chat Messages Stream */
   #chat-box {
     flex: 1;
     overflow-y: auto;
@@ -134,7 +192,6 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Modern Bubble Styles */
   .msg-row {
     display: flex;
     width: 100%;
@@ -174,7 +231,6 @@
     margin-top: 2px;
   }
 
-  /* Keyboard-Safe Fixed Bottom Bar */
   .chat-footer {
     min-height: 56px;
     background: #131b26;
@@ -231,43 +287,103 @@
 </head>
 <body>
 
-  <!-- Camouflage Weather UI -->
+  <!-- Premium Camouflage Weather Dashboard -->
   <main id="app-root" class="weather-card">
-    <form id="access-form" style="display: flex; gap: 8px; margin-bottom: 20px;">
-      <input id="search-code" type="text" autocomplete="off" placeholder="Search city or district…" class="weather-input" required>
-      <button type="submit" style="background:#0284c7; border:none; color:#fff; border-radius:12px; padding:0 14px; font-weight:600;">Search</button>
+    <form id="access-form" class="search-bar">
+      <input id="search-code" type="text" autocomplete="off" placeholder="Search city or location…" class="weather-input" required>
+      <button type="submit" class="search-submit-btn">🔍</button>
     </form>
-    <p id="search-note" style="font-size: 11px; color: #64748b; margin-top: -12px; margin-bottom: 16px;">Place ka naam likhkar search karein.</p>
     
-    <div style="font-size: 55px; margin-bottom: 6px;">🌤️</div>
-    <h2 id="w-city" style="font-size: 20px; font-weight: 700;">New Delhi, IN</h2>
-    <p style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Clear sky • Current Weather</p>
-    <div id="w-temp" style="font-size: 48px; font-weight: 300; margin: 8px 0;">29°C</div>
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+      <div>
+        <h2 id="w-city" style="font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.3px;">New Delhi</h2>
+        <p id="w-country" style="font-size: 12px; color: #94a3b8;">India • Realtime Radar</p>
+      </div>
+      <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 600;">LIVE</span>
+    </div>
+
+    <!-- Temperature Hero Display -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin: 16px 0;">
+      <div>
+        <div id="w-temp" style="font-size: 58px; font-weight: 200; line-height: 1; color: #f8fafc;">29°</div>
+        <div id="w-desc" style="font-size: 13px; color: #cbd5e1; margin-top: 6px; font-weight: 500;">Clear Sky • Good Visibility</div>
+      </div>
+      <div id="w-icon" style="font-size: 64px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));">🌤️</div>
+    </div>
+
+    <p id="search-note" style="font-size: 11px; color: #64748b; margin-top: -6px; margin-bottom: 14px;">Updated just now</p>
+
+    <!-- Weather Details Grid -->
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-label">🌬️ Wind Speed</div>
+        <div id="w-wind" class="stat-value">12 km/h</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">💧 Humidity</div>
+        <div id="w-humidity" class="stat-value">48%</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">🌡️ Feels Like</div>
+        <div id="w-feels" class="stat-value">31°C</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">🍃 Air Quality</div>
+        <div id="w-aqi" class="stat-value" style="color: #34d399;">42 • Good</div>
+      </div>
+    </div>
+
+    <!-- 3-Day Forecast Section -->
+    <div class="forecast-strip">
+      <div class="day-col">
+        <div style="color: #94a3b8; margin-bottom: 3px;">Tomorrow</div>
+        <div style="font-size: 18px;">☀️</div>
+        <div style="font-weight: 600; margin-top: 3px;">30°</div>
+      </div>
+      <div class="day-col">
+        <div style="color: #94a3b8; margin-bottom: 3px;">Friday</div>
+        <div style="font-size: 18px;">⛅</div>
+        <div style="font-weight: 600; margin-top: 3px;">28°</div>
+      </div>
+      <div class="day-col">
+        <div style="color: #94a3b8; margin-bottom: 3px;">Saturday</div>
+        <div style="font-size: 18px;">🌧️</div>
+        <div style="font-weight: 600; margin-top: 3px;">26°</div>
+      </div>
+    </div>
   </main>
 
 <script>
+// Genuine Weather Search Engine
 async function searchWeather(place) {
   const note = document.getElementById('search-note');
-  note.style.color = '#94a3b8';
-  note.textContent = 'Location search ho rahi hai…';
+  note.style.color = '#38bdf8';
+  note.textContent = 'Syncing weather telemetry…';
   try {
     const geo = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(place) + '&count=1').then(r => r.json());
     if (!geo.results || !geo.results.length) {
       note.style.color = '#f43f5e';
-      note.textContent = `❌ '${place}' nahi mila.`;
+      note.textContent = `City '${place}' not found.`;
       return;
     }
     const loc = geo.results[0];
-    const w = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m`).then(r => r.json());
-    document.getElementById('w-city').textContent = loc.name + ', ' + loc.country;
-    document.getElementById('w-temp').textContent = Math.round(w.current.temperature_2m) + '°C';
+    const w = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m`).then(r => r.json());
+    
+    document.getElementById('w-city').textContent = loc.name;
+    document.getElementById('w-country').textContent = (loc.country || 'Region') + ' • Realtime Radar';
+    document.getElementById('w-temp').textContent = Math.round(w.current.temperature_2m) + '°';
+    document.getElementById('w-feels').textContent = Math.round(w.current.apparent_temperature) + '°C';
+    document.getElementById('w-wind').textContent = Math.round(w.current.wind_speed_10m) + ' km/h';
+    document.getElementById('w-humidity').textContent = Math.round(w.current.relative_humidity_2m) + '%';
+    
     note.style.color = '#34d399';
-    note.textContent = '✓ Updated';
+    note.textContent = '✓ Updated successfully';
   } catch (_) {
-    note.textContent = 'Weather error';
+    note.textContent = 'Network latency error';
   }
 }
 
+// Passcode Check vs Real Weather Query
 document.getElementById('access-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const val = document.getElementById('search-code').value.trim();
@@ -309,7 +425,6 @@ function loadFullFeatureApp() {
         </div>
 
         <div style="display: flex; align-items: center; gap: 6px;">
-          <!-- Calls Dropdown Toggle -->
           <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:14px; padding: 7px 10px;">📞</button>
           <button id="hide-btn" type="button" class="tool-btn" style="font-size:11px;">Lock</button>
           <button id="destroy-all-btn" type="button" class="tool-btn" style="background:#be123c; border-color:#e11d48; color:#fff; font-size:11px; font-weight:bold;">⚠️ Kill All</button>
@@ -352,7 +467,6 @@ function loadFullFeatureApp() {
   let pc = null, localStream = null, remoteStream = null;
   let pendingOffer = null, callKind = 'audio', partnerPresent = false;
 
-  // Toggle call options tray to save mobile screen height
   $('toggle-calls-btn').onclick = () => {
     const tray = $('call-tray');
     tray.style.display = tray.style.display === 'block' ? 'none' : 'block';
@@ -388,11 +502,9 @@ function loadFullFeatureApp() {
     row.appendChild(bubble);
     box.appendChild(row);
 
-    // Keep scroll pinned to bottom
     box.scrollTop = box.scrollHeight;
   }
 
-  // Mobile keyboard trigger scroll
   $('msg-input').addEventListener('focus', () => {
     setTimeout(() => {
       $('chat-box').scrollTop =$('chat-box').scrollHeight;
