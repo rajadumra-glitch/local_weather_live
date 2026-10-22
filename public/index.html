@@ -7,9 +7,9 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background-color: #020617;
+    background-color: #0b0f19;
     color: #f8fafc;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -18,37 +18,54 @@
     user-select: none;
   }
   .card {
-    background-color: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 24px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    background-color: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
   }
   .input-box {
-    background-color: #020617;
-    border: 1px solid #334155;
-    border-radius: 14px;
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 12px;
     padding: 12px 16px;
     color: #ffffff;
     font-size: 14px;
     outline: none;
     width: 100%;
+    transition: 0.2s;
+  }
+  .input-box:focus {
+    border-color: #38bdf8;
   }
   .btn {
     border: none;
-    border-radius: 14px;
+    border-radius: 12px;
     padding: 10px 18px;
     font-weight: 600;
     font-size: 13px;
     cursor: pointer;
     transition: 0.2s;
     color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .btn-primary { background-color: #0284c7; }
+  .btn-primary:hover { background-color: #0369a1; }
+
+  /* Chat Box Custom Scrollbar */
+  #chat-box::-webkit-scrollbar {
+    width: 5px;
+  }
+  #chat-box::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 4px;
+  }
 </style>
 </head>
 <body>
 
-  <!-- Masking Interface: Inspect karne par sirf weather dikhega -->
+  <!-- Masking Interface: Normal Weather Screen -->
   <main id="app-root" class="card" style="width: 100%; max-width: 360px; padding: 24px; text-align: center;">
     <form id="access-form" style="display: flex; gap: 8px; margin-bottom: 20px;">
       <input id="search-code" type="text" autocomplete="off" placeholder="Search city or district…" class="input-box" required>
@@ -110,41 +127,49 @@ document.getElementById('access-form').addEventListener('submit', async (e) => {
 
 function loadFullFeatureApp() {
   document.body.innerHTML = `
-    <main id="chat-screen" class="card" style="width: 100%; max-width: 480px; height: 92vh; display: flex; flex-direction: column;">
-      <header class="card" style="padding: 12px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span id="dot" style="height: 10px; width: 10px; border-radius: 50%; background: #fbbf24;"></span>
+    <main id="chat-screen" class="card" style="width: 100%; max-width: 480px; height: 94vh; display: flex; flex-direction: column; overflow: hidden; background: #0f172a; border: 1px solid #1e293b;">
+      
+      <!-- Top Bar -->
+      <header style="padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: #1e293b; border-bottom: 1px solid #334155;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="position: relative;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #334155; display: flex; align-items: center; justify-content: center; font-size: 18px;">🔒</div>
+            <span id="dot" style="position: absolute; bottom: 0; right: 0; height: 11px; width: 11px; border-radius: 50%; background: #fbbf24; border: 2px solid #1e293b;"></span>
+          </div>
           <div>
-            <div style="font-size: 11px; font-weight: bold; letter-spacing: 1px; color: #e2e8f0; text-transform: uppercase;">Private Session</div>
-            <div id="status-txt" style="font-size: 10px; color: #fbbf24;">Waiting for partner…</div>
+            <div style="font-size: 13px; font-weight: 700; color: #f8fafc; letter-spacing: 0.5px;">SECURE CHANNEL</div>
+            <div id="status-txt" style="font-size: 11px; color: #fbbf24; font-weight: 500;">Connecting...</div>
           </div>
         </div>
-        <div style="display: flex; gap: 6px;">
-          <button id="hide-btn" type="button" class="btn" style="background:#334155; color:#cbd5e1; padding: 6px 10px; font-size: 11px;">Lock</button>
-          <button id="destroy-all-btn" type="button" class="btn" style="background:#be123c; color:#fff; padding: 6px 10px; font-size: 11px;" title="Dono devices se turant logout karega">⚠️ Kill All</button>
+        <div style="display: flex; gap: 8px;">
+          <button id="hide-btn" type="button" class="btn" style="background:#334155; color:#cbd5e1; padding: 6px 12px; font-size: 11px;">Lock</button>
+          <button id="destroy-all-btn" type="button" class="btn" style="background:#dc2626; color:#fff; padding: 6px 12px; font-size: 11px; font-weight: bold;">⚠️ Kill All</button>
         </div>
       </header>
 
-      <section class="card" style="padding: 12px; margin-bottom: 8px;">
+      <!-- Calls Action Bar -->
+      <section style="padding: 10px 14px; background: #141e33; border-bottom: 1px solid #1e293b;">
         <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-          <button id="audio-call" type="button" disabled class="btn" style="background:#059669;">📞 Audio Call</button>
-          <button id="video-call" type="button" disabled class="btn" style="background:#4f46e5;">🎥 Video Call</button>
-          <button id="answer-call" type="button" disabled class="btn btn-primary">Answer</button>
-          <button id="end-call" type="button" disabled class="btn" style="background:#be123c;">End Call</button>
+          <button id="audio-call" type="button" disabled class="btn" style="background:#059669; font-size: 12px; padding: 7px 12px;">📞 Call</button>
+          <button id="video-call" type="button" disabled class="btn" style="background:#4f46e5; font-size: 12px; padding: 7px 12px;">🎥 Video</button>
+          <button id="answer-call" type="button" disabled class="btn btn-primary" style="font-size: 12px; padding: 7px 12px;">Answer</button>
+          <button id="end-call" type="button" disabled class="btn" style="background:#991b1b; font-size: 12px; padding: 7px 12px;">End</button>
         </div>
-        <p id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 8px;">Waiting for partner to connect…</p>
+        <p id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 6px;">Status: Standby</p>
         <div id="video-wrap" style="display: none; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
-          <div><video id="local-video" autoplay muted playsinline style="width:100%; max-height:200px; background:#000; border-radius:12px; object-fit:cover;"></video></div>
-          <div><video id="remote-video" autoplay playsinline style="width:100%; max-height:200px; background:#000; border-radius:12px; object-fit:cover;"></video></div>
+          <div><video id="local-video" autoplay muted playsinline style="width:100%; max-height:170px; background:#000; border-radius:12px; object-fit:cover; border: 1px solid #334155;"></video></div>
+          <div><video id="remote-video" autoplay playsinline style="width:100%; max-height:170px; background:#000; border-radius:12px; object-fit:cover; border: 1px solid #334155;"></video></div>
         </div>
         <audio id="remote-audio" autoplay></audio>
       </section>
 
-      <section id="chat-box" class="card" style="flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: rgba(2,6,23,0.85);"></section>
+      <!-- Modern Chat Stream -->
+      <section id="chat-box" style="flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #0b1120;"></section>
 
-      <form id="message-form" style="display: flex; gap: 8px; margin-top: 8px;">
-        <input id="msg-input" type="text" maxlength="2000" placeholder="Waiting for partner…" autocomplete="off" disabled class="input-box" required>
-        <button id="send-btn" type="submit" disabled class="btn" style="background:#059669; padding: 12px 20px;">Send</button>
+      <!-- Bottom Input Field -->
+      <form id="message-form" style="display: flex; gap: 8px; padding: 12px; background: #1e293b; border-top: 1px solid #334155; align-items: center;">
+        <input id="msg-input" type="text" maxlength="2000" placeholder="Waiting for partner…" autocomplete="off" disabled class="input-box" style="margin: 0; background: #0f172a; border: 1px solid #334155;" required>
+        <button id="send-btn" type="submit" disabled class="btn" style="background: #2563eb; width: 44px; height: 44px; border-radius: 12px; padding: 0; flex-shrink: 0; font-size: 16px;">➤</button>
       </form>
     </main>
   `;
@@ -157,24 +182,6 @@ function loadFullFeatureApp() {
   let pc = null, localStream = null, remoteStream = null;
   let pendingOffer = null, callKind = 'audio', partnerPresent = false;
 
-  function playAlertSound() {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.45);
-    } catch (_) {}
-  }
-
   function setStatus(text, color) {
     $('status-txt').textContent = text;
     $('status-txt').style.color = color;
@@ -186,36 +193,49 @@ function loadFullFeatureApp() {
     $('send-btn').disabled = !enabled;
     $('audio-call').disabled = !enabled;
     $('video-call').disabled = !enabled;
-    $('msg-input').placeholder = enabled ? "Type message…" : "Partner offline. Waiting…";
+    $('msg-input').placeholder = enabled ? "Type a secret message…" : "Partner offline. Waiting…";
   }
 
+  // Stylish Chat Bubble Generator
   function appendMessage(text, isMe, time) {
     const box = $('chat-box');
-    const container = document.createElement('div');
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.alignItems = isMe ? 'flex-end' : 'flex-start';
-
-    const tag = document.createElement('span');
-    tag.style.fontSize = '10px';
-    tag.style.marginBottom = '2px';
-    tag.style.color = isMe ? '#34d399' : '#38bdf8';
-    tag.textContent = isMe ? 'Aap (You)' : 'Partner';
+    const wrap = document.createElement('div');
+    wrap.style.display = 'flex';
+    wrap.style.flexDirection = 'column';
+    wrap.style.alignItems = isMe ? 'flex-end' : 'flex-start';
+    wrap.style.width = '100%';
 
     const bubble = document.createElement('div');
-    bubble.style.cssText = isMe 
-      ? "background-color: #059669; color: #fff; border-radius: 16px 16px 2px 16px; padding: 10px 14px; font-size: 14px; max-width: 80%; word-break: break-word;"
-      : "background-color: #1e293b; color: #f1f5f9; border: 1px solid #334155; border-radius: 16px 16px 16px 2px; padding: 10px 14px; font-size: 14px; max-width: 80%; word-break: break-word;";
+    bubble.style.maxWidth = '80%';
+    bubble.style.padding = '10px 14px';
+    bubble.style.fontSize = '14px';
+    bubble.style.lineHeight = '1.45';
+    bubble.style.wordBreak = 'break-word';
+    bubble.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.25)';
+
+    if (isMe) {
+      bubble.style.background = 'linear-gradient(135deg, #2563eb, #1d4ed8)';
+      bubble.style.color = '#ffffff';
+      bubble.style.borderRadius = '18px 18px 4px 18px';
+    } else {
+      bubble.style.background = '#1e293b';
+      bubble.style.color = '#f1f5f9';
+      bubble.style.border = '1px solid #334155';
+      bubble.style.borderRadius = '18px 18px 18px 4px';
+    }
+
     bubble.textContent = text;
 
-    const stamp = document.createElement('span');
-    stamp.style.fontSize = '9px';
-    stamp.style.color = '#64748b';
-    stamp.style.marginTop = '2px';
-    stamp.textContent = time;
+    const timeSpan = document.createElement('span');
+    timeSpan.style.fontSize = '10px';
+    timeSpan.style.marginTop = '4px';
+    timeSpan.style.color = '#64748b';
+    timeSpan.style.padding = '0 4px';
+    timeSpan.textContent = time;
 
-    container.append(tag, bubble, stamp);
-    box.append(container);
+    wrap.appendChild(bubble);
+    wrap.appendChild(timeSpan);
+    box.appendChild(wrap);
     box.scrollTop = box.scrollHeight;
   }
 
@@ -232,28 +252,27 @@ function loadFullFeatureApp() {
       if (data.type === 'presence-ready') {
         partnerPresent = true;
         setControls(true);
-        setStatus('Both Online (2/2)', '#34d399');
-        $('call-status').textContent = 'Partner online hai. Chat active hai.';
-        playAlertSound();
+        setStatus('Partner Active (Online)', '#34d399');
+        $('call-status').textContent = 'Secure link established.';
       } else if (data.type === 'presence-left') {
         partnerPresent = false;
         setControls(false);
-        setStatus('Partner offline (1/2)', '#fbbf24');
-        $('call-status').textContent = 'Partner disconnected.';
+        setStatus('Partner Disconnected', '#f87171');
+        $('call-status').textContent = 'Partner is offline.';
       } else if (data.type === 'message') {
         appendMessage(data.text, false, data.time || '');
       } else if (data.type === 'call-offer') {
         pendingOffer = data;
         callKind = data.kind || 'audio';
         $('answer-call').disabled = false;
-        $('call-status').textContent = `Incoming ${callKind} call... Answer dabayein.`;
+        $('call-status').textContent = `Incoming ${callKind} call...`;
       } else if (data.type === 'call-answer' && pc) {
         await pc.setRemoteDescription(data.sdp);
       } else if (data.type === 'ice' && pc && data.candidate) {
         try { await pc.addIceCandidate(data.candidate); } catch (_) {}
       } else if (data.type === 'call-end' && pc) {
         await cleanupCall(false);
-        $('call-status').textContent = 'Call end ho gayi.';
+        $('call-status').textContent = 'Call ended.';
       }
     } catch (_) {}
   };
