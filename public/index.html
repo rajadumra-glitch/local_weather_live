@@ -63,7 +63,6 @@
   </main>
 
 <script>
-// Weather API Fetch
 async function searchWeather(place) {
   const note = document.getElementById('search-note');
   note.style.color = '#94a3b8';
@@ -86,7 +85,6 @@ async function searchWeather(place) {
   }
 }
 
-// Passcode Submission to Backend
 document.getElementById('access-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const val = document.getElementById('search-code').value.trim();
@@ -110,7 +108,6 @@ document.getElementById('access-form').addEventListener('submit', async (e) => {
   await searchWeather(val);
 });
 
-// Passcode verified hone par poora Call/Video/Chat module load hoga
 function loadFullFeatureApp() {
   document.body.innerHTML = `
     <main id="chat-screen" class="card" style="width: 100%; max-width: 480px; height: 92vh; display: flex; flex-direction: column;">
@@ -122,7 +119,10 @@ function loadFullFeatureApp() {
             <div id="status-txt" style="font-size: 10px; color: #fbbf24;">Waiting for partner…</div>
           </div>
         </div>
-        <button id="hide-btn" type="button" class="btn" style="background:#4c0519; border:1px solid #881337; color:#fecdd3; padding: 6px 12px;">Exit & Lock</button>
+        <div style="display: flex; gap: 6px;">
+          <button id="hide-btn" type="button" class="btn" style="background:#334155; color:#cbd5e1; padding: 6px 10px; font-size: 11px;">Lock</button>
+          <button id="destroy-all-btn" type="button" class="btn" style="background:#be123c; color:#fff; padding: 6px 10px; font-size: 11px;" title="Dono devices se turant logout karega">⚠️ Kill All</button>
+        </div>
       </header>
 
       <section class="card" style="padding: 12px; margin-bottom: 8px;">
@@ -222,6 +222,13 @@ function loadFullFeatureApp() {
   socket.onmessage = async (event) => {
     try {
       const data = JSON.parse(event.data);
+      
+      if (data.type === 'force-logout') {
+        cleanupCall(false);
+        window.location.reload();
+        return;
+      }
+
       if (data.type === 'presence-ready') {
         partnerPresent = true;
         setControls(true);
@@ -318,7 +325,19 @@ function loadFullFeatureApp() {
     $('video-wrap').style.display = 'none';$('end-call').disabled = true;
   }
 
-  $('hide-btn').onclick = () => window.location.reload();$('audio-call').onclick = () => startCall('audio');
+  $('hide-btn').onclick = () => window.location.reload();
+
+  $('destroy-all-btn').onclick = () => {
+    if (confirm("Kya aap dono computers se session turant band karna chahte hain?")) {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: 'force-logout-all' }));
+      }
+      cleanupCall(false);
+      window.location.reload();
+    }
+  };
+
+  $('audio-call').onclick = () => startCall('audio');
   $('video-call').onclick = () => startCall('video');$('answer-call').onclick = answerCall;
   $('end-call').onclick = () => cleanupCall(true);
 
@@ -332,6 +351,12 @@ function loadFullFeatureApp() {
     appendMessage(val, true, time);
     $('msg-input').value = '';
   };
+
+  window.addEventListener('beforeunload', () => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.close();
+    }
+  });
 }
 </script>
 </body>
