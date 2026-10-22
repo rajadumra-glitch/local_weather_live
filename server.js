@@ -2,10 +2,11 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const path = require('path');
+const crypto = require('crypto');
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ noServer: true });
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -44,17 +45,46 @@ async function sendTelegramAlert() {
   } catch (_) {}
 }
 
+// Temporary Valid Tokens Store (Valid for 60 seconds only)
+const validTokens = new Set();
+
+// Passcode verify route: Sirf sahi passcode aane par ek baar use hone wala token banega
 app.post('/api/verify', async (req, res) => {
   const { code } = req.body;
   if (code === SECRET_PASS) {
     sendTelegramAlert();
-    res.json({ success: true });
+    const token = crypto.randomBytes(24).toString('hex');
+    validTokens.add(token);
+    
+    // 60 second me expire ho jayega agar use nahi hua
+    setTimeout(() => validTokens.delete(token), 60000);
+    
+    res.json({ success: true, token });
   } else {
     res.status(401).json({ success: false });
   }
 });
 
 let clients = new Set();
+
+// WebSocket Gatekeeper: Bina valid token ke connection sidha reject (Error 401)
+server.on('upgrade', (request, socket, head) => {
+  const url = new URL(request.url, `http://${request.headers.host}`);
+  const token = url.searchParams.get('token');
+
+  if (!token || !validTokens.has(token)) {
+    socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+    socket.destroy();
+    return;
+  }
+
+  // Token use hote hi delete taaki dobara koi use na kare
+  validTokens.delete(token);
+
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit('connection', ws, request);
+  });
+});
 
 wss.on('connection', (ws) => {
   if (clients.size >= 2) {
