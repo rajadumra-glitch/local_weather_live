@@ -92,6 +92,15 @@
   color: #fff; background: rgba(13,17,35,.97); border: 2px solid #00f7ff;
   box-shadow: 0 0 18px rgba(0,247,255,.45), 0 0 44px rgba(255,0,127,.18);
 }
+/* Compact login box only; keep the secret-code and registration layouts unchanged. */
+#otp-gate-layer .gate-card { width:min(100%, 330px); padding:20px 18px; border-radius:20px; }
+#otp-gate-layer .gate-logo { width:54px; height:54px; margin-bottom:10px; border-radius:16px; font-size:24px; }
+#otp-gate-layer .gate-title { font-size:19px; margin-bottom:6px; }
+#otp-gate-layer .gate-subtitle { font-size:10px; margin-bottom:15px; }
+#otp-gate-layer .gate-input { padding:10px 10px; font-size:19px; margin-bottom:10px; }
+#otp-gate-layer .gate-submit { padding:11px; font-size:11px; }
+#otp-gate-layer .free-game-hint { font-size:12px!important; margin-bottom:10px!important; }
+
 .gate-logo { width: 68px; height: 68px; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;
   border-radius:20px; color:#fff; font-size:30px; background:linear-gradient(135deg,#ff007f,#9d4edd); box-shadow:0 0 22px #ff007f66; }
 .gate-title { font:900 22px Orbitron, sans-serif; letter-spacing:1px; margin-bottom:8px; }
@@ -123,6 +132,21 @@
 .love-hint { color:#fbcfe8; font:600 10px Orbitron,sans-serif; letter-spacing:1px; }
 @keyframes heartBeat {0%,100%{transform:scale(1)}50%{transform:scale(1.12)}} @keyframes lovePop {from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
 @media(max-width:380px){#chat-screen .chat-header{padding:0 7px;}#chat-screen .tool-btn{padding:6px 7px;font-size:10px;} .gate-card{padding:24px 18px;}}
+
+/* Full-page gameplay: activate only after a game is selected. The original portal is restored by ALL GAMES. */
+html.arcade-fullscreen, body.arcade-fullscreen { width:100%; height:100%; min-height:100%; overflow:hidden!important; }
+body.arcade-fullscreen { display:block!important; margin:0!important; }
+body.arcade-fullscreen > header, body.arcade-fullscreen > footer { display:none!important; }
+body.arcade-fullscreen > main { display:block!important; position:static!important; width:100%!important; max-width:none!important; margin:0!important; padding:0!important; }
+body.arcade-fullscreen > main > div:not(#arenaContainer) { display:none!important; }
+body.arcade-fullscreen #arenaContainer { position:fixed!important; inset:0!important; z-index:90000!important; width:100vw!important; height:100dvh!important; max-height:100dvh!important; margin:0!important; border:0!important; border-radius:0!important; padding:clamp(8px,1.5vw,20px)!important; overflow:auto!important; display:flex!important; flex-direction:column!important; box-sizing:border-box!important; }
+body.arcade-fullscreen #arenaContainer > .relative.w-full.flex.flex-col.items-center.justify-center { flex:1 0 auto!important; min-height:0!important; }
+body.arcade-fullscreen #snakeCanvas { width:min(72vh, 88vw)!important; height:min(72vh, 88vw)!important; max-width:100%!important; max-height:72vh!important; object-fit:contain; }
+body.arcade-fullscreen #brickCanvas { width:min(94vw, 1200px)!important; height:min(64vh, 720px)!important; max-width:100%!important; object-fit:contain; }
+body.arcade-fullscreen #flappyCanvas { width:min(60vh, 88vw)!important; height:min(66vh, 96vw)!important; max-width:100%!important; object-fit:contain; }
+body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
+@media(max-height:600px){body.arcade-fullscreen #snakeCanvas{width:min(62vh,80vw)!important;height:min(62vh,80vw)!important;max-height:62vh!important;}body.arcade-fullscreen #arenaContainer{padding:6px!important;}body.arcade-fullscreen #arenaContainer > .flex.flex-wrap.items-center.justify-between{padding-bottom:6px!important;margin-bottom:6px!important;}}
+
 
 </style>
 </head>
@@ -570,6 +594,8 @@
     }
 
     function launchGame(gameKey) {
+      document.documentElement.classList.add('arcade-fullscreen');
+      document.body.classList.add('arcade-fullscreen');
       // Stop ongoing loops of previous game
       stopActiveGameLoops();
       activeGame = gameKey;
@@ -603,6 +629,14 @@
       document.getElementById('arenaContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
       playSound('beep');
     }
+
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' && document.body.classList.contains('arcade-fullscreen')) {
+        document.documentElement.classList.remove('arcade-fullscreen');
+        document.body.classList.remove('arcade-fullscreen');
+      }
+    });
 
     function restartCurrentGame() {
       launchGame(activeGame);
@@ -668,6 +702,8 @@
     }
 
     function goToAllGames() {
+      document.documentElement.classList.remove('arcade-fullscreen');
+      document.body.classList.remove('arcade-fullscreen');
       document.getElementById('gameModal').classList.add('hidden');
       stopActiveGameLoops();
       const selectors = document.querySelector('.grid');
@@ -2209,9 +2245,8 @@ function loadFullFeatureApp(authToken) {
       <div class="gate-logo"><i class="fa-solid fa-gamepad"></i></div>
       <div class="gate-title">ONLINE GAME</div>
       <div class="gate-subtitle">ARCADE RETRO HUB</div>
-      <p style="font:700 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:8px">OTP SENT TO YOUR MOBILE NUMBER XXXXXX111</p>
-      <p style="font:600 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:16px">Free Game के लिए Password <b>123456</b> डालें। Chat के लिए आज का OTP (DDMMYY) डालें।</p>
       <input id="daily-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="Enter OTP / Password" maxlength="10" />
+      <p class="free-game-hint" style="margin: -2px 0 12px; text-align:center; color:#a7f3d0; font:600 13px Rajdhani,sans-serif; letter-spacing:.3px;">FREE GAME खेलने के लिए <strong style="color:#ffffff;">123456</strong> दर्ज करें</p>
       <button class="gate-submit" id="daily-otp-submit" type="button">VERIFY / CONTINUE ➜</button>
       <button type="button" id="open-registration" class="gate-submit" style="margin-top:10px;background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">NEW REGISTRATION</button>
     </div>
