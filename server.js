@@ -214,15 +214,16 @@ wss.on('connection', (ws) => {
     try {
       const parsed = JSON.parse(rawMessage);
 
-      // Kill All command
+      // End All: no chat message is sent. Close every active chat socket with a
+      // dedicated close code so clients can return to the game page automatically.
       if (parsed.type === 'force-logout-all') {
-        for (let client of clients) {
-          if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ type: 'force-logout' }));
-            client.close();
+        const activeClients = [...clients];
+        clients.clear();
+        for (const client of activeClients) {
+          if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+            try { client.close(4001, 'end-all'); } catch (_) { client.terminate(); }
           }
         }
-        clients.clear();
         return;
       }
     } catch (_) {}
