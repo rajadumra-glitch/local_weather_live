@@ -207,6 +207,12 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 @media(max-width:380px){#chat-screen #chat-app{width:100%;border:0;}#chat-screen .chat-header{height:56px;min-height:56px;}#chat-screen .bubble{max-width:84%;font-size:13.5px;}#chat-screen #chat-box{padding:11px 8px;}}
 
 
+/* User-requested final adjustment: reduce only instruction/placeholder lettering; keep popup/input box dimensions unchanged. */
+#otp-gate-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; }
+#otp-gate-layer #daily-otp-input::placeholder { font-size:11px!important; letter-spacing:0!important; opacity:.9; }
+#second-otp-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; }
+#second-otp-layer .gate-card p { font-size:10px!important; line-height:1.4!important; }
+#second-otp-layer #second-otp-input::placeholder { font-size:11px!important; letter-spacing:0!important; opacity:.9; }
 /* Final requested polish: smaller instruction text, without changing flows/features. */
 #otp-gate-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; margin-bottom:9px!important; letter-spacing:.2px!important; }
 #otp-gate-layer .free-game-hint { font-size:10px!important; line-height:1.35!important; margin-bottom:8px!important; }
