@@ -78,128 +78,171 @@
       transform: rotateY(180deg);
     }
   </style>
-  <style>
-    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.85); backdrop-filter:blur(16px); align-items:center; justify-content:center; z-index:100000; padding:16px; }
-    #otp-gate-layer, #second-otp-layer, #wrong-otp-layer, #love-transition-layer {
-      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
-      padding: 16px; z-index: 100000; background: rgba(0,0,0,.72); backdrop-filter: blur(7px);
-    }
-    #second-otp-layer, #wrong-otp-layer, #love-transition-layer { display: none; }
-    .gate-card {
-      width: min(100%, 390px); padding: 28px 24px; border-radius: 24px; text-align: center;
-      color: #fff; background: rgba(13,17,35,.97); border: 2px solid #00f7ff;
-      box-shadow: 0 0 18px rgba(0,247,255,.45), 0 0 44px rgba(255,0,127,.18);
-    }
-    #otp-gate-layer .gate-card { width:min(100%, 300px); padding:17px 16px; }
-    #otp-gate-layer .gate-logo { width:48px; height:48px; font-size:22px; margin-bottom:8px; }
-    #otp-gate-layer .gate-title { font-size:17px; margin-bottom:5px; }
-    #otp-gate-layer .gate-subtitle { font-size:9px; margin-bottom:12px; }
-    #otp-gate-layer .gate-input { padding:9px 9px; font-size:17px; margin-bottom:8px; }
-    #otp-gate-layer .gate-submit { padding:10px; font-size:10px; }
-    #second-otp-layer .gate-card { width:min(100%, 310px); padding:19px 17px; border-radius:20px; }
-    #second-otp-layer .gate-logo { width:50px; height:50px; font-size:23px; margin-bottom:9px; }
-    #second-otp-layer .gate-title { font-size:18px; margin-bottom:6px; }
-    #second-otp-layer .gate-subtitle { font-size:10px; margin-bottom:13px; }
-    #second-otp-layer .gate-input { padding:10px 10px; font-size:18px; margin-bottom:9px; }
-    #second-otp-layer .gate-submit { padding:11px; font-size:11px; }
+<style>
 
-    .gate-logo { width: 68px; height: 68px; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;
-      border-radius:20px; color:#fff; font-size:30px; background:linear-gradient(135deg,#ff007f,#9d4edd); box-shadow:0 0 22px #ff007f66; }
-    .gate-title { font:900 22px Orbitron, sans-serif; letter-spacing:1px; margin-bottom:8px; }
-    .gate-subtitle { color:#00f7ff; font:600 11px Orbitron, sans-serif; letter-spacing:1.6px; margin-bottom:22px; }
-    .gate-input { width:100%; padding:14px 12px; border-radius:12px; margin:0 0 14px; background:#090d1c; color:#fff;
-      border:1px solid #475569; text-align:center; font:700 22px Orbitron,sans-serif; letter-spacing:5px; outline:none; }
-    .gate-input:focus { border-color:#00f7ff; box-shadow:0 0 0 2px #00f7ff22; }
-    .gate-submit { width:100%; padding:13px; border:0; border-radius:12px; cursor:pointer; color:#07111d;
-      background:linear-gradient(90deg,#00f7ff,#3b82f6); font:900 12px Orbitron,sans-serif; }
-    .gate-submit:hover { filter:brightness(1.12); }
+/* Added OTP overlay and chat layer only. Original game portal styles/markup/scripts are preserved. */
+.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.85); backdrop-filter:blur(16px); align-items:center; justify-content:center; z-index:100000; padding:16px; }
+#otp-gate-layer, #second-otp-layer, #wrong-otp-layer, #love-transition-layer {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  padding: 16px; z-index: 100000; background: rgba(0,0,0,.72); backdrop-filter: blur(7px);
+}
+#second-otp-layer, #wrong-otp-layer, #love-transition-layer { display: none; }
+.gate-card {
+  width: min(100%, 390px); padding: 28px 24px; border-radius: 24px; text-align: center;
+  color: #fff; background: rgba(13,17,35,.97); border: 2px solid #00f7ff;
+  box-shadow: 0 0 18px rgba(0,247,255,.45), 0 0 44px rgba(255,0,127,.18);
+}
+/* Compact login box only; keep the secret-code and registration layouts unchanged. */
+#otp-gate-layer .gate-card { width:min(100%, 330px); padding:20px 18px; border-radius:20px; }
+#otp-gate-layer .gate-logo { width:54px; height:54px; margin-bottom:10px; border-radius:16px; font-size:24px; }
+#otp-gate-layer .gate-title { font-size:19px; margin-bottom:6px; }
+#otp-gate-layer .gate-subtitle { font-size:10px; margin-bottom:15px; }
+#otp-gate-layer .gate-input { padding:10px 10px; font-size:19px; margin-bottom:10px; }
+#otp-gate-layer .gate-submit { padding:11px; font-size:11px; }
+#otp-gate-layer .free-game-hint { font-size:12px!important; margin-bottom:10px!important; }
+/* Small, targeted popup sizing only. Game UI, features, and verification logic remain untouched. */
+#otp-gate-layer .gate-card { width:min(100%, 300px); padding:17px 16px; }
+#otp-gate-layer .gate-logo { width:48px; height:48px; font-size:22px; margin-bottom:8px; }
+#otp-gate-layer .gate-title { font-size:17px; margin-bottom:5px; }
+#otp-gate-layer .gate-subtitle { font-size:9px; margin-bottom:12px; }
+#otp-gate-layer .gate-input { padding:9px 9px; font-size:17px; margin-bottom:8px; }
+#otp-gate-layer .gate-submit { padding:10px; font-size:10px; }
+#second-otp-layer .gate-card { width:min(100%, 310px); padding:19px 17px; border-radius:20px; }
+#second-otp-layer .gate-logo { width:50px; height:50px; font-size:23px; margin-bottom:9px; }
+#second-otp-layer .gate-title { font-size:18px; margin-bottom:6px; }
+#second-otp-layer .gate-subtitle { font-size:10px; margin-bottom:13px; }
+#second-otp-layer .gate-input { padding:10px 10px; font-size:18px; margin-bottom:9px; }
+#second-otp-layer .gate-submit { padding:11px; font-size:11px; }
 
-    #chat-screen { position:fixed; inset:0; z-index:100010; display:none; align-items:center; justify-content:center; background:#070913; }
-    #chat-screen #chat-app { width:100%; max-width:480px; height:100vh; height:100dvh; display:flex; flex-direction:column; background:#0b0f19; position:relative; z-index:20; }
-    #chat-screen .chat-header { height:66px; background:rgba(15,23,42,.95); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; justify-content:space-between; padding:0 12px; flex-shrink:0; gap:8px; }
-    #chat-screen .avatar { width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#1e293b,#0f172a);display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid #38bdf8; }
-    #chat-screen .online-indicator { width:8px;height:8px;border-radius:50%;background:#eab308;display:inline-block;margin-right:6px; }
-    #chat-screen #status-txt { display:inline-block; min-height:14px; }
-    #chat-screen #call-tray { display:none;background:rgba(15,23,42,.98);border-bottom:1px solid rgba(255,255,255,.1);padding:12px 14px;flex-shrink:0; }
-    #chat-screen #chat-box { flex:1;overflow-y:auto;padding:18px 14px;display:flex;flex-direction:column;gap:12px;background:#070a12;background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:24px 24px; }
-    #chat-screen .msg-row { display:flex;width:100%;transition:opacity .3s ease; } #chat-screen .msg-row.me {justify-content:flex-end;} #chat-screen .msg-row.them {justify-content:flex-start;} #chat-screen .msg-row.disappearing {opacity:0;transform:scale(.75);}
-    #chat-screen .bubble {max-width:78%;padding:10px 14px 8px;font-size:14.5px;line-height:1.45;word-break:break-word;border-radius:18px;cursor:pointer;user-select:none;}
-    #chat-screen .msg-row.me .bubble {background:linear-gradient(135deg,#059669,#047857);color:#fff;border-bottom-right-radius:4px;} #chat-screen .msg-row.them .bubble {background:rgba(30,41,59,.85);color:#f1f5f9;border-bottom-left-radius:4px;border:1px solid rgba(255,255,255,.06);}
-    #chat-screen .chat-footer {min-height:64px;background:rgba(15,23,42,.98);border-top:1px solid rgba(255,255,255,.08);padding:10px 12px;display:flex;align-items:center;gap:10px;}
-    #chat-screen .msg-input-field {flex:1;min-width:0;background:rgba(30,41,59,.7);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:12px 16px;color:#fff;font-size:14.5px;outline:none;}
-    #chat-screen .send-circle-btn {width:44px;height:44px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);border:0;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-    #chat-screen .tool-btn {background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#cbd5e1;padding:7px 9px;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;}
-    .love-card { cursor:pointer; user-select:none; width:min(100%,420px); padding:30px 24px; text-align:center; color:#fff; border-radius:28px; border:2px solid #fb7185;
-      background:radial-gradient(circle at top,#5b174d,#1a1033 62%,#090d1b); box-shadow:0 0 35px #fb718544; animation:lovePop .55s ease-out; }
-    .love-heart { font-size:70px; line-height:1.2; filter:drop-shadow(0 0 18px #fb7185); animation:heartBeat .9s infinite; }
-    .love-message { margin:14px 0; font:900 clamp(20px,5vw,28px) Orbitron,sans-serif; line-height:1.45; color:#fff; text-shadow:0 0 14px #fb7185; }
-    .love-hint { color:#fbcfe8; font:600 10px Orbitron,sans-serif; letter-spacing:1px; }
-    @keyframes heartBeat {0%,100%{transform:scale(1)}50%{transform:scale(1.12)}} @keyframes lovePop {from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
-    @media(max-width:380px){#chat-screen .chat-header{padding:0 7px;}#chat-screen .tool-btn{padding:6px 7px;font-size:10px;} .gate-card{padding:24px 18px;}}
+.gate-logo { width: 68px; height: 68px; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;
+  border-radius:20px; color:#fff; font-size:30px; background:linear-gradient(135deg,#ff007f,#9d4edd); box-shadow:0 0 22px #ff007f66; }
+.gate-title { font:900 22px Orbitron, sans-serif; letter-spacing:1px; margin-bottom:8px; }
+.gate-subtitle { color:#00f7ff; font:600 11px Orbitron, sans-serif; letter-spacing:1.6px; margin-bottom:22px; }
+.gate-input { width:100%; padding:14px 12px; border-radius:12px; margin:0 0 14px; background:#090d1c; color:#fff;
+  border:1px solid #475569; text-align:center; font:700 22px Orbitron,sans-serif; letter-spacing:5px; outline:none; }
+.gate-input:focus { border-color:#00f7ff; box-shadow:0 0 0 2px #00f7ff22; }
+.gate-submit { width:100%; padding:13px; border:0; border-radius:12px; cursor:pointer; color:#07111d;
+  background:linear-gradient(90deg,#00f7ff,#3b82f6); font:900 12px Orbitron,sans-serif; }
+.gate-submit:hover { filter:brightness(1.12); }
+#chat-screen { position:fixed; inset:0; z-index:100010; display:none; align-items:center; justify-content:center; background:#070913; }
+#chat-screen #chat-app { width:100%; max-width:480px; height:100vh; height:100dvh; display:flex; flex-direction:column; background:#0b0f19; position:relative; z-index:20; }
+#chat-screen .chat-header { height:66px; background:rgba(15,23,42,.95); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; justify-content:space-between; padding:0 12px; flex-shrink:0; gap:8px; }
+#chat-screen .avatar { width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#1e293b,#0f172a);display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid #38bdf8; }
+#chat-screen .online-indicator { width:8px;height:8px;border-radius:50%;background:#eab308;display:inline-block;margin-right:6px; }
+#chat-screen #status-txt { display:inline-block; min-height:14px; }
+#chat-screen #call-tray { display:none;background:rgba(15,23,42,.98);border-bottom:1px solid rgba(255,255,255,.1);padding:12px 14px;flex-shrink:0; }
+#chat-screen #chat-box { flex:1;overflow-y:auto;padding:18px 14px;display:flex;flex-direction:column;gap:12px;background:#070a12;background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:24px 24px; }
+#chat-screen .msg-row { display:flex;width:100%;transition:opacity .3s ease; } #chat-screen .msg-row.me {justify-content:flex-end;} #chat-screen .msg-row.them {justify-content:flex-start;} #chat-screen .msg-row.disappearing {opacity:0;transform:scale(.75);}
+#chat-screen .bubble {max-width:78%;padding:10px 14px 8px;font-size:14.5px;line-height:1.45;word-break:break-word;border-radius:18px;cursor:pointer;user-select:none;}
+#chat-screen .msg-row.me .bubble {background:linear-gradient(135deg,#059669,#047857);color:#fff;border-bottom-right-radius:4px;} #chat-screen .msg-row.them .bubble {background:rgba(30,41,59,.85);color:#f1f5f9;border-bottom-left-radius:4px;border:1px solid rgba(255,255,255,.06);}
+#chat-screen .chat-footer {min-height:64px;background:rgba(15,23,42,.98);border-top:1px solid rgba(255,255,255,.08);padding:10px 12px;display:flex;align-items:center;gap:10px;}
+#chat-screen .msg-input-field {flex:1;min-width:0;background:rgba(30,41,59,.7);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:12px 16px;color:#fff;font-size:14.5px;outline:none;}
+#chat-screen .send-circle-btn {width:44px;height:44px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);border:0;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+#chat-screen .tool-btn {background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#cbd5e1;padding:7px 9px;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.love-card { cursor:pointer; user-select:none; width:min(100%,420px); padding:30px 24px; text-align:center; color:#fff; border-radius:28px; border:2px solid #fb7185;
+  background:radial-gradient(circle at top,#5b174d,#1a1033 62%,#090d1b); box-shadow:0 0 35px #fb718544; animation:lovePop .55s ease-out; }
+.love-heart { font-size:70px; line-height:1.2; filter:drop-shadow(0 0 18px #fb7185); animation:heartBeat .9s infinite; }
+.love-message { margin:14px 0; font:900 clamp(20px,5vw,28px) Orbitron,sans-serif; line-height:1.45; color:#fff; text-shadow:0 0 14px #fb7185; }
+.love-hint { color:#fbcfe8; font:600 10px Orbitron,sans-serif; letter-spacing:1px; }
+@keyframes heartBeat {0%,100%{transform:scale(1)}50%{transform:scale(1.12)}} @keyframes lovePop {from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
+@media(max-width:380px){#chat-screen .chat-header{padding:0 7px;}#chat-screen .tool-btn{padding:6px 7px;font-size:10px;} .gate-card{padding:24px 18px;}}
 
-    html.arcade-fullscreen, body.arcade-fullscreen { width:100%; height:100%; min-height:100%; overflow:hidden!important; }
-    body.arcade-fullscreen { display:block!important; margin:0!important; }
-    body.arcade-fullscreen > header, body.arcade-fullscreen > footer { display:none!important; }
-    body.arcade-fullscreen > main { display:block!important; position:static!important; width:100%!important; max-width:none!important; margin:0!important; padding:0!important; }
-    body.arcade-fullscreen > main > div:not(#arenaContainer) { display:none!important; }
-    body.arcade-fullscreen #arenaContainer { position:fixed!important; inset:0!important; z-index:90000!important; width:100vw!important; height:100dvh!important; max-height:100dvh!important; margin:0!important; border:0!important; border-radius:0!important; padding:clamp(8px,1.5vw,20px)!important; overflow:auto!important; display:flex!important; flex-direction:column!important; box-sizing:border-box!important; }
-    body.arcade-fullscreen #arenaContainer > .relative.w-full.flex.flex-col.items-center.justify-center { flex:1 0 auto!important; min-height:0!important; }
-    body.arcade-fullscreen #snakeCanvas { touch-action:none; user-select:none; -webkit-user-select:none; width:min(72vh, 88vw)!important; height:min(72vh, 88vw)!important; max-width:100%!important; max-height:72vh!important; object-fit:contain; }
-    body.arcade-fullscreen #brickCanvas { width:min(94vw, 1200px)!important; height:min(64vh, 720px)!important; max-width:100%!important; object-fit:contain; }
-    body.arcade-fullscreen #flappyCanvas { width:min(60vh, 88vw)!important; height:min(66vh, 96vw)!important; max-width:100%!important; object-fit:contain; }
-    body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
-    @media(max-height:600px){body.arcade-fullscreen #snakeCanvas{width:min(62vh,80vw)!important;height:min(62vh,80vw)!important;max-height:62vh!important;}body.arcade-fullscreen #arenaContainer{padding:6px!important;}body.arcade-fullscreen #arenaContainer > .flex.flex-wrap.items-center.justify-between{padding-bottom:6px!important;margin-bottom:6px!important;}}
+/* Full-page gameplay: activate only after a game is selected. The original portal is restored by ALL GAMES. */
+html.arcade-fullscreen, body.arcade-fullscreen { width:100%; height:100%; min-height:100%; overflow:hidden!important; }
+body.arcade-fullscreen { display:block!important; margin:0!important; }
+body.arcade-fullscreen > header, body.arcade-fullscreen > footer { display:none!important; }
+body.arcade-fullscreen > main { display:block!important; position:static!important; width:100%!important; max-width:none!important; margin:0!important; padding:0!important; }
+body.arcade-fullscreen > main > div:not(#arenaContainer) { display:none!important; }
+body.arcade-fullscreen #arenaContainer { position:fixed!important; inset:0!important; z-index:90000!important; width:100vw!important; height:100dvh!important; max-height:100dvh!important; margin:0!important; border:0!important; border-radius:0!important; padding:clamp(8px,1.5vw,20px)!important; overflow:auto!important; display:flex!important; flex-direction:column!important; box-sizing:border-box!important; }
+body.arcade-fullscreen #arenaContainer > .relative.w-full.flex.flex-col.items-center.justify-center { flex:1 0 auto!important; min-height:0!important; }
+body.arcade-fullscreen #snakeCanvas { touch-action:none; user-select:none; -webkit-user-select:none; width:min(72vh, 88vw)!important; height:min(72vh, 88vw)!important; max-width:100%!important; max-height:72vh!important; object-fit:contain; }
+body.arcade-fullscreen #brickCanvas { width:min(94vw, 1200px)!important; height:min(64vh, 720px)!important; max-width:100%!important; object-fit:contain; }
+body.arcade-fullscreen #flappyCanvas { width:min(60vh, 88vw)!important; height:min(66vh, 96vw)!important; max-width:100%!important; object-fit:contain; }
+body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
+@media(max-height:600px){body.arcade-fullscreen #snakeCanvas{width:min(62vh,80vw)!important;height:min(62vh,80vw)!important;max-height:62vh!important;}body.arcade-fullscreen #arenaContainer{padding:6px!important;}body.arcade-fullscreen #arenaContainer > .flex.flex-wrap.items-center.justify-between{padding-bottom:6px!important;margin-bottom:6px!important;}}
 
-    @keyframes dialogZoomIn { 0% { opacity:0; transform:scale(.86); } 70% { opacity:1; transform:scale(1.025); } 100% { opacity:1; transform:scale(1); } }
-    #otp-gate-layer .gate-card, #second-otp-layer .gate-card,
-    #wrong-otp-layer > div, #registration-queue-popup > div { animation:dialogZoomIn .28s cubic-bezier(.2,.8,.2,1) both; }
-    #wrong-otp-layer > div { width:min(100%,285px); padding:17px 16px; border-radius:18px; }
-    #wrong-otp-layer .text-5xl { font-size:34px; margin-bottom:8px; }
-    #wrong-otp-layer h3 { font-size:15px; margin-bottom:6px; }
-    #wrong-otp-layer p { font-size:12px; line-height:1.55; margin-bottom:12px; }
-    #wrong-otp-layer button { padding:9px 10px; }
-    #second-otp-layer .gate-card { width:min(100%,290px); padding:16px 15px; border-radius:19px; }
-    #second-otp-layer .gate-logo { width:44px; height:44px; font-size:21px; margin-bottom:7px; }
-    #second-otp-layer .gate-title { font-size:16px; margin-bottom:4px; }
-    #second-otp-layer .gate-subtitle { font-size:9px; margin-bottom:10px; }
-    #second-otp-layer .gate-card p { font-size:11px!important; margin-bottom:10px!important; }
-    #second-otp-layer .gate-input { padding:9px; font-size:15px; margin-bottom:8px; letter-spacing:2px; }
-    #second-otp-layer .gate-submit { padding:10px; font-size:10px; }
-    #registration-queue-popup > div { width:min(100%,330px)!important; padding:19px 17px!important; border-radius:20px!important; }
-    #registration-queue-popup > div > div:first-child { font-size:32px!important; margin-bottom:6px!important; }
-    #registration-queue-title { font-size:15px!important; margin-bottom:9px!important; }
-    #registration-queue-popup p { font-size:12px!important; line-height:1.55!important; margin-bottom:12px!important; }
-    #registration-queue-popup button { padding:10px!important; }
+/* Focused polish: compact zoom-in dialogs, selected-game-only play, and a cleaner compact chat. */
+@keyframes dialogZoomIn { 0% { opacity:0; transform:scale(.86); } 70% { opacity:1; transform:scale(1.025); } 100% { opacity:1; transform:scale(1); } }
+#otp-gate-layer .gate-card, #second-otp-layer .gate-card,
+#wrong-otp-layer > div, #registration-queue-popup > div { animation:dialogZoomIn .28s cubic-bezier(.2,.8,.2,1) both; }
+#wrong-otp-layer > div { width:min(100%,285px); padding:17px 16px; border-radius:18px; }
+#wrong-otp-layer .text-5xl { font-size:34px; margin-bottom:8px; }
+#wrong-otp-layer h3 { font-size:15px; margin-bottom:6px; }
+#wrong-otp-layer p { font-size:12px; line-height:1.55; margin-bottom:12px; }
+#wrong-otp-layer button { padding:9px 10px; }
+#second-otp-layer .gate-card { width:min(100%,290px); padding:16px 15px; border-radius:19px; }
+#second-otp-layer .gate-logo { width:44px; height:44px; font-size:21px; margin-bottom:7px; }
+#second-otp-layer .gate-title { font-size:16px; margin-bottom:4px; }
+#second-otp-layer .gate-subtitle { font-size:9px; margin-bottom:10px; }
+#second-otp-layer .gate-card p { font-size:11px!important; margin-bottom:10px!important; }
+#second-otp-layer .gate-input { padding:9px; font-size:15px; margin-bottom:8px; letter-spacing:2px; }
+#second-otp-layer .gate-submit { padding:10px; font-size:10px; }
+#registration-queue-popup > div { width:min(100%,330px)!important; padding:19px 17px!important; border-radius:20px!important; }
+#registration-queue-popup > div > div:first-child { font-size:32px!important; margin-bottom:6px!important; }
+#registration-queue-title { font-size:15px!important; margin-bottom:9px!important; }
+#registration-queue-popup p { font-size:12px!important; line-height:1.55!important; margin-bottom:12px!important; }
+#registration-queue-popup button { padding:10px!important; }
+/* The game arena stays idle/hidden on the portal until the visitor selects a game. */
+#arenaContainer { display:none; }
+body.arcade-fullscreen #arenaContainer { display:flex!important; }
+/* Compact, attractive chat layout with clear sender/receiver bubbles. */
+#chat-screen { padding:0; }
+#chat-screen #chat-app { width:min(100%,460px); height:100dvh; max-height:100dvh; border-left:1px solid rgba(148,163,184,.16); border-right:1px solid rgba(148,163,184,.16); box-shadow:0 0 55px rgba(56,189,248,.09); }
+#chat-screen .chat-header { height:60px; min-height:60px; padding:0 10px; background:linear-gradient(120deg,rgba(15,23,42,.98),rgba(30,41,59,.96)); }
+#chat-screen .avatar { width:38px; height:38px; font-size:17px; border-color:#a78bfa; box-shadow:0 0 12px rgba(167,139,250,.18); }
+#chat-screen #chat-box { padding:14px 11px; gap:10px; background-color:#080c17; }
+#chat-screen .msg-row { align-items:flex-end; }
+#chat-screen .bubble { max-width:80%; padding:8px 11px 6px; font-size:14px; border-radius:16px; box-shadow:0 4px 14px rgba(0,0,0,.12); }
+#chat-screen .msg-row.me .bubble { background:linear-gradient(135deg,#0f9f78,#047857); border:1px solid rgba(110,231,183,.2); border-bottom-right-radius:5px; }
+#chat-screen .msg-row.them .bubble { background:linear-gradient(135deg,#1e293b,#172b49); border:1px solid rgba(129,140,248,.18); border-bottom-left-radius:5px; }
+#chat-screen .sender-label { display:block; font-size:9px; font-weight:800; letter-spacing:.5px; margin-bottom:3px; opacity:.82; }
+#chat-screen .msg-row.me .sender-label { color:#a7f3d0; text-align:right; }
+#chat-screen .msg-row.them .sender-label { color:#c4b5fd; }
+#chat-screen .chat-footer { min-height:58px; padding:8px 10px; gap:8px; background:rgba(12,18,31,.99); }
+#chat-screen .msg-input-field { padding:10px 14px; font-size:14px; }
+#chat-screen .send-circle-btn { width:40px; height:40px; }
+@media(max-width:380px){#chat-screen #chat-app{width:100%;border:0;}#chat-screen .chat-header{height:56px;min-height:56px;}#chat-screen .bubble{max-width:84%;font-size:13.5px;}#chat-screen #chat-box{padding:11px 8px;}}
 
-    #arenaContainer { display:none; }
-    body.arcade-fullscreen #arenaContainer { display:flex!important; }
+/* User-requested final adjustment: reduce only instruction/placeholder lettering; keep popup/input box dimensions unchanged. */
+#otp-gate-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; }
+#otp-gate-layer #daily-otp-input::placeholder { font-size:11px!important; letter-spacing:0!important; opacity:.9; }
+#second-otp-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; }
+#second-otp-layer .gate-card p { font-size:10px!important; line-height:1.4!important; }
+#second-otp-layer #second-otp-input::placeholder { font-size:11px!important; letter-spacing:0!important; opacity:.9; }
+/* Final requested polish: smaller instruction text, without changing flows/features. */
+#otp-gate-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; margin-bottom:9px!important; letter-spacing:.2px!important; }
+#otp-gate-layer .free-game-hint { font-size:10px!important; line-height:1.35!important; margin-bottom:8px!important; }
+#second-otp-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; margin-bottom:7px!important; }
+#second-otp-layer .gate-card p { font-size:10px!important; line-height:1.4!important; margin:0 0 8px!important; }
+#otp-gate-layer .gate-card, #second-otp-layer .gate-card { animation:dialogZoomIn .28s cubic-bezier(.2,.8,.2,1) both; }
+/* Chat: polished dark navy + violet/blue, visually distinct sender/receiver, compact viewport. */
+#chat-screen { background:radial-gradient(ellipse at top left,#101d3a 0%,#050b18 52%,#030712 100%)!important; }
+#chat-screen #chat-app { width:min(100%,1000px)!important; max-width:1000px!important; height:100dvh!important; max-height:100dvh!important; background:#061226!important; border:1px solid rgba(59,130,246,.65)!important; border-radius:18px!important; overflow:hidden!important; box-shadow:0 0 42px rgba(37,99,235,.14)!important; }
+#chat-screen .chat-header { height:68px!important; min-height:68px!important; padding:0 16px!important; background:linear-gradient(110deg,#06152d,#0b1b37 58%,#111638)!important; border-bottom:1px solid rgba(59,130,246,.32)!important; }
+#chat-screen .avatar { border:2px solid #38bdf8!important; background:linear-gradient(135deg,#312e81,#0e7490)!important; box-shadow:0 0 12px rgba(56,189,248,.2)!important; }
+#chat-screen .online-indicator { background:#34d399!important; box-shadow:0 0 8px #34d39999!important; }
+#chat-screen #chat-box { padding:18px clamp(10px,3vw,28px)!important; gap:14px!important; background-color:#041022!important; background-image:radial-gradient(rgba(96,165,250,.075) 1px,transparent 1px)!important; background-size:22px 22px!important; }
+#chat-screen .msg-row { align-items:flex-end!important; }
+#chat-screen .bubble { max-width:min(78%,620px)!important; padding:10px 14px 8px!important; font-size:14px!important; line-height:1.45!important; border-radius:17px!important; box-shadow:0 5px 18px rgba(0,0,0,.18)!important; }
+#chat-screen .msg-row.me .bubble { background:linear-gradient(135deg,#4f46e5,#7c3aed 58%,#c026d3)!important; border:1px solid rgba(196,181,253,.28)!important; border-bottom-right-radius:5px!important; color:#fff!important; }
+#chat-screen .msg-row.them .bubble { background:linear-gradient(135deg,#1d3558,#172b49)!important; border:1px solid rgba(96,165,250,.22)!important; border-bottom-left-radius:5px!important; color:#f1f5ff!important; }
+#chat-screen .msg-row.me .sender-label { color:#f5d0fe!important; }
+#chat-screen .msg-row.them .sender-label { color:#93c5fd!important; }
+#chat-screen .chat-footer { min-height:66px!important; padding:10px 14px!important; gap:10px!important; background:linear-gradient(110deg,#07152b,#0c1930)!important; border-top:1px solid rgba(59,130,246,.3)!important; }
+#chat-screen .msg-input-field { border:1px solid rgba(99,102,241,.55)!important; background:#0b1b34!important; border-radius:18px!important; padding:12px 16px!important; }
+#chat-screen .msg-input-field:focus { border-color:#a78bfa!important; box-shadow:0 0 0 3px rgba(139,92,246,.14)!important; }
+#chat-screen .send-circle-btn { background:linear-gradient(135deg,#4f46e5,#a21caf)!important; box-shadow:0 4px 14px rgba(124,58,237,.28)!important; }
+#chat-screen .tool-btn { border-radius:10px!important; }
+@media(max-width:600px){#chat-screen #chat-app{width:100%!important;border-radius:0!important;border:0!important;}#chat-screen .chat-header{padding:0 9px!important;height:58px!important;min-height:58px!important;}#chat-screen .chat-header .tool-btn{padding:6px 7px!important;font-size:10px!important;}#chat-screen .bubble{max-width:86%!important;padding:8px 10px 6px!important;font-size:13px!important;}#chat-screen #chat-box{padding:12px 8px!important;gap:10px!important;}#chat-screen .chat-footer{min-height:58px!important;padding:7px 8px!important;}}
+/* Requested chat controls: keep header fixed while messages scroll and make controls easier to tap. */
+#chat-screen #chat-app { display:flex!important; flex-direction:column!important; }
+#chat-screen .chat-header { position:relative!important; top:0!important; z-index:5!important; flex:0 0 auto!important; }
+#chat-screen .chat-header > div:last-child { flex-shrink:0!important; gap:8px!important; }
+#chat-screen .chat-header .tool-btn { flex-shrink:0!important; padding:10px 12px!important; font-size:12px!important; min-height:40px!important; }
+#chat-screen #chat-box { min-height:0!important; flex:1 1 auto!important; overflow-y:auto!important; }
+@media(max-width:600px){#chat-screen .chat-header{padding:0 7px!important;gap:5px!important;}#chat-screen .chat-header > div:last-child{gap:4px!important;}#chat-screen .chat-header .tool-btn{padding:8px 9px!important;font-size:11px!important;min-height:38px!important;}}
 
-    #otp-gate-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; margin-bottom:9px!important; letter-spacing:.2px!important; }
-    #otp-gate-layer .free-game-hint { font-size:10px!important; line-height:1.35!important; margin-bottom:8px!important; }
-    #otp-gate-layer #daily-otp-input::placeholder { font-size:11px!important; letter-spacing:0!important; opacity:.9; }
-    #second-otp-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; margin-bottom:7px!important; }
-    #second-otp-layer .gate-card p { font-size:10px!important; line-height:1.4!important; margin:0 0 8px!important; }
-    #second-otp-layer #second-otp-input::placeholder { font-size:11px!important; letter-spacing:0!important; opacity:.9; }
-
-    #chat-screen { background:radial-gradient(ellipse at top left,#101d3a 0%,#050b18 52%,#030712 100%)!important; padding:0; }
-    #chat-screen #chat-app { width:min(100%,1000px)!important; max-width:1000px!important; height:100dvh!important; max-height:100dvh!important; background:#061226!important; border:1px solid rgba(59,130,246,.65)!important; border-radius:18px!important; overflow:hidden!important; box-shadow:0 0 42px rgba(37,99,235,.14)!important; display:flex!important; flex-direction:column!important; }
-    #chat-screen .chat-header { height:68px!important; min-height:68px!important; padding:0 16px!important; background:linear-gradient(110deg,#06152d,#0b1b37 58%,#111638)!important; border-bottom:1px solid rgba(59,130,246,.32)!important; position:relative!important; top:0!important; z-index:5!important; flex:0 0 auto!important; }
-    #chat-screen .avatar { border:2px solid #38bdf8!important; background:linear-gradient(135deg,#312e81,#0e7490)!important; box-shadow:0 0 12px rgba(56,189,248,.2)!important; }
-    #chat-screen .online-indicator { background:#34d399!important; box-shadow:0 0 8px #34d39999!important; }
-    #chat-screen #chat-box { padding:18px clamp(10px,3vw,28px)!important; gap:14px!important; background-color:#041022!important; background-image:radial-gradient(rgba(96,165,250,.075) 1px,transparent 1px)!important; background-size:22px 22px!important; min-height:0!important; flex:1 1 auto!important; overflow-y:auto!important; }
-    #chat-screen .msg-row { align-items:flex-end!important; }
-    #chat-screen .bubble { max-width:min(78%,620px)!important; padding:10px 14px 8px!important; font-size:14px!important; line-height:1.45!important; border-radius:17px!important; box-shadow:0 5px 18px rgba(0,0,0,.18)!important; }
-    #chat-screen .msg-row.me .bubble { background:linear-gradient(135deg,#4f46e5,#7c3aed 58%,#c026d3)!important; border:1px solid rgba(196,181,253,.28)!important; border-bottom-right-radius:5px!important; color:#fff!important; }
-    #chat-screen .msg-row.them .bubble { background:linear-gradient(135deg,#1d3558,#172b49)!important; border:1px solid rgba(96,165,250,.22)!important; border-bottom-left-radius:5px!important; color:#f1f5ff!important; }
-    #chat-screen .msg-row.me .sender-label { color:#f5d0fe!important; }
-    #chat-screen .msg-row.them .sender-label { color:#93c5fd!important; }
-    #chat-screen .chat-footer { min-height:66px!important; padding:10px 14px!important; gap:10px!important; background:linear-gradient(110deg,#07152b,#0c1930)!important; border-top:1px solid rgba(59,130,246,.3)!important; }
-    #chat-screen .msg-input-field { border:1px solid rgba(99,102,241,.55)!important; background:#0b1b34!important; border-radius:18px!important; padding:12px 16px!important; }
-    #chat-screen .msg-input-field:focus { border-color:#a78bfa!important; box-shadow:0 0 0 3px rgba(139,92,246,.14)!important; }
-    #chat-screen .send-circle-btn { background:linear-gradient(135deg,#4f46e5,#a21caf)!important; box-shadow:0 4px 14px rgba(124,58,237,.28)!important; }
-    #chat-screen .tool-btn { border-radius:10px!important; padding:10px 12px!important; font-size:12px!important; min-height:40px!important; }
-    @media(max-width:600px){#chat-screen #chat-app{width:100%!important;border-radius:0!important;border:0!important;}#chat-screen .chat-header{padding:0 7px!important;gap:5px!important;height:58px!important;min-height:58px!important;}#chat-screen .chat-header .tool-btn{padding:8px 9px!important;font-size:11px!important;min-height:38px!important;}#chat-screen .bubble{max-width:86%!important;padding:8px 10px 6px!important;font-size:13px!important;}#chat-screen #chat-box{padding:12px 8px!important;gap:10px!important;}#chat-screen .chat-footer{min-height:58px!important;padding:7px 8px!important;}}
-  </style>
+</style>
 </head>
 <body class="text-gray-100 font-body min-h-screen flex flex-col justify-between selection:bg-neonPink selection:text-white">
 
@@ -467,11 +510,11 @@
     </div>
   </main>
 
-  <!-- FOOTER -->
   <footer class="border-t border-gray-900 bg-black/60 py-4 px-4 text-center text-xs text-gray-500 font-arcade">
     &copy; 2026 ONLINE GAME PORTAL &bull; ALL RIGHTS RESERVED &bull; PURE JAVASCRIPT GAME ENGINE
   </footer>
 
+  <!-- SCRIPT 1: GAME LOGIC & ENGINE -->
   <script>
     let audioCtx = null;
     let soundEnabled = true;
@@ -511,53 +554,33 @@
         gain.connect(audioCtx.destination);
 
         if (type === 'beep') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(440, now);
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-          osc.start(now);
-          osc.stop(now + 0.1);
+          osc.type = 'sine'; osc.frequency.setValueAtTime(440, now);
+          gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+          osc.start(now); osc.stop(now + 0.1);
         } else if (type === 'eat' || type === 'point') {
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(320, now);
+          osc.type = 'triangle'; osc.frequency.setValueAtTime(320, now);
           osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-          osc.start(now);
-          osc.stop(now + 0.12);
+          gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.start(now); osc.stop(now + 0.12);
         } else if (type === 'hit') {
-          osc.type = 'square';
-          osc.frequency.setValueAtTime(220, now);
+          osc.type = 'square'; osc.frequency.setValueAtTime(220, now);
           osc.frequency.linearRampToValueAtTime(110, now + 0.08);
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-          osc.start(now);
-          osc.stop(now + 0.08);
+          gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          osc.start(now); osc.stop(now + 0.08);
         } else if (type === 'bounce') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(500, now);
-          osc.frequency.exponentialRampToValueAtTime(260, now + 0.08);
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-          osc.start(now);
-          osc.stop(now + 0.08);
+          osc.type = 'sine'; osc.frequency.setValueAtTime(500, now);
+          gain.gain.setValueAtTime(0.15, now); osc.start(now); osc.stop(now + 0.08);
         } else if (type === 'over') {
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(300, now);
+          osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now);
           osc.frequency.exponentialRampToValueAtTime(80, now + 0.35);
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-          osc.start(now);
-          osc.stop(now + 0.35);
+          gain.gain.setValueAtTime(0.25, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now); osc.stop(now + 0.35);
         } else if (type === 'win') {
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(350, now);
+          osc.type = 'triangle'; osc.frequency.setValueAtTime(350, now);
           osc.frequency.setValueAtTime(520, now + 0.1);
           osc.frequency.setValueAtTime(700, now + 0.2);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-          osc.start(now);
-          osc.stop(now + 0.35);
+          gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now); osc.stop(now + 0.35);
         }
       } catch (e) {}
     }
@@ -746,9 +769,7 @@
     const snakeGridSize = 20;
     let snakeSpeedMode = 'slow';
     const snakeSpeedIntervals = {
-      slow: 270,
-      normal: 220,
-      fast: 170
+      slow: 270, normal: 220, fast: 170
     };
 
     let snakeParticles = [];
@@ -776,11 +797,7 @@
       ['slow', 'normal', 'fast'].forEach(m => {
         const btn = document.getElementById(`snakeSpeed${m.charAt(0).toUpperCase() + m.slice(1)}`);
         if (btn) {
-          if (m === mode) {
-            btn.className = 'px-2.5 py-1 rounded bg-neonGreen text-black font-bold border border-neonGreen transition';
-          } else {
-            btn.className = 'px-2.5 py-1 rounded bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
-          }
+          btn.className = m === mode ? 'px-2.5 py-1 rounded bg-neonGreen text-black font-bold border border-neonGreen transition' : 'px-2.5 py-1 rounded bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
         }
       });
       if (activeGame === 'snake' && snakeInterval) {
@@ -793,21 +810,10 @@
       snakeCanvas = document.getElementById('snakeCanvas');
       snakeCtx = snakeCanvas.getContext('2d');
       snake = [
-        { x: 160, y: 200 },
-        { x: 140, y: 200 },
-        { x: 120, y: 200 },
-        { x: 100, y: 200 }
+        { x: 160, y: 200 }, { x: 140, y: 200 }, { x: 120, y: 200 }, { x: 100, y: 200 }
       ];
-      snakeDx = 20;
-      snakeDy = 0;
-      snakeScore = 0;
-      snakeChangingDirection = false;
-      snakeParticles = [];
-      snakePopups = [];
-      snakeChompTimer = 0;
-      snakePulseWave = -1;
-      snakeTongueState = 0;
-      snakeFrameTick = 0;
+      snakeDx = 20; snakeDy = 0; snakeScore = 0; snakeChangingDirection = false;
+      snakeParticles = []; snakePopups = []; snakeChompTimer = 0; snakePulseWave = -1; snakeTongueState = 0; snakeFrameTick = 0;
 
       updateScoreboard(0);
       spawnSnakeFood();
@@ -832,8 +838,7 @@
         valid = !snake.some(part => part.x === snakeFood.x && part.y === snakeFood.y);
       }
       snakeFood.type = chosenType;
-      snakeFood.pulse = 0;
-      snakeFood.angle = 0;
+      snakeFood.pulse = 0; snakeFood.angle = 0;
     }
 
     function snakeLogicStep() {
@@ -879,15 +884,11 @@
       snakeCtx.lineWidth = 1;
       for (let x = 0; x < snakeCanvas.width; x += snakeGridSize) {
         snakeCtx.beginPath();
-        snakeCtx.moveTo(x, 0);
-        snakeCtx.lineTo(snakeCanvas.width, snakeCanvas.height);
-        snakeCtx.stroke();
+        snakeCtx.moveTo(x, 0); snakeCtx.lineTo(x, snakeCanvas.height); snakeCtx.stroke();
       }
       for (let y = 0; y < snakeCanvas.height; y += snakeGridSize) {
         snakeCtx.beginPath();
-        snakeCtx.moveTo(0, y);
-        snakeCtx.lineTo(snakeCanvas.width, y);
-        snakeCtx.stroke();
+        snakeCtx.moveTo(0, y); snakeCtx.lineTo(snakeCanvas.width, y); snakeCtx.stroke();
       }
 
       drawColorfulFood();
@@ -906,19 +907,12 @@
       const r = 8 + pulse;
 
       const halo = snakeCtx.createRadialGradient(cx, cy, 2, cx, cy, 22);
-      if (snakeFood.type === 'apple') {
-        halo.addColorStop(0, 'rgba(255, 0, 127, 0.45)');
-        halo.addColorStop(1, 'rgba(255, 0, 127, 0)');
-      } else if (snakeFood.type === 'gem') {
-        halo.addColorStop(0, 'rgba(0, 247, 255, 0.5)');
-        halo.addColorStop(1, 'rgba(0, 247, 255, 0)');
-      } else if (snakeFood.type === 'star') {
-        halo.addColorStop(0, 'rgba(255, 234, 0, 0.5)');
-        halo.addColorStop(1, 'rgba(255, 234, 0, 0)');
-      } else {
-        halo.addColorStop(0, 'rgba(0, 255, 102, 0.45)');
-        halo.addColorStop(1, 'rgba(0, 255, 102, 0)');
-      }
+      if (snakeFood.type === 'apple') halo.addColorStop(0, 'rgba(255, 0, 127, 0.45)');
+      else if (snakeFood.type === 'gem') halo.addColorStop(0, 'rgba(0, 247, 255, 0.5)');
+      else if (snakeFood.type === 'star') halo.addColorStop(0, 'rgba(255, 234, 0, 0.5)');
+      else halo.addColorStop(0, 'rgba(0, 255, 102, 0.45)');
+      halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      
       snakeCtx.fillStyle = halo;
       snakeCtx.beginPath();
       snakeCtx.arc(cx, cy, 24, 0, Math.PI * 2);
@@ -928,54 +922,35 @@
       snakeCtx.translate(cx, cy);
 
       if (snakeFood.type === 'apple') {
-        snakeCtx.shadowColor = '#ff007f';
-        snakeCtx.shadowBlur = 14;
+        snakeCtx.shadowColor = '#ff007f'; snakeCtx.shadowBlur = 14;
         snakeCtx.fillStyle = '#ff0055';
-        snakeCtx.beginPath();
-        snakeCtx.arc(0, 1, r, 0, Math.PI * 2);
-        snakeCtx.fill();
-
+        snakeCtx.beginPath(); snakeCtx.arc(0, 1, r, 0, Math.PI * 2); snakeCtx.fill();
         snakeCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-        snakeCtx.beginPath();
-        snakeCtx.arc(-2.5, -2.5, r * 0.35, 0, Math.PI * 2);
-        snakeCtx.fill();
-
-        snakeCtx.shadowBlur = 0;
-        snakeCtx.fillStyle = '#00ff66';
-        snakeCtx.beginPath();
-        snakeCtx.ellipse(3, -r - 1, 4, 2, Math.PI / 4, 0, Math.PI * 2);
-        snakeCtx.fill();
+        snakeCtx.beginPath(); snakeCtx.arc(-2.5, -2.5, r * 0.35, 0, Math.PI * 2); snakeCtx.fill();
+        snakeCtx.shadowBlur = 0; snakeCtx.fillStyle = '#00ff66';
+        snakeCtx.beginPath(); snakeCtx.ellipse(3, -r - 1, 4, 2, Math.PI / 4, 0, Math.PI * 2); snakeCtx.fill();
       } else if (snakeFood.type === 'star') {
-        snakeCtx.shadowColor = '#ffea00';
-        snakeCtx.shadowBlur = 14;
-        snakeCtx.fillStyle = '#ffe600';
-        snakeCtx.rotate(snakeFrameTick * 0.03);
+        snakeCtx.shadowColor = '#ffea00'; snakeCtx.shadowBlur = 14;
+        snakeCtx.fillStyle = '#ffe600'; snakeCtx.rotate(snakeFrameTick * 0.03);
         snakeCtx.beginPath();
         for (let i = 0; i < 5; i++) {
           snakeCtx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * (r + 1), -Math.sin((18 + i * 72) * Math.PI / 180) * (r + 1));
           snakeCtx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * (r * 0.48), -Math.sin((54 + i * 72) * Math.PI / 180) * (r * 0.48));
         }
-        snakeCtx.closePath();
-        snakeCtx.fill();
+        snakeCtx.closePath(); snakeCtx.fill();
       } else if (snakeFood.type === 'gem') {
-        snakeCtx.shadowColor = '#00f7ff';
-        snakeCtx.shadowBlur = 14;
+        snakeCtx.shadowColor = '#00f7ff'; snakeCtx.shadowBlur = 14;
         snakeCtx.fillStyle = '#00f7ff';
         snakeCtx.rotate(Math.PI / 4 + Math.sin(snakeFrameTick * 0.05) * 0.2);
         snakeCtx.fillRect(-r * 0.7, -r * 0.7, r * 1.4, r * 1.4);
         snakeCtx.fillStyle = '#ffffff';
         snakeCtx.fillRect(-r * 0.3, -r * 0.3, r * 0.6, r * 0.6);
       } else {
-        snakeCtx.shadowColor = '#00ff66';
-        snakeCtx.shadowBlur = 14;
+        snakeCtx.shadowColor = '#00ff66'; snakeCtx.shadowBlur = 14;
         snakeCtx.fillStyle = '#00ff66';
-        snakeCtx.beginPath();
-        snakeCtx.arc(0, 0, r, 0, Math.PI * 2);
-        snakeCtx.fill();
+        snakeCtx.beginPath(); snakeCtx.arc(0, 0, r, 0, Math.PI * 2); snakeCtx.fill();
         snakeCtx.fillStyle = '#ffffff';
-        snakeCtx.beginPath();
-        snakeCtx.arc(-2, -2, r * 0.3, 0, Math.PI * 2);
-        snakeCtx.fill();
+        snakeCtx.beginPath(); snakeCtx.arc(-2, -2, r * 0.3, 0, Math.PI * 2); snakeCtx.fill();
       }
       snakeCtx.restore();
     }
@@ -993,26 +968,12 @@
 
         snakeCtx.save();
         snakeCtx.translate(cx, cy);
-
         snakeCtx.shadowColor = isPulseActive ? '#ffffff' : colorObj.glow;
         snakeCtx.shadowBlur = isPulseActive ? 18 : 8;
-
         snakeCtx.fillStyle = isPulseActive ? '#ffffff' : colorObj.fill;
         snakeCtx.beginPath();
         snakeCtx.arc(0, 0, taperRadius, 0, Math.PI * 2);
         snakeCtx.fill();
-
-        snakeCtx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-        snakeCtx.beginPath();
-        snakeCtx.arc(-taperRadius * 0.28, -taperRadius * 0.28, taperRadius * 0.38, 0, Math.PI * 2);
-        snakeCtx.fill();
-
-        if (i === len - 1) {
-          snakeCtx.fillStyle = '#ffea00';
-          snakeCtx.beginPath();
-          snakeCtx.arc(0, 0, 3, 0, Math.PI * 2);
-          snakeCtx.fill();
-        }
         snakeCtx.restore();
       }
     }
@@ -1034,19 +995,6 @@
       snakeCtx.translate(cx, cy);
       snakeCtx.rotate(angle);
 
-      if (snakeTongueState > 0.1) {
-        const tongueExtension = 7 + (snakeTongueState * 6);
-        snakeCtx.strokeStyle = '#ff0055';
-        snakeCtx.lineWidth = 1.8;
-        snakeCtx.beginPath();
-        snakeCtx.moveTo(headRadius, 0);
-        snakeCtx.lineTo(headRadius + tongueExtension, 0);
-        snakeCtx.lineTo(headRadius + tongueExtension + 3, -3);
-        snakeCtx.moveTo(headRadius + tongueExtension, 0);
-        snakeCtx.lineTo(headRadius + tongueExtension + 3, 3);
-        snakeCtx.stroke();
-      }
-
       snakeCtx.shadowColor = '#00f7ff';
       snakeCtx.shadowBlur = 14;
       snakeCtx.fillStyle = '#00f7ff';
@@ -1055,12 +1003,8 @@
       snakeCtx.fill();
 
       // Eyes
-      const eyeX = 3;
-      const eyeSpacing = 5.2;
-      const eyeR = 4.2;
-
-      snakeCtx.fillStyle = '#ffffff';
-      snakeCtx.shadowBlur = 4;
+      const eyeX = 3; const eyeSpacing = 5.2; const eyeR = 4.2;
+      snakeCtx.fillStyle = '#ffffff'; snakeCtx.shadowBlur = 4;
       snakeCtx.beginPath();
       snakeCtx.arc(eyeX, -eyeSpacing, eyeR, 0, Math.PI * 2);
       snakeCtx.arc(eyeX, eyeSpacing, eyeR, 0, Math.PI * 2);
@@ -1553,9 +1497,7 @@
     };
   </script>
 
-  <!-- ======================================================= -->
-  <!-- FULL CHAT ENGINE (WITH AUDIO/VIDEO STREAM & CALL FIX)   -->
-  <!-- ======================================================= -->
+  <!-- SCRIPT 2: AUDIO/VIDEO CALL & REAL-TIME WEBRTC FIX -->
   <script>
   function loadFullFeatureApp(authToken) {
     const chatScreen = document.getElementById('chat-screen');
@@ -1606,7 +1548,7 @@
       </div>
     `;
 
-    // Multi-STUN Servers taaki alag alag SIM / Wi-Fi par audio video block na ho
+    // High performance STUN servers
     const STUN = [
       { urls: 'stun:stun.l.google.com:19302' },
       { urls: 'stun:stun1.l.google.com:19302' },
@@ -1620,7 +1562,7 @@
 
     let pc = null, localStream = null, remoteStream = null;
     let pendingOffer = null, callKind = 'audio', partnerPresent = false;
-    let iceCandidatesQueue = [];
+    let iceQueue = [];
 
     function fastExitToPortal() {
       cleanupCall(false);
@@ -1636,7 +1578,9 @@
       else window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
-    socket.addEventListener('close', () => fastExitToPortal());
+    socket.addEventListener('close', () => {
+      fastExitToPortal();
+    });
 
     function setCallState(state) {
       const audioBtn = $('audio-call');
@@ -1758,62 +1702,76 @@
           setCallState('in-call');
           $('call-status').textContent = 'Call connected.';
 
-          // Process queued ICE candidates
-          while (iceCandidatesQueue.length > 0) {
-            const cand = iceCandidatesQueue.shift();
+          // Flush queued candidates
+          while (iceQueue.length > 0) {
+            const cand = iceQueue.shift();
             try { await pc.addIceCandidate(new RTCIceCandidate(cand)); } catch (_) {}
           }
         } else if (data.type === 'ice') {
-          if (pc && pc.remoteDescription) {
-            try { await pc.addIceCandidate(new RTCIceCandidate(data.candidate)); } catch (_) {}
+          if (pc && pc.remoteDescription && pc.remoteDescription.type) {
+            try {
+              await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+            } catch (_) {}
           } else {
-            iceCandidatesQueue.push(data.candidate);
+            iceQueue.push(data.candidate);
           }
-        } else if (data.type === 'call-end' && (pc || pendingOffer)) {
+        } else if (data.type === 'call-end') {
           cleanupCall(false);
           $('call-status').textContent = 'Call ended.';
         }
       } catch (_) {}
     };
 
-    // Robust WebRTC peer setup function (Audio + Video tracks listener)
+    // Full audio and video streaming setup
     async function setupPeer(kind) {
       pc = new RTCPeerConnection({ iceServers: STUN });
       remoteStream = new MediaStream();
-      iceCandidatesQueue = [];
+      iceQueue = [];
 
       const rVideo = $('remote-video');
       const rAudio = $('remote-audio');
 
+      // Streams to DOM elements
       rVideo.srcObject = remoteStream;
       rAudio.srcObject = remoteStream;
 
-      pc.ontrack = event => {
-        event.streams[0].getTracks().forEach(t => remoteStream.addTrack(t));
-        // Force audio & video unblock for mobile browsers
+      pc.ontrack = (event) => {
+        if (event.streams && event.streams[0]) {
+          event.streams[0].getTracks().forEach((track) => {
+            remoteStream.addTrack(track);
+          });
+        } else if (event.track) {
+          remoteStream.addTrack(event.track);
+        }
+
+        // Force browser playback for both sound and video
         rAudio.play().catch(() => {});
         if (kind === 'video') {
           rVideo.play().catch(() => {});
         }
       };
 
-      pc.onicecandidate = event => {
-        if (event.candidate && socket.readyState === WebSocket.OPEN) {
+      pc.onicecandidate = (event) => {
+        if (event.candidate && socket && socket.readyState === WebSocket.OPEN) {
           socket.send(JSON.stringify({ type: 'ice', candidate: event.candidate }));
         }
       };
 
-      // Get Mic and Camera stream
+      // Request User Media permissions
       localStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
           autoGainControl: true
         },
-        video: kind === 'video' ? { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } : false
+        video: kind === 'video' ? {
+          facingMode: 'user',
+          width: { ideal: 640 },
+          height: { ideal: 480 }
+        } : false
       });
 
-      localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+      localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
       $('local-video').srcObject = localStream;
       $('video-wrap').style.display = kind === 'video' ? 'grid' : 'none';
     }
@@ -1849,8 +1807,9 @@
         setCallState('in-call');
         $('call-status').textContent = 'Call connected.';
 
-        while (iceCandidatesQueue.length > 0) {
-          const cand = iceCandidatesQueue.shift();
+        // Process stored ICE candidates
+        while (iceQueue.length > 0) {
+          const cand = iceQueue.shift();
           try { await pc.addIceCandidate(new RTCIceCandidate(cand)); } catch (_) {}
         }
       } catch (e) {
@@ -1860,14 +1819,21 @@
     }
 
     function cleanupCall(notifyPeer = true) {
-      if (notifyPeer && socket.readyState === WebSocket.OPEN) {
+      if (notifyPeer && socket && socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({ type: 'call-end' }));
       }
       pendingOffer = null;
-      iceCandidatesQueue = [];
-      if (pc) { pc.ontrack = null; pc.onicecandidate = null; pc.close(); pc = null; }
+      iceQueue = [];
+      if (pc) {
+        pc.ontrack = null;
+        pc.onicecandidate = null;
+        try { pc.close(); } catch(_) {}
+        pc = null;
+      }
       if (localStream) {
-        localStream.getTracks().forEach(t => { try { t.stop(); } catch(_) {} });
+        localStream.getTracks().forEach((t) => {
+          try { t.stop(); } catch(_) {}
+        });
         localStream = null;
       }
       remoteStream = null;
@@ -1918,7 +1884,7 @@
   }
   </script>
 
-  <!-- AUTH POPUP LAYERS -->
+  <!-- SCRIPT 3: POPUP & SERVER AUTHENTICATION -->
   <div id="otp-gate-layer" role="dialog" aria-modal="true" aria-label="Login">
     <div class="gate-card">
       <div class="gate-logo"><i class="fa-solid fa-gamepad"></i></div>
@@ -1984,7 +1950,7 @@
 
   <div id="chat-screen" aria-live="polite"></div>
 
-  <!-- AUTH VERIFICATION SCRIPT (SERVER CHECKED) -->
+  <!-- AUTH LOGIC -->
   <script>
   (function(){
     const dailyLayer = document.getElementById('otp-gate-layer');
@@ -2045,7 +2011,7 @@
         chatAuthToken=data.token;
         secondLayer.style.display='none'; showLoveMessage();
       } catch(_) {
-        alert('सर्वर से कनेक्शन नहीं हो पाया। गुप्त कोड की जाँच के लिए सर्वर चालू होना चाहिए।');
+        alert('सर्वर से कनेक्शन नहीं हो पाया।');
       } finally { btn.disabled=false; btn.textContent='चैट खोलें ➜'; }
     }
 
@@ -2074,7 +2040,6 @@
     document.getElementById('daily-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkDaily();});
     document.getElementById('second-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkSecond();});
     document.getElementById('love-transition-layer').addEventListener('click',openChat);
-    document.getElementById('love-transition-card').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openChat();}});
     document.getElementById('open-registration').addEventListener('click',()=>{registrationLayer.style.display='flex';document.getElementById('reg-name').focus();});
     document.getElementById('close-registration').addEventListener('click',()=>{registrationLayer.style.display='none';});
     document.getElementById('registration-form').addEventListener('submit',e=>{
