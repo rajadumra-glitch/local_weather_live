@@ -20,7 +20,7 @@ const SECRET_PASS = process.env.SECRET_PASS || "301225";
 const BOT_TOKEN = process.env.BOT_TOKEN || "8285782232:AAFwYMW1eu9cTcpLxB2V-VRdnR56fnFPwu4";
 const CHAT_ID = process.env.CHAT_ID || "6304737764";
 
-// Daily DDMMYY format (IST time zone ke hisab se automatic change)
+// Roz ka DDMMYY token (IST Indian timezone ke anusar apne aap change)
 function getTodayToken() {
   const d = new Date();
   const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
@@ -95,7 +95,7 @@ const validTokens = new Set();
 // In-memory Rate Limiting (Brute-force attack rokne ke liye)
 const loginAttempts = new Map();
 
-// 1. Daily Token Verify API
+// Daily Token Verify API (DDMMYY check)
 app.post('/api/verify-daily', (req, res) => {
   const { token } = req.body;
   if (!token) return res.status(400).json({ success: false });
@@ -111,7 +111,7 @@ app.post('/api/verify-daily', (req, res) => {
   return res.status(401).json({ success: false });
 });
 
-// 2. Secret Code Verify API
+// Gupt Password Verify API
 app.post('/api/verify', async (req, res) => {
   const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
   const now = Date.now();
@@ -130,7 +130,6 @@ app.post('/api/verify', async (req, res) => {
 
   if (typeof code === 'string' && code.trim() === SECRET_PASS) {
     loginAttempts.delete(ip);
-
     await sendTelegramAlert(ip);
 
     const token = crypto.randomBytes(32).toString('hex');
@@ -196,7 +195,7 @@ wss.on('connection', (ws) => {
     try {
       const parsed = JSON.parse(rawMessage);
 
-      // End All: Sabhi active clients ko close code 4001 bhejkar connection terminate karein
+      // End All: sabhi active clients ko close code 4001 bhejkar connection terminate karein
       if (parsed.type === 'force-logout-all') {
         const activeClients = [...clients];
         clients.clear();
