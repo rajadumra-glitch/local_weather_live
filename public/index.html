@@ -260,7 +260,6 @@
     flex-shrink: 0;
   }
 
-  /* बड़ा और स्पष्ट Lock बटन */
   .big-lock-btn {
     background: #334155;
     border: 1px solid #475569;
@@ -610,7 +609,6 @@ function loadFullFeatureApp(authToken) {
 
         <div style="display: flex; align-items: center; gap: 8px;">
           <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:15px; padding: 7px 11px;">📞</button>
-          <!-- बड़ा और स्पष्ट Lock बटन -->
           <button id="hide-btn" type="button" class="big-lock-btn">🔒 Lock</button>
           <button id="destroy-all-btn" type="button" class="tool-btn" style="background:#be123c; border-color:#e11d48; color:#fff; font-size:11px; font-weight:bold;">⚠️ Kill</button>
         </div>
@@ -621,6 +619,7 @@ function loadFullFeatureApp(authToken) {
           <button id="audio-call" type="button" disabled class="tool-btn" style="background:#059669; color:#fff;">📞 Voice Call</button>
           <button id="video-call" type="button" disabled class="tool-btn" style="background:#4f46e5; color:#fff;">🎥 Video Call</button>
           <button id="answer-call" type="button" disabled class="tool-btn" style="background:#0284c7; color:#fff;">Answer</button>
+          <button id="speaker-toggle" type="button" class="tool-btn" style="background:#475569; color:#fff;">📱 Earpiece</button>
           <button id="end-call" type="button" disabled class="tool-btn" style="background:#991b1b; color:#fff;">End</button>
         </div>
         <div id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 6px;">Call standby</div>
@@ -628,7 +627,7 @@ function loadFullFeatureApp(authToken) {
           <video id="local-video" autoplay muted playsinline style="width:100%; max-height:120px; background:#000; border-radius:8px; object-fit:cover;"></video>
           <video id="remote-video" autoplay playsinline style="width:100%; max-height:120px; background:#000; border-radius:8px; object-fit:cover;"></video>
         </div>
-        <audio id="remote-audio" autoplay></audio>
+        <audio id="remote-audio" autoplay playsinline></audio>
       </section>
 
       <main id="chat-box"></main>
@@ -648,10 +647,42 @@ function loadFullFeatureApp(authToken) {
 
   let pc = null, localStream = null, remoteStream = null;
   let pendingOffer = null, callKind = 'audio', partnerPresent = false;
+  let isLoudSpeaker = false; // Earpiece by default
 
   $('toggle-calls-btn').onclick = () => {
     const tray = $('call-tray');
     tray.style.display = tray.style.display === 'block' ? 'none' : 'block';
+  };
+
+  // Speaker / Earpiece switch toggle
+  $('speaker-toggle').onclick = async () => {
+    isLoudSpeaker = !isLoudSpeaker;
+    const btn = $('speaker-toggle');
+    const audioEl = $('remote-audio');
+
+    if (isLoudSpeaker) {
+      btn.textContent = '🔊 Speaker';
+      btn.style.background = '#eab308';
+      audioEl.volume = 1.0;
+    } else {
+      btn.textContent = '📱 Earpiece';
+      btn.style.background = '#475569';
+      audioEl.volume = 0.35; // Lower volume for ear proximity
+    }
+
+    // Try native audio sink switch if supported (Chrome Android / modern browsers)
+    if (typeof audioEl.setSinkId === 'function') {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const audioOutputs = devices.filter(d => d.kind === 'audiooutput');
+        if (audioOutputs.length > 1) {
+          const target = isLoudSpeaker 
+            ? audioOutputs.find(d => d.label.toLowerCase().includes('speaker')) || audioOutputs[0]
+            : audioOutputs.find(d => d.label.toLowerCase().includes('earpiece') || d.label.toLowerCase().includes('receiver')) || audioOutputs[audioOutputs.length - 1];
+          if (target) await audioEl.setSinkId(target.deviceId);
+        }
+      } catch (_) {}
+    }
   };
 
   function setStatus(text, color) {
@@ -712,7 +743,6 @@ function loadFullFeatureApp(authToken) {
       } else if (data.type === 'presence-left') {
         partnerPresent = false;
         setControls(false);
-        // Last seen time track karna
         const exitTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         setStatus(`Last seen at ${exitTime}`, '#ef4444');
         $('call-status').textContent = 'Partner disconnected.';
@@ -739,7 +769,11 @@ function loadFullFeatureApp(authToken) {
     pc = new RTCPeerConnection({ iceServers: STUN });
     remoteStream = new MediaStream();
     $('remote-video').srcObject = remoteStream;
-    $('remote-audio').srcObject = remoteStream;
+    
+    const audioEl = $('remote-audio');
+    audioEl.srcObject = remoteStream;
+    // By default for voice calls, keep volume low so it acts like normal phone earpiece
+    audioEl.volume = kind === 'video' ? 1.0 : 0.35;
 
     pc.ontrack = event => event.streams[0].getTracks().forEach(t => remoteStream.addTrack(t));
     pc.onicecandidate = event => {
@@ -748,7 +782,18 @@ function loadFullFeatureApp(authToken) {
       }
     };
 
-    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: kind === 'video' });
+    // Telephony audio constraints to prevent automatic loudspeaker activation
+    const audioConstraints = {
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true
+    };
+
+    localStream = await navigator.mediaDevices.getUserMedia({
+      audio: audioConstraints,
+      video: kind === 'video'
+    });
+
     localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
     $('local-video').srcObject = localStream;
     $('video-wrap').style.display = kind === 'video' ? 'grid' : 'none';
@@ -804,11 +849,10 @@ function loadFullFeatureApp(authToken) {
     $('end-call').disabled = true;
   }
 
-  // बड़ा Lock बटन: क्लिक करते ही सेशन डिलीट होकर सीधे OTP वाले स्क्रीन पर रीडायरेक्ट होगा
   $('hide-btn').onclick = () => {
     cleanupCall(false);
-    sessionStorage.clear(); // OTP सेशन खत्म
-    window.location.reload(); // पेज रीलोड होकर सीधे OTP स्क्रीन दिखाएगा
+    sessionStorage.clear();
+    window.location.reload();
   };
 
   $('destroy-all-btn').onclick = () => {
