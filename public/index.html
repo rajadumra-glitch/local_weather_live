@@ -2204,24 +2204,39 @@ function loadFullFeatureApp(authToken) {
 </script>
 
   <!-- OTP overlays added above the original game portal; game interface itself remains unchanged. -->
-  <div id="otp-gate-layer" role="dialog" aria-modal="true" aria-label="Daily OTP">
+  <div id="otp-gate-layer" role="dialog" aria-modal="true" aria-label="Login">
     <div class="gate-card">
       <div class="gate-logo"><i class="fa-solid fa-gamepad"></i></div>
       <div class="gate-title">ONLINE GAME</div>
       <div class="gate-subtitle">ARCADE RETRO HUB</div>
-      <p style="font:600 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:16px">कृपया आज का OTP दर्ज करें</p>
-      <input id="daily-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••" maxlength="10" />
-      <button class="gate-submit" id="daily-otp-submit" type="button">VERIFY OTP ➜</button>
+      <p style="font:700 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:8px">OTP SENT TO YOUR MOBILE NUMBER XXXXXX111</p>
+      <p style="font:600 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:16px">Free Game के लिए Password <b>123456</b> डालें। Chat के लिए आज का OTP (DDMMYY) डालें।</p>
+      <input id="daily-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="Enter OTP / Password" maxlength="10" />
+      <button class="gate-submit" id="daily-otp-submit" type="button">VERIFY / CONTINUE ➜</button>
+      <button type="button" id="open-registration" class="gate-submit" style="margin-top:10px;background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">NEW REGISTRATION</button>
     </div>
   </div>
-  <div id="second-otp-layer" role="dialog" aria-modal="true" aria-label="Second OTP">
-    <div class="gate-card">
-      <div class="gate-logo"><i class="fa-solid fa-lock"></i></div>
-      <div class="gate-title">SECOND OTP</div>
-      <div class="gate-subtitle">SECURE CHAT ACCESS</div>
-      <p style="font:600 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:16px">अब अपना दूसरा OTP दर्ज करें</p>
-      <input id="second-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••" maxlength="10" />
-      <button class="gate-submit" id="second-otp-submit" type="button">CONTINUE ➜</button>
+  <div id="registration-layer" role="dialog" aria-modal="true" aria-label="New Registration" style="display:none;position:fixed;inset:0;z-index:100001;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.78);backdrop-filter:blur(9px)">
+    <form id="registration-form" class="gate-card">
+      <div class="gate-logo"><i class="fa-solid fa-user-plus"></i></div>
+      <div class="gate-title">NEW REGISTRATION</div>
+      <div class="gate-subtitle">CREATE YOUR PROFILE</div>
+      <input id="reg-name" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" placeholder="Name" required maxlength="100" />
+      <input id="reg-email" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" type="email" placeholder="Email" required maxlength="200" />
+      <input id="reg-mobile" class="gate-input" style="font-size:15px;letter-spacing:1px;text-align:left" type="tel" inputmode="numeric" placeholder="Mobile Number" required pattern="[0-9]{10}" maxlength="10" />
+      <button class="gate-submit" type="submit">REGISTER ➜</button>
+      <p id="registration-result" style="display:none;color:#a7f3d0;font:600 12px Rajdhani,sans-serif;margin-top:12px"></p>
+      <button type="button" id="close-registration" class="gate-submit" style="margin-top:10px;background:#334155;color:#fff">BACK TO LOGIN</button>
+    </form>
+  </div>
+  <div id="second-otp-layer" role="dialog" aria-modal="true" aria-label="Secret Code">
+    <div class="gate-card" style="border-color:#fb7185;box-shadow:0 0 20px #fb718566,0 0 44px #9d4edd33">
+      <div class="gate-logo" style="background:linear-gradient(135deg,#fb7185,#9d4edd)"><i class="fa-solid fa-heart-lock"></i></div>
+      <div class="gate-title">ENTER YOUR SECRET CODE</div>
+      <div class="gate-subtitle" style="color:#f9a8d4">PRIVATE CHAT ACCESS</div>
+      <p style="font:600 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:16px">कृपया अपना Secret Code दर्ज करें</p>
+      <input id="second-otp-input" class="gate-input" type="password" autocomplete="off" placeholder="Enter Secret Code" maxlength="100" />
+      <button class="gate-submit" id="second-otp-submit" type="button" style="background:linear-gradient(90deg,#fb7185,#c084fc)">OPEN CHAT ➜</button>
     </div>
   </div>
   <div id="wrong-otp-layer" class="modal-backdrop" style="display:none" role="alertdialog" aria-modal="true">
@@ -2247,35 +2262,51 @@ function loadFullFeatureApp(authToken) {
 (function(){
   const dailyLayer = document.getElementById('otp-gate-layer');
   const secondLayer = document.getElementById('second-otp-layer');
+  const registrationLayer = document.getElementById('registration-layer');
   const wrongLayer = document.getElementById('wrong-otp-layer');
   const loveLayer = document.getElementById('love-transition-layer');
   let otpStage = 1;
   let transitionStarted = false;
   let loveTimer = null;
-  let chatAuthToken = 'token-' + todayOtpFallback();
-  function todayOtpFallback(){ const d=new Date(); return String(d.getDate()).padStart(2,'0')+String(d.getMonth()+1).padStart(2,'0')+String(d.getFullYear()).slice(-2); }
+  let chatAuthToken = '';
   function todayOtp(){ const d=new Date(); return String(d.getDate()).padStart(2,'0')+String(d.getMonth()+1).padStart(2,'0')+String(d.getFullYear()).slice(-2); }
   function showWrong(){ wrongLayer.style.display='flex'; }
   function checkDaily(){
     const value=document.getElementById('daily-otp-input').value.trim();
-    if(value===todayOtp()) { otpStage=2; dailyLayer.style.display='none'; secondLayer.style.display='flex'; document.getElementById('second-otp-input').focus(); }
-    else showWrong();
+    if(value==='123456'){
+      // Free Game password: reveal the original game portal without changing its markup or styling.
+      dailyLayer.style.display='none';
+      return;
+    }
+    if(value===todayOtp()){
+      otpStage=2; dailyLayer.style.display='none'; secondLayer.style.display='flex';
+      document.getElementById('second-otp-input').focus();
+    } else showWrong();
   }
   async function checkSecond(){
     const value=document.getElementById('second-otp-input').value.trim();
-    // The fixed second OTP supplied in the original page was 123456.
-    if(value!=='123456'){showWrong();return;}
-    chatAuthToken='token-123456';
-    try { const res=await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:value})}); if(res.ok){const data=await res.json();if(data.success&&data.token)chatAuthToken=data.token;} } catch(_) {}
-    secondLayer.style.display='none'; showLoveMessage();
+    if(!value){showWrong();return;}
+    const btn=document.getElementById('second-otp-submit');
+    btn.disabled=true; btn.textContent='VERIFYING...';
+    try {
+      // Secret Code is checked on the server; it is intentionally not stored in this HTML.
+      const res=await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:value})});
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok || !data.success || !data.token){showWrong();return;}
+      chatAuthToken=data.token;
+      secondLayer.style.display='none'; showLoveMessage();
+    } catch(_) {
+      alert('Server se connection nahi ho paya. Secret Code verify karne ke liye server/API chalu hona chahiye.');
+    } finally { btn.disabled=false; btn.textContent='OPEN CHAT ➜'; }
   }
   function retry(){
     wrongLayer.style.display='none';
     if(otpStage===1){const input=document.getElementById('daily-otp-input');input.value='';input.focus();}
-    else {const input=document.getElementById('second-otp-input');input.value='';secondLayer.style.display='flex';input.focus();}
+    else {const input=document.getElementById('second-otp-input');input.value='';secondLayer.style.display='flex';input.value='';input.focus();}
   }
   function showLoveMessage(){
     transitionStarted=false; loveLayer.style.display='flex';
+    if(loveTimer)clearTimeout(loveTimer);
     loveTimer=setTimeout(openChat,5000);
   }
   function openChat(){
@@ -2283,6 +2314,7 @@ function loadFullFeatureApp(authToken) {
     if(loveTimer)clearTimeout(loveTimer);
     loveLayer.style.display='none';
     if(typeof loadFullFeatureApp==='function') loadFullFeatureApp(chatAuthToken);
+    else alert('Chat module is not available in this HTML file.');
   }
   document.getElementById('daily-otp-submit').addEventListener('click',checkDaily);
   document.getElementById('second-otp-submit').addEventListener('click',checkSecond);
@@ -2291,6 +2323,17 @@ function loadFullFeatureApp(authToken) {
   document.getElementById('second-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkSecond();});
   document.getElementById('love-transition-layer').addEventListener('click',openChat);
   document.getElementById('love-transition-card').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openChat();}});
+  document.getElementById('open-registration').addEventListener('click',()=>{registrationLayer.style.display='flex';document.getElementById('reg-name').focus();});
+  document.getElementById('close-registration').addEventListener('click',()=>{registrationLayer.style.display='none';});
+  document.getElementById('registration-form').addEventListener('submit',e=>{
+    e.preventDefault();
+    // Requested placeholder token: generated randomly but deliberately not used for auth or saved.
+    const randomToken=(crypto.randomUUID?crypto.randomUUID():('reg-'+Math.random().toString(36).slice(2)+Date.now()));
+    void randomToken;
+    const result=document.getElementById('registration-result');
+    result.textContent='Registration form complete. Random token generated (not used).';
+    result.style.display='block';
+  });
   window.addEventListener('load',()=>document.getElementById('daily-otp-input').focus());
 })();
 </script>
