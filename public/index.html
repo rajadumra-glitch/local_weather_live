@@ -20,6 +20,103 @@
     overflow-x: hidden;
   }
 
+  /* --- OTP Gatekeeper Lock Screen --- */
+  #otp-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 15, 26, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+  }
+
+  .otp-card {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 32px 22px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    text-align: center;
+    max-width: 360px;
+    width: 90%;
+    transition: transform 0.2s ease;
+  }
+
+  .shake {
+    animation: otpShake 0.4s ease-in-out;
+  }
+  @keyframes otpShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+  }
+
+  .otp-card h3 {
+    margin-bottom: 12px;
+    color: #f8fafc;
+    font-size: 19px;
+    font-weight: 700;
+  }
+
+  .otp-card p {
+    font-size: 13.5px;
+    color: #94a3b8;
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+
+  .otp-card input {
+    width: 100%;
+    padding: 13px;
+    font-size: 22px;
+    letter-spacing: 6px;
+    text-align: center;
+    background: #1e293b;
+    border: 2px solid #334155;
+    color: #fff;
+    border-radius: 12px;
+    outline: none;
+    margin-bottom: 16px;
+    transition: 0.2s;
+  }
+
+  .otp-card input:focus {
+    border-color: #38bdf8;
+  }
+
+  .otp-card button {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    background: #0284c7;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .otp-card button:hover {
+    background: #0369a1;
+  }
+
+  #otp-error {
+    color: #f43f5e;
+    font-size: 13px;
+    margin-top: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    display: none;
+  }
+
+  /* --- Original Weather Card Styles --- */
   .weather-card {
     background: rgba(17, 24, 39, 0.75);
     backdrop-filter: blur(16px);
@@ -109,6 +206,7 @@
     font-size: 11px;
   }
 
+  /* --- Chat App Styles --- */
   #chat-app {
     width: 100%;
     max-width: 500px;
@@ -122,7 +220,7 @@
   }
 
   .chat-header {
-    height: 58px;
+    height: 62px;
     background: #131b26;
     border-bottom: 1px solid #1f293d;
     display: flex;
@@ -140,15 +238,15 @@
   }
 
   .avatar {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: linear-gradient(135deg, #1e293b, #334155);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 16px;
     border: 1px solid #3b82f6;
   }
 
@@ -158,7 +256,33 @@
     border-radius: 50%;
     background: #eab308;
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 5px;
+    flex-shrink: 0;
+  }
+
+  /* बड़ा और स्पष्ट Lock बटन */
+  .big-lock-btn {
+    background: #334155;
+    border: 1px solid #475569;
+    color: #f8fafc;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.2s;
+  }
+
+  .big-lock-btn:hover {
+    background: #475569;
+    border-color: #64748b;
+  }
+
+  .big-lock-btn:active {
+    transform: scale(0.96);
   }
 
   #call-tray {
@@ -274,7 +398,7 @@
     background: #1f2a3e;
     border: 1px solid #2b3b55;
     color: #cbd5e1;
-    padding: 6px 10px;
+    padding: 7px 11px;
     border-radius: 8px;
     font-size: 12px;
     cursor: pointer;
@@ -283,8 +407,21 @@
 </head>
 <body>
 
+  <!-- 1. OTP Lock Overlay -->
+  <div id="otp-overlay">
+    <div class="otp-card" id="otp-box-card">
+      <h3>🔐 सुरक्षा सत्यापन</h3>
+      <p>📲 OTP आपके रजिस्टर्ड मोबाइल नंबर <b>XXXXXXX111</b> पर भेजा गया है। कृपया सही OTP दर्ज करें।</p>
+      
+      <input type="password" id="gate-otp" placeholder="------" maxlength="6" autofocus autocomplete="off">
+      <button type="button" onclick="verifyDailyOtp()">सत्यापित करें ➔</button>
+      
+      <div id="otp-error">❌ अमान्य OTP! कृपया सही 6-अंकों का कोड दर्ज करें। ⚠️</div>
+    </div>
+  </div>
+
   <!-- Camouflage Weather UI -->
-  <main id="app-root" class="weather-card">
+  <main id="app-root" class="weather-card" style="display: none;">
     <form id="access-form" class="search-bar">
       <input id="search-code" type="text" autocomplete="off" placeholder="Search city or location…" class="weather-input" required>
       <button type="submit" class="search-submit-btn">🔍</button>
@@ -347,6 +484,58 @@
   </main>
 
 <script>
+/* ========================
+   DAILY OTP GATEKEEPER
+   ======================== */
+function getTodayOtp() {
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2, '0');
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const yy = String(now.getFullYear()).slice(-2);
+  return dd + mm + yy; 
+}
+
+function verifyDailyOtp() {
+  const entered = document.getElementById('gate-otp').value.trim();
+  const correct = getTodayOtp();
+  const overlay = document.getElementById('otp-overlay');
+  const appRoot = document.getElementById('app-root');
+  const errorEl = document.getElementById('otp-error');
+  const cardBox = document.getElementById('otp-box-card');
+
+  if (entered === correct) {
+    sessionStorage.setItem('gate_unlocked', 'true');
+    overlay.style.display = 'none';
+    appRoot.style.display = 'block';
+  } else {
+    errorEl.style.display = 'block';
+    cardBox.classList.add('shake');
+    document.getElementById('gate-otp').value = '';
+
+    setTimeout(() => {
+      cardBox.classList.remove('shake');
+    }, 400);
+  }
+}
+
+document.getElementById('gate-otp').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    verifyDailyOtp();
+  }
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem('gate_unlocked') === 'true') {
+    const overlay = document.getElementById('otp-overlay');
+    const appRoot = document.getElementById('app-root');
+    if (overlay) overlay.style.display = 'none';
+    if (appRoot) appRoot.style.display = 'block';
+  }
+});
+
+/* ========================
+   WEATHER APP LOGIC
+   ======================== */
 async function searchWeather(place) {
   const note = document.getElementById('search-note');
   note.style.color = '#38bdf8';
@@ -401,6 +590,9 @@ document.getElementById('access-form').addEventListener('submit', async (e) => {
   await searchWeather(val);
 });
 
+/* ========================
+   CHAT & WEBRTC SYSTEM
+   ======================== */
 function loadFullFeatureApp(authToken) {
   document.body.innerHTML = `
     <div id="chat-app">
@@ -409,17 +601,18 @@ function loadFullFeatureApp(authToken) {
           <div class="avatar">🔒</div>
           <div>
             <div style="font-size: 14px; font-weight: 600; line-height: 1.2;">Private Partner</div>
-            <div style="font-size: 11px; display: flex; align-items: center; margin-top: 1px;">
+            <div style="font-size: 11px; display: flex; align-items: center; margin-top: 2px;">
               <span id="dot" class="online-indicator"></span>
               <span id="status-txt" style="color: #94a3b8;">Connecting…</span>
             </div>
           </div>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:14px; padding: 7px 10px;">📞</button>
-          <button id="hide-btn" type="button" class="tool-btn" style="font-size:11px;">Lock</button>
-          <button id="destroy-all-btn" type="button" class="tool-btn" style="background:#be123c; border-color:#e11d48; color:#fff; font-size:11px; font-weight:bold;">⚠️ Kill All</button>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:15px; padding: 7px 11px;">📞</button>
+          <!-- बड़ा और स्पष्ट Lock बटन -->
+          <button id="hide-btn" type="button" class="big-lock-btn">🔒 Lock</button>
+          <button id="destroy-all-btn" type="button" class="tool-btn" style="background:#be123c; border-color:#e11d48; color:#fff; font-size:11px; font-weight:bold;">⚠️ Kill</button>
         </div>
       </header>
 
@@ -481,7 +674,7 @@ function loadFullFeatureApp(authToken) {
 
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
-    bubble.textContent = text; // textContent XSS injection se bachaata hai
+    bubble.textContent = text;
 
     const footer = document.createElement('div');
     footer.className = 'bubble-footer';
@@ -506,6 +699,7 @@ function loadFullFeatureApp(authToken) {
       
       if (data.type === 'force-logout') {
         cleanupCall(false);
+        sessionStorage.clear();
         window.location.reload();
         return;
       }
@@ -518,7 +712,9 @@ function loadFullFeatureApp(authToken) {
       } else if (data.type === 'presence-left') {
         partnerPresent = false;
         setControls(false);
-        setStatus('Offline', '#ef4444');
+        // Last seen time track karna
+        const exitTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        setStatus(`Last seen at ${exitTime}`, '#ef4444');
         $('call-status').textContent = 'Partner disconnected.';
       } else if (data.type === 'message') {
         appendMessage(data.text, false, data.time || '');
@@ -608,7 +804,12 @@ function loadFullFeatureApp(authToken) {
     $('end-call').disabled = true;
   }
 
-  $('hide-btn').onclick = () => window.location.reload();
+  // बड़ा Lock बटन: क्लिक करते ही सेशन डिलीट होकर सीधे OTP वाले स्क्रीन पर रीडायरेक्ट होगा
+  $('hide-btn').onclick = () => {
+    cleanupCall(false);
+    sessionStorage.clear(); // OTP सेशन खत्म
+    window.location.reload(); // पेज रीलोड होकर सीधे OTP स्क्रीन दिखाएगा
+  };
 
   $('destroy-all-btn').onclick = () => {
     if (confirm("Kya aap dono devices se instant logout karna chahte hain?")) {
@@ -616,6 +817,7 @@ function loadFullFeatureApp(authToken) {
         socket.send(JSON.stringify({ type: 'force-logout-all' }));
       }
       cleanupCall(false);
+      sessionStorage.clear();
       window.location.reload();
     }
   };
