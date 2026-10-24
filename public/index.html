@@ -141,7 +141,7 @@ body.arcade-fullscreen > main { display:block!important; position:static!importa
 body.arcade-fullscreen > main > div:not(#arenaContainer) { display:none!important; }
 body.arcade-fullscreen #arenaContainer { position:fixed!important; inset:0!important; z-index:90000!important; width:100vw!important; height:100dvh!important; max-height:100dvh!important; margin:0!important; border:0!important; border-radius:0!important; padding:clamp(8px,1.5vw,20px)!important; overflow:auto!important; display:flex!important; flex-direction:column!important; box-sizing:border-box!important; }
 body.arcade-fullscreen #arenaContainer > .relative.w-full.flex.flex-col.items-center.justify-center { flex:1 0 auto!important; min-height:0!important; }
-body.arcade-fullscreen #snakeCanvas { width:min(72vh, 88vw)!important; height:min(72vh, 88vw)!important; max-width:100%!important; max-height:72vh!important; object-fit:contain; }
+body.arcade-fullscreen #snakeCanvas { touch-action:none; user-select:none; -webkit-user-select:none; width:min(72vh, 88vw)!important; height:min(72vh, 88vw)!important; max-width:100%!important; max-height:72vh!important; object-fit:contain; }
 body.arcade-fullscreen #brickCanvas { width:min(94vw, 1200px)!important; height:min(64vh, 720px)!important; max-width:100%!important; object-fit:contain; }
 body.arcade-fullscreen #flappyCanvas { width:min(60vh, 88vw)!important; height:min(66vh, 96vw)!important; max-width:100%!important; object-fit:contain; }
 body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
@@ -286,6 +286,9 @@ body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
             <i class="fa-solid fa-rotate-right"></i>
             <span class="hidden sm:inline">RESET</span>
           </button>
+          <button onclick="goToAllGames()" class="px-4 py-2.5 bg-rose-700 hover:bg-rose-600 border border-rose-500 rounded-xl text-sm font-arcade tracking-wider transition active:scale-95 flex items-center gap-2" title="Exit to Main Game Page">
+            <i class="fa-solid fa-right-from-bracket"></i><span>EXIT</span>
+          </button>
         </div>
       </div>
 
@@ -303,7 +306,7 @@ body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
           </div>
           <canvas id="snakeCanvas" width="400" height="400" class="max-w-full bg-[#070b14] rounded-2xl border-2 border-neonCyan/40 shadow-neon-cyan"></canvas>
           <!-- Snake Mobile D-PAD -->
-          <div class="mt-4 grid grid-cols-3 gap-2 w-48 sm:hidden">
+          <div class="mt-3 grid grid-cols-3 gap-2 w-48 touch-pan-y" aria-label="Touch controls for Snake">
             <div></div>
             <button onclick="snakeInput('UP')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-up"></i></button>
             <div></div>
@@ -311,10 +314,7 @@ body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
             <button onclick="snakeInput('DOWN')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-down"></i></button>
             <button onclick="snakeInput('RIGHT')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-right"></i></button>
           </div>
-          <p class="text-xs text-gray-400 mt-2 hidden sm:block flex items-center gap-1.5">
-            <span class="inline-block w-2 h-2 rounded-full bg-neonGreen animate-ping"></span>
-            Use Arrow Keys or [W, A, S, D] to Steer your Rainbow Snake!
-          </p>
+          <p class="text-xs text-gray-400 mt-2 text-center">Touch the arrows or swipe on the game screen to steer the snake.</p>
         </div>
 
         <!-- ==================== GAME 2: BRICK BREAKER ==================== -->
@@ -736,9 +736,9 @@ body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
     const snakeGridSize = 20;
     let snakeSpeedMode = 'slow'; // default to relaxed, slow pace
     const snakeSpeedIntervals = {
-      slow: 190,    // Relaxed, easy and smooth
-      normal: 130,  // Medium arcade speed
-      fast: 85      // High-speed challenge
+      slow: 270,    // Extra relaxed pace
+      normal: 220,  // Comfortable pace
+      fast: 170      // Faster, but still controllable
     };
 
     // Colorful particles and floating text system
@@ -1347,6 +1347,24 @@ body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
         snakeDx = snakeGridSize; snakeDy = 0; snakeChangingDirection = true;
       }
     }
+
+    // Touch/swipe steering for Snake on phones and touch-enabled screens.
+    (() => {
+      let touchStartX = 0, touchStartY = 0;
+      document.addEventListener('touchstart', (event) => {
+        if (activeGame !== 'snake' || !event.target.closest('#snakeCanvas')) return;
+        const t = event.changedTouches[0];
+        touchStartX = t.clientX; touchStartY = t.clientY;
+      }, { passive: true });
+      document.addEventListener('touchend', (event) => {
+        if (activeGame !== 'snake' || !event.target.closest('#snakeCanvas')) return;
+        const t = event.changedTouches[0];
+        const dx = t.clientX - touchStartX, dy = t.clientY - touchStartY;
+        if (Math.max(Math.abs(dx), Math.abs(dy)) < 18) return;
+        if (Math.abs(dx) > Math.abs(dy)) snakeInput(dx > 0 ? 'RIGHT' : 'LEFT');
+        else snakeInput(dy > 0 ? 'DOWN' : 'UP');
+      }, { passive: true });
+    })();
 
     // Keyboard listener for Snake & Flappy & Brick
     window.addEventListener('keydown', (e) => {
@@ -2264,6 +2282,14 @@ function loadFullFeatureApp(authToken) {
       <button type="button" id="close-registration" class="gate-submit" style="margin-top:10px;background:#334155;color:#fff">BACK TO LOGIN</button>
     </form>
   </div>
+  <div id="registration-queue-popup" role="dialog" aria-modal="true" aria-labelledby="registration-queue-title" style="display:none;position:fixed;inset:0;z-index:100010;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px)">
+    <div style="width:min(100%,390px);padding:25px 22px;border-radius:20px;text-align:center;background:linear-gradient(145deg,#111827,#1e1b4b);border:1px solid #c084fc;box-shadow:0 0 35px #a855f755;color:#fff">
+      <div style="font-size:42px;margin-bottom:10px">📩</div>
+      <div id="registration-queue-title" style="font:800 17px Orbitron,sans-serif;letter-spacing:.5px;color:#f0abfc;margin-bottom:14px">REGISTRATION QUEUE</div>
+      <p style="font:500 14px/1.7 Rajdhani,sans-serif;color:#f1f5f9;margin:0 0 20px">Website ke users ki sankhya abhi poori hai, isliye filhaal registration nahi kiya ja sakta. Aapka registration queue mein hai. Register hone par aapko email ke madhyam se suchna di jayegi.</p>
+      <button type="button" id="close-registration-queue-popup" class="gate-submit" style="background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">OK, SAMJH GAYA</button>
+    </div>
+  </div>
   <div id="second-otp-layer" role="dialog" aria-modal="true" aria-label="Secret Code">
     <div class="gate-card" style="border-color:#fb7185;box-shadow:0 0 20px #fb718566,0 0 44px #9d4edd33">
       <div class="gate-logo" style="background:linear-gradient(135deg,#fb7185,#9d4edd)"><i class="fa-solid fa-heart-lock"></i></div>
@@ -2365,9 +2391,13 @@ function loadFullFeatureApp(authToken) {
     // Requested placeholder token: generated randomly but deliberately not used for auth or saved.
     const randomToken=(crypto.randomUUID?crypto.randomUUID():('reg-'+Math.random().toString(36).slice(2)+Date.now()));
     void randomToken;
-    const result=document.getElementById('registration-result');
-    result.textContent='Registration form complete. Random token generated (not used).';
-    result.style.display='block';
+    // Show the requested queue notice popup after the registration form is submitted.
+    // This HTML-only notice does not persist a real queue entry or send email without a backend.
+    document.getElementById('registration-queue-popup').style.display='flex';
+  });
+  document.getElementById('close-registration-queue-popup').addEventListener('click',()=>{
+    document.getElementById('registration-queue-popup').style.display='none';
+    registrationLayer.style.display='none';
   });
   window.addEventListener('load',()=>document.getElementById('daily-otp-input').focus());
 })();
