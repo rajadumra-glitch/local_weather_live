@@ -78,133 +78,126 @@
       transform: rotateY(180deg);
     }
   </style>
-<style>
 
-/* Added OTP overlay and chat layer only. Original game portal styles/markup/scripts are preserved. */
-.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.85); backdrop-filter:blur(16px); align-items:center; justify-content:center; z-index:100000; padding:16px; }
-#otp-gate-layer, #second-otp-layer, #wrong-otp-layer, #love-transition-layer {
-  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
-  padding: 16px; z-index: 100000; background: rgba(0,0,0,.72); backdrop-filter: blur(7px);
-}
-#second-otp-layer, #wrong-otp-layer, #love-transition-layer { display: none; }
-.gate-card {
-  width: min(100%, 390px); padding: 28px 24px; border-radius: 24px; text-align: center;
-  color: #fff; background: rgba(13,17,35,.97); border: 2px solid #00f7ff;
-  box-shadow: 0 0 18px rgba(0,247,255,.45), 0 0 44px rgba(255,0,127,.18);
-}
-/* Compact login box only; keep the secret-code and registration layouts unchanged. */
-#otp-gate-layer .gate-card { width:min(100%, 330px); padding:20px 18px; border-radius:20px; }
-#otp-gate-layer .gate-logo { width:54px; height:54px; margin-bottom:10px; border-radius:16px; font-size:24px; }
-#otp-gate-layer .gate-title { font-size:19px; margin-bottom:6px; }
-#otp-gate-layer .gate-subtitle { font-size:10px; margin-bottom:15px; }
-#otp-gate-layer .gate-input { padding:10px 10px; font-size:19px; margin-bottom:10px; }
-#otp-gate-layer .gate-submit { padding:11px; font-size:11px; }
-#otp-gate-layer .free-game-hint { font-size:12px!important; margin-bottom:10px!important; }
-/* Small, targeted popup sizing only. Game UI, features, and verification logic remain untouched. */
-#otp-gate-layer .gate-card { width:min(100%, 300px); padding:17px 16px; }
-#otp-gate-layer .gate-logo { width:48px; height:48px; font-size:22px; margin-bottom:8px; }
-#otp-gate-layer .gate-title { font-size:17px; margin-bottom:5px; }
-#otp-gate-layer .gate-subtitle { font-size:9px; margin-bottom:12px; }
-#otp-gate-layer .gate-input { padding:9px 9px; font-size:17px; margin-bottom:8px; }
-#otp-gate-layer .gate-submit { padding:10px; font-size:10px; }
-#second-otp-layer .gate-card { width:min(100%, 310px); padding:19px 17px; border-radius:20px; }
-#second-otp-layer .gate-logo { width:50px; height:50px; font-size:23px; margin-bottom:9px; }
-#second-otp-layer .gate-title { font-size:18px; margin-bottom:6px; }
-#second-otp-layer .gate-subtitle { font-size:10px; margin-bottom:13px; }
-#second-otp-layer .gate-input { padding:10px 10px; font-size:18px; margin-bottom:9px; }
-#second-otp-layer .gate-submit { padding:11px; font-size:11px; }
+  <style>
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.85); backdrop-filter:blur(16px); align-items:center; justify-content:center; z-index:100000; padding:16px; }
+    #otp-gate-layer, #second-otp-layer, #wrong-otp-layer, #love-transition-layer {
+      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      padding: 16px; z-index: 100000; background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
+    }
+    #second-otp-layer, #wrong-otp-layer, #love-transition-layer { display: none; }
 
+    /* Popups ka standard, sundar aur bada card sizing */
+    .gate-card {
+      width: min(100%, 360px); 
+      padding: 26px 22px; 
+      border-radius: 22px; 
+      text-align: center;
+      color: #fff; 
+      background: rgba(13,17,35,.98); 
+      border: 2px solid #00f7ff;
+      box-shadow: 0 0 22px rgba(0,247,255,.4), 0 0 50px rgba(255,0,127,.18);
+      animation: dialogZoomIn .28s cubic-bezier(.2,.8,.2,1) both;
+    }
 
-.gate-logo { width: 68px; height: 68px; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;
-  border-radius:20px; color:#fff; font-size:30px; background:linear-gradient(135deg,#ff007f,#9d4edd); box-shadow:0 0 22px #ff007f66; }
-.gate-title { font:900 22px Orbitron, sans-serif; letter-spacing:1px; margin-bottom:8px; }
-.gate-subtitle { color:#00f7ff; font:600 11px Orbitron, sans-serif; letter-spacing:1.6px; margin-bottom:22px; }
-.gate-input { width:100%; padding:14px 12px; border-radius:12px; margin:0 0 14px; background:#090d1c; color:#fff;
-  border:1px solid #475569; text-align:center; font:700 22px Orbitron,sans-serif; letter-spacing:5px; outline:none; }
-.gate-input:focus { border-color:#00f7ff; box-shadow:0 0 0 2px #00f7ff22; }
-.gate-submit { width:100%; padding:13px; border:0; border-radius:12px; cursor:pointer; color:#07111d;
-  background:linear-gradient(90deg,#00f7ff,#3b82f6); font:900 12px Orbitron,sans-serif; }
-.gate-submit:hover { filter:brightness(1.12); }
-#chat-screen { position:fixed; inset:0; z-index:100010; display:none; align-items:center; justify-content:center; background:#070913; }
-#chat-screen #chat-app { width:100%; max-width:480px; height:100vh; height:100dvh; display:flex; flex-direction:column; background:#0b0f19; position:relative; z-index:20; }
-#chat-screen .chat-header { height:66px; background:rgba(15,23,42,.95); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; justify-content:space-between; padding:0 12px; flex-shrink:0; gap:8px; }
-#chat-screen .avatar { width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#1e293b,#0f172a);display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid #38bdf8; }
-#chat-screen .online-indicator { width:8px;height:8px;border-radius:50%;background:#eab308;display:inline-block;margin-right:6px; }
-#chat-screen #status-txt { display:inline-block; min-height:14px; }
-#chat-screen #call-tray { display:none;background:rgba(15,23,42,.98);border-bottom:1px solid rgba(255,255,255,.1);padding:12px 14px;flex-shrink:0; }
-#chat-screen #chat-box { flex:1;overflow-y:auto;padding:18px 14px;display:flex;flex-direction:column;gap:12px;background:#070a12;background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:24px 24px; }
-#chat-screen .msg-row { display:flex;width:100%;transition:opacity .3s ease; } #chat-screen .msg-row.me {justify-content:flex-end;} #chat-screen .msg-row.them {justify-content:flex-start;} #chat-screen .msg-row.disappearing {opacity:0;transform:scale(.75);}
-#chat-screen .bubble {max-width:78%;padding:10px 14px 8px;font-size:14.5px;line-height:1.45;word-break:break-word;border-radius:18px;cursor:pointer;user-select:none;}
-#chat-screen .msg-row.me .bubble {background:linear-gradient(135deg,#059669,#047857);color:#fff;border-bottom-right-radius:4px;} #chat-screen .msg-row.them .bubble {background:rgba(30,41,59,.85);color:#f1f5f9;border-bottom-left-radius:4px;border:1px solid rgba(255,255,255,.06);}
-#chat-screen .chat-footer {min-height:64px;background:rgba(15,23,42,.98);border-top:1px solid rgba(255,255,255,.08);padding:10px 12px;display:flex;align-items:center;gap:10px;}
-#chat-screen .msg-input-field {flex:1;min-width:0;background:rgba(30,41,59,.7);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:12px 16px;color:#fff;font-size:14.5px;outline:none;}
-#chat-screen .send-circle-btn {width:44px;height:44px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);border:0;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-#chat-screen .tool-btn {background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#cbd5e1;padding:7px 9px;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;}
-.love-card { cursor:pointer; user-select:none; width:min(100%,420px); padding:30px 24px; text-align:center; color:#fff; border-radius:28px; border:2px solid #fb7185;
-  background:radial-gradient(circle at top,#5b174d,#1a1033 62%,#090d1b); box-shadow:0 0 35px #fb718544; animation:lovePop .55s ease-out; }
-.love-heart { font-size:70px; line-height:1.2; filter:drop-shadow(0 0 18px #fb7185); animation:heartBeat .9s infinite; }
-.love-message { margin:14px 0; font:900 clamp(20px,5vw,28px) Orbitron,sans-serif; line-height:1.45; color:#fff; text-shadow:0 0 14px #fb7185; }
-.love-hint { color:#fbcfe8; font:600 10px Orbitron,sans-serif; letter-spacing:1px; }
-@keyframes heartBeat {0%,100%{transform:scale(1)}50%{transform:scale(1.12)}} @keyframes lovePop {from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
-@media(max-width:380px){#chat-screen .chat-header{padding:0 7px;}#chat-screen .tool-btn{padding:6px 7px;font-size:10px;} .gate-card{padding:24px 18px;}}
+    #second-otp-layer .gate-card {
+      border-color: #fb7185;
+      box-shadow: 0 0 22px rgba(251,113,133,.45), 0 0 50px rgba(157,78,221,.25);
+    }
 
-/* Full-page gameplay */
-html.arcade-fullscreen, body.arcade-fullscreen { width:100%; height:100%; min-height:100%; overflow:hidden!important; }
-body.arcade-fullscreen { display:block!important; margin:0!important; }
-body.arcade-fullscreen > header, body.arcade-fullscreen > footer { display:none!important; }
-body.arcade-fullscreen > main { display:block!important; position:static!important; width:100%!important; max-width:none!important; margin:0!important; padding:0!important; }
-body.arcade-fullscreen > main > div:not(#arenaContainer) { display:none!important; }
-body.arcade-fullscreen #arenaContainer { position:fixed!important; inset:0!important; z-index:90000!important; width:100vw!important; height:100dvh!important; max-height:100dvh!important; margin:0!important; border:0!important; border-radius:0!important; padding:clamp(8px,1.5vw,20px)!important; overflow:auto!important; display:flex!important; flex-direction:column!important; box-sizing:border-box!important; }
-body.arcade-fullscreen #arenaContainer > .relative.w-full.flex.flex-col.items-center.justify-center { flex:1 0 auto!important; min-height:0!important; }
-body.arcade-fullscreen #snakeCanvas { touch-action:none; user-select:none; -webkit-user-select:none; width:min(72vh, 88vw)!important; height:min(72vh, 88vw)!important; max-width:100%!important; max-height:72vh!important; object-fit:contain; }
-body.arcade-fullscreen #brickCanvas { width:min(94vw, 1200px)!important; height:min(64vh, 720px)!important; max-width:100%!important; object-fit:contain; }
-body.arcade-fullscreen #flappyCanvas { width:min(60vh, 88vw)!important; height:min(66vh, 96vw)!important; max-width:100%!important; object-fit:contain; }
-body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
-@media(max-height:600px){body.arcade-fullscreen #snakeCanvas{width:min(62vh,80vw)!important;height:min(62vh,80vw)!important;max-height:62vh!important;}body.arcade-fullscreen #arenaContainer{padding:6px!important;}body.arcade-fullscreen #arenaContainer > .flex.flex-wrap.items-center.justify-between{padding-bottom:6px!important;margin-bottom:6px!important;}}
+    .gate-logo { 
+      width: 54px; height: 54px; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;
+      border-radius:18px; color:#fff; font-size:24px; background:linear-gradient(135deg,#ff007f,#9d4edd); 
+      box-shadow:0 0 20px rgba(255,0,127,.45); 
+    }
+    #second-otp-layer .gate-logo {
+      background: linear-gradient(135deg,#fb7185,#9d4edd);
+      box-shadow: 0 0 20px rgba(251,113,133,.5);
+    }
 
-@keyframes dialogZoomIn { 0% { opacity:0; transform:scale(.86); } 70% { opacity:1; transform:scale(1.025); } 100% { opacity:1; transform:scale(1); } }
-#otp-gate-layer .gate-card, #second-otp-layer .gate-card,
-#wrong-otp-layer > div, #registration-queue-popup > div { animation:dialogZoomIn .28s cubic-bezier(.2,.8,.2,1) both; }
-#wrong-otp-layer > div { width:min(100%,285px); padding:17px 16px; border-radius:18px; }
-#wrong-otp-layer .text-5xl { font-size:34px; margin-bottom:8px; }
-#wrong-otp-layer h3 { font-size:15px; margin-bottom:6px; }
-#wrong-otp-layer p { font-size:12px; line-height:1.55; margin-bottom:12px; }
-#wrong-otp-layer button { padding:9px 10px; }
-#second-otp-layer .gate-card { width:min(100%,290px); padding:16px 15px; border-radius:19px; }
-#second-otp-layer .gate-logo { width:44px; height:44px; font-size:21px; margin-bottom:7px; }
-#second-otp-layer .gate-title { font-size:16px; margin-bottom:4px; }
-#second-otp-layer .gate-subtitle { font-size:9px; margin-bottom:10px; }
-#second-otp-layer .gate-card p { font-size:11px!important; margin-bottom:10px!important; }
-#second-otp-layer .gate-input { padding:9px; font-size:15px; margin-bottom:8px; letter-spacing:2px; }
-#second-otp-layer .gate-submit { padding:10px; font-size:10px; }
-#registration-queue-popup > div { width:min(100%,330px)!important; padding:19px 17px!important; border-radius:20px!important; }
-#registration-queue-popup > div > div:first-child { font-size:32px!important; margin-bottom:6px!important; }
-#registration-queue-title { font-size:15px!important; margin-bottom:9px!important; }
-#registration-queue-popup p { font-size:12px!important; line-height:1.55!important; margin-bottom:12px!important; }
-#registration-queue-popup button { padding:10px!important; }
+    .gate-title { font:900 19px Orbitron, sans-serif; letter-spacing:1px; margin-bottom:5px; }
+    .gate-subtitle { color:#00f7ff; font:600 11px Orbitron, sans-serif; letter-spacing:.3px; margin-bottom:12px; line-height:1.4; }
+    #second-otp-layer .gate-subtitle { color: #f9a8d4; }
 
-#arenaContainer { display:none; }
-body.arcade-fullscreen #arenaContainer { display:flex!important; }
+    /* Input Field & Placeholder Size Adjustments */
+    .gate-input { 
+      width:100%; 
+      padding:11px 12px; 
+      border-radius:14px; 
+      margin:0 0 10px; 
+      background:#090d1c; 
+      color:#fff;
+      border:1px solid #475569; 
+      text-align:center; 
+      font:700 19px Orbitron,sans-serif; 
+      letter-spacing:4px; 
+      outline:none; 
+      transition: all 0.2s ease;
+    }
+    .gate-input:focus { border-color:#00f7ff; box-shadow:0 0 0 3px rgba(0,247,255,.2); }
+    #second-otp-layer .gate-input:focus { border-color:#fb7185; box-shadow:0 0 0 3px rgba(251,113,133,.2); }
 
-#chat-screen { padding:0; background:radial-gradient(ellipse at top left,#101d3a 0%,#050b18 52%,#030712 100%)!important; }
-#chat-screen #chat-app { width:min(100%,1000px)!important; max-width:1000px!important; height:100dvh!important; max-height:100dvh!important; background:#061226!important; border:1px solid rgba(59,130,246,.65)!important; border-radius:18px!important; overflow:hidden!important; box-shadow:0 0 42px rgba(37,99,235,.14)!important; display:flex!important; flex-direction:column!important; }
-#chat-screen .chat-header { height:68px!important; min-height:68px!important; padding:0 16px!important; background:linear-gradient(110deg,#06152d,#0b1b37 58%,#111638)!important; border-bottom:1px solid rgba(59,130,246,.32)!important; position:relative!important; top:0!important; z-index:5!important; flex:0 0 auto!important; }
-#chat-screen .avatar { border:2px solid #38bdf8!important; background:linear-gradient(135deg,#312e81,#0e7490)!important; box-shadow:0 0 12px rgba(56,189,248,.2)!important; }
-#chat-screen .online-indicator { background:#34d399!important; box-shadow:0 0 8px #34d39999!important; }
-#chat-screen #chat-box { padding:18px clamp(10px,3vw,28px)!important; gap:14px!important; background-color:#041022!important; background-image:radial-gradient(rgba(96,165,250,.075) 1px,transparent 1px)!important; background-size:22px 22px!important; min-height:0!important; flex:1 1 auto!important; overflow-y:auto!important; }
-#chat-screen .msg-row { align-items:flex-end!important; }
-#chat-screen .bubble { max-width:min(78%,620px)!important; padding:10px 14px 8px!important; font-size:14px!important; line-height:1.45!important; border-radius:17px!important; box-shadow:0 5px 18px rgba(0,0,0,.18)!important; }
-#chat-screen .msg-row.me .bubble { background:linear-gradient(135deg,#4f46e5,#7c3aed 58%,#c026d3)!important; border:1px solid rgba(196,181,253,.28)!important; border-bottom-right-radius:5px!important; color:#fff!important; }
-#chat-screen .msg-row.them .bubble { background:linear-gradient(135deg,#1d3558,#172b49)!important; border:1px solid rgba(96,165,250,.22)!important; border-bottom-left-radius:5px!important; color:#f1f5ff!important; }
-#chat-screen .msg-row.me .sender-label { color:#f5d0fe!important; }
-#chat-screen .msg-row.them .sender-label { color:#93c5fd!important; }
-#chat-screen .chat-footer { min-height:66px!important; padding:10px 14px!important; gap:10px!important; background:linear-gradient(110deg,#07152b,#0c1930)!important; border-top:1px solid rgba(59,130,246,.3)!important; }
-#chat-screen .msg-input-field { border:1px solid rgba(99,102,241,.55)!important; background:#0b1b34!important; border-radius:18px!important; padding:12px 16px!important; }
-#chat-screen .msg-input-field:focus { border-color:#a78bfa!important; box-shadow:0 0 0 3px rgba(139,92,246,.14)!important; }
-#chat-screen .send-circle-btn { background:linear-gradient(135deg,#4f46e5,#a21caf)!important; box-shadow:0 4px 14px rgba(124,58,237,.28)!important; }
-#chat-screen .tool-btn { border-radius:10px!important; padding:10px 12px!important; font-size:12px!important; min-height:40px!important; }
-@media(max-width:600px){#chat-screen #chat-app{width:100%!important;border-radius:0!important;border:0!important;}#chat-screen .chat-header{padding:0 7px!important;gap:5px!important;height:58px!important;min-height:58px!important;}#chat-screen .chat-header .tool-btn{padding:8px 9px!important;font-size:11px!important;min-height:38px!important;}#chat-screen .bubble{max-width:86%!important;padding:8px 10px 6px!important;font-size:13px!important;}#chat-screen #chat-box{padding:12px 8px!important;gap:10px!important;}#chat-screen .chat-footer{min-height:58px!important;padding:7px 8px!important;}}
-</style>
+    /* Placeholder text ko chhota aur elegant banana */
+    .gate-input::placeholder {
+      font-family: 'Rajdhani', sans-serif !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.5px !important;
+      color: #94a3b8 !important;
+      opacity: 0.85;
+    }
+
+    .gate-submit { 
+      width:100%; 
+      padding:11px; 
+      border:0; 
+      border-radius:12px; 
+      cursor:pointer; 
+      color:#07111d;
+      background:linear-gradient(90deg,#00f7ff,#3b82f6); 
+      font:900 11px Orbitron,sans-serif; 
+      letter-spacing: 0.5px;
+      transition: filter 0.2s;
+    }
+    .gate-submit:hover { filter:brightness(1.12); }
+
+    /* Chat Screen Elements */
+    #chat-screen { position:fixed; inset:0; z-index:100010; display:none; align-items:center; justify-content:center; background:radial-gradient(ellipse at top left,#101d3a 0%,#050b18 52%,#030712 100%); }
+    #chat-screen #chat-app { width:min(100%,1000px); max-width:1000px; height:100dvh; max-height:100dvh; display:flex; flex-direction:column; background:#061226; border:1px solid rgba(59,130,246,.65); border-radius:18px; overflow:hidden; box-shadow:0 0 42px rgba(37,99,235,.14); }
+    #chat-screen .chat-header { height:68px; min-height:68px; background:linear-gradient(110deg,#06152d,#0b1b37 58%,#111638); border-bottom:1px solid rgba(59,130,246,.32); display:flex; align-items:center; justify-content:space-between; padding:0 16px; flex-shrink:0; position:relative; top:0; z-index:5; }
+    #chat-screen .avatar { width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#312e81,#0e7490);display:flex;align-items:center;justify-content:center;font-size:17px;border:2px solid #38bdf8; box-shadow:0 0 12px rgba(56,189,248,.2); }
+    #chat-screen .online-indicator { width:8px;height:8px;border-radius:50%;background:#34d399;display:inline-block;margin-right:6px;box-shadow:0 0 8px #34d39999; }
+    #chat-screen #call-tray { display:none;background:rgba(15,23,42,.98);border-bottom:1px solid rgba(255,255,255,.1);padding:12px 14px;flex-shrink:0; }
+    #chat-screen #chat-box { flex:1;overflow-y:auto;padding:18px clamp(10px,3vw,28px);display:flex;flex-direction:column;gap:14px;background:#041022; background-image:radial-gradient(rgba(96,165,250,.075) 1px,transparent 1px);background-size:22px 22px; min-height:0; }
+    #chat-screen .msg-row { display:flex;width:100%;align-items:flex-end; } 
+    #chat-screen .msg-row.me {justify-content:flex-end;} 
+    #chat-screen .msg-row.them {justify-content:flex-start;}
+    #chat-screen .bubble {max-width:min(78%,620px);padding:10px 14px 8px;font-size:14px;line-height:1.45;word-break:break-word;border-radius:17px;box-shadow:0 5px 18px rgba(0,0,0,.18);}
+    #chat-screen .msg-row.me .bubble {background:linear-gradient(135deg,#4f46e5,#7c3aed 58%,#c026d3);color:#fff;border-bottom-right-radius:5px;border:1px solid rgba(196,181,253,.28);} 
+    #chat-screen .msg-row.them .bubble {background:linear-gradient(135deg,#1d3558,#172b49);color:#f1f5ff;border-bottom-left-radius:5px;border:1px solid rgba(96,165,250,.22);}
+    #chat-screen .sender-label { display:block; font-size:9px; font-weight:800; letter-spacing:.5px; margin-bottom:3px; }
+    #chat-screen .msg-row.me .sender-label { color:#f5d0fe; text-align:right; }
+    #chat-screen .msg-row.them .sender-label { color:#93c5fd; }
+    #chat-screen .chat-footer {min-height:66px;background:linear-gradient(110deg,#07152b,#0c1930);border-top:1px solid rgba(59,130,246,.3);padding:10px 14px;display:flex;align-items:center;gap:10px;}
+    #chat-screen .msg-input-field {flex:1;min-width:0;background:#0b1b34;border:1px solid rgba(99,102,241,.55);border-radius:18px;padding:12px 16px;color:#fff;font-size:14px;outline:none;}
+    #chat-screen .msg-input-field:focus { border-color:#a78bfa; box-shadow:0 0 0 3px rgba(139,92,246,.14); }
+    #chat-screen .send-circle-btn {width:42px;height:42px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#a21caf);box-shadow:0 4px 14px rgba(124,58,237,.28);border:0;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    #chat-screen .tool-btn {border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);min-height:40px;}
+
+    .love-card { width:min(100%,420px); padding:30px 24px; text-align:center; color:#fff; border-radius:28px; border:2px solid #fb7185;
+      background:radial-gradient(circle at top,#5b174d,#1a1033 62%,#090d1b); box-shadow:0 0 35px #fb718544; cursor:pointer; }
+    .love-heart { font-size:70px; line-height:1.2; filter:drop-shadow(0 0 18px #fb7185); animation:heartBeat .9s infinite; }
+    .love-message { margin:14px 0; font:900 clamp(20px,5vw,28px) Orbitron,sans-serif; line-height:1.45; color:#fff; text-shadow:0 0 14px #fb7185; }
+
+    @keyframes heartBeat {0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+    @keyframes dialogZoomIn { 0% { opacity:0; transform:scale(.86); } 100% { opacity:1; transform:scale(1); } }
+
+    /* Fullscreen Game Arena */
+    html.arcade-fullscreen, body.arcade-fullscreen { width:100%; height:100%; overflow:hidden!important; }
+    body.arcade-fullscreen > header, body.arcade-fullscreen > footer { display:none!important; }
+    body.arcade-fullscreen #arenaContainer { position:fixed!important; inset:0!important; z-index:90000!important; width:100vw!important; height:100dvh!important; border-radius:0!important; display:flex!important; flex-direction:column!important; }
+    #arenaContainer { display:none; }
+  </style>
 </head>
 <body class="text-gray-100 font-body min-h-screen flex flex-col justify-between selection:bg-neonPink selection:text-white">
 
@@ -225,7 +218,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         </div>
       </div>
 
-      <!-- Quick Audio Toggle & Portal Stats -->
       <div class="flex items-center gap-4 bg-gray-900/80 px-4 py-2 rounded-2xl border border-gray-800">
         <button id="soundToggleBtn" onclick="toggleAudio()" class="flex items-center gap-2 text-sm text-gray-300 hover:text-neonGreen transition">
           <i id="soundIcon" class="fa-solid fa-volume-high text-neonGreen"></i>
@@ -248,86 +240,62 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       <p class="text-gray-400 text-sm">Pick a game to start playing immediately in the interactive arena below.</p>
     </div>
 
-    <!-- GAMES CARDS GRID -->
+    <!-- GAMES GRID -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
-      
-      <!-- 1. Snake Game Card -->
-      <button onclick="launchGame('snake')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-green hover:border-neonGreen transition">
-        <div class="w-16 h-16 rounded-2xl bg-emerald-950/60 border border-neonGreen/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+      <button onclick="launchGame('snake')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-green hover:border-neonGreen transition">
+        <div class="w-16 h-16 rounded-2xl bg-emerald-950/60 border border-neonGreen/40 flex items-center justify-center mb-3">
           <i class="fa-solid fa-staff-snake text-3xl text-neonGreen"></i>
         </div>
-        <h3 class="font-arcade text-lg text-white font-bold tracking-wide">SNAKE RETRO</h3>
+        <h3 class="font-arcade text-lg text-white font-bold">SNAKE RETRO</h3>
         <p class="text-xs text-gray-400 mt-1 mb-3">Eat pellets, speed up, avoid self-collision.</p>
-        <span class="w-full py-1.5 px-3 bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs rounded-xl font-arcade uppercase group-hover:bg-neonGreen group-hover:text-black font-semibold transition">
-          Play Now
-        </span>
+        <span class="w-full py-1.5 px-3 bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs rounded-xl font-arcade uppercase font-semibold">Play Now</span>
       </button>
 
-      <!-- 2. Brick Breaker Card -->
-      <button onclick="launchGame('brick')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-cyan hover:border-neonCyan transition">
-        <div class="w-16 h-16 rounded-2xl bg-cyan-950/60 border border-neonCyan/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+      <button onclick="launchGame('brick')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-cyan hover:border-neonCyan transition">
+        <div class="w-16 h-16 rounded-2xl bg-cyan-950/60 border border-neonCyan/40 flex items-center justify-center mb-3">
           <i class="fa-solid fa-shapes text-3xl text-neonCyan"></i>
         </div>
-        <h3 class="font-arcade text-lg text-white font-bold tracking-wide">BRICK BREAKER</h3>
+        <h3 class="font-arcade text-lg text-white font-bold">BRICK BREAKER</h3>
         <p class="text-xs text-gray-400 mt-1 mb-3">Bouncing paddle ball & multicolored bricks.</p>
-        <span class="w-full py-1.5 px-3 bg-neonCyan/10 border border-neonCyan/30 text-neonCyan text-xs rounded-xl font-arcade uppercase group-hover:bg-neonCyan group-hover:text-black font-semibold transition">
-          Play Now
-        </span>
+        <span class="w-full py-1.5 px-3 bg-neonCyan/10 border border-neonCyan/30 text-neonCyan text-xs rounded-xl font-arcade uppercase font-semibold">Play Now</span>
       </button>
 
-      <!-- 3. Flappy Flyer Card -->
-      <button onclick="launchGame('flappy')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-pink hover:border-neonPink transition">
-        <div class="w-16 h-16 rounded-2xl bg-pink-950/60 border border-neonPink/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+      <button onclick="launchGame('flappy')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-pink hover:border-neonPink transition">
+        <div class="w-16 h-16 rounded-2xl bg-pink-950/60 border border-neonPink/40 flex items-center justify-center mb-3">
           <i class="fa-solid fa-rocket text-3xl text-neonPink"></i>
         </div>
-        <h3 class="font-arcade text-lg text-white font-bold tracking-wide">SPACE FLAPPER</h3>
+        <h3 class="font-arcade text-lg text-white font-bold">SPACE FLAPPER</h3>
         <p class="text-xs text-gray-400 mt-1 mb-3">Flap your thrusters & navigate laser gates.</p>
-        <span class="w-full py-1.5 px-3 bg-neonPink/10 border border-neonPink/30 text-neonPink text-xs rounded-xl font-arcade uppercase group-hover:bg-neonPink group-hover:text-black font-semibold transition">
-          Play Now
-        </span>
+        <span class="w-full py-1.5 px-3 bg-neonPink/10 border border-neonPink/30 text-neonPink text-xs rounded-xl font-arcade uppercase font-semibold">Play Now</span>
       </button>
 
-      <!-- 4. Memory Match Card -->
-      <button onclick="launchGame('memory')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-cyan hover:border-neonYellow transition">
-        <div class="w-16 h-16 rounded-2xl bg-yellow-950/60 border border-neonYellow/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+      <button onclick="launchGame('memory')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-cyan hover:border-neonYellow transition">
+        <div class="w-16 h-16 rounded-2xl bg-yellow-950/60 border border-neonYellow/40 flex items-center justify-center mb-3">
           <i class="fa-solid fa-brain text-3xl text-neonYellow"></i>
         </div>
-        <h3 class="font-arcade text-lg text-white font-bold tracking-wide">MEMORY MATCH</h3>
+        <h3 class="font-arcade text-lg text-white font-bold">MEMORY MATCH</h3>
         <p class="text-xs text-gray-400 mt-1 mb-3">Flip cards to match emoji pairs quickly.</p>
-        <span class="w-full py-1.5 px-3 bg-neonYellow/10 border border-neonYellow/30 text-neonYellow text-xs rounded-xl font-arcade uppercase group-hover:bg-neonYellow group-hover:text-black font-semibold transition">
-          Play Now
-        </span>
+        <span class="w-full py-1.5 px-3 bg-neonYellow/10 border border-neonYellow/30 text-neonYellow text-xs rounded-xl font-arcade uppercase font-semibold">Play Now</span>
       </button>
 
-      <!-- 5. Tic-Tac-Toe Card -->
-      <button onclick="launchGame('tictactoe')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-pink hover:border-neonPurple transition">
-        <div class="w-16 h-16 rounded-2xl bg-purple-950/60 border border-neonPurple/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+      <button onclick="launchGame('tictactoe')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-pink hover:border-neonPurple transition">
+        <div class="w-16 h-16 rounded-2xl bg-purple-950/60 border border-neonPurple/40 flex items-center justify-center mb-3">
           <i class="fa-solid fa-xmarks-lines text-3xl text-neonPurple"></i>
         </div>
-        <h3 class="font-arcade text-lg text-white font-bold tracking-wide">TIC-TAC-TOE</h3>
+        <h3 class="font-arcade text-lg text-white font-bold">TIC-TAC-TOE</h3>
         <p class="text-xs text-gray-400 mt-1 mb-3">Play vs Smart AI or a Friend in 2P mode.</p>
-        <span class="w-full py-1.5 px-3 bg-neonPurple/10 border border-neonPurple/30 text-neonPurple text-xs rounded-xl font-arcade uppercase group-hover:bg-neonPurple group-hover:text-black font-semibold transition">
-          Play Now
-        </span>
+        <span class="w-full py-1.5 px-3 bg-neonPurple/10 border border-neonPurple/30 text-neonPurple text-xs rounded-xl font-arcade uppercase font-semibold">Play Now</span>
       </button>
-
     </div>
 
-    <!-- MAIN GAME ARENA CONTAINER -->
+    <!-- MAIN GAME ARENA -->
     <div class="w-full bg-darkCard/95 border-2 border-gray-800 rounded-3xl p-4 sm:p-6 shadow-2xl relative overflow-hidden" id="arenaContainer">
-      <div class="absolute -top-24 -left-24 w-60 h-60 bg-neonCyan/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-neonPink/10 rounded-full blur-3xl pointer-events-none"></div>
-
-      <!-- Arena Top Bar -->
       <div class="flex flex-wrap items-center justify-between border-b border-gray-800 pb-4 mb-4 gap-4">
         <div>
           <span class="text-xs uppercase font-arcade tracking-widest text-neonCyan" id="gameCategory">ARCADE CLASSIC</span>
-          <h2 class="text-2xl sm:text-3xl font-arcade font-extrabold text-white flex items-center gap-3" id="activeGameTitle">
-            SNAKE RETRO
-          </h2>
+          <h2 class="text-2xl sm:text-3xl font-arcade font-extrabold text-white" id="activeGameTitle">SNAKE RETRO</h2>
         </div>
 
-        <!-- Scores & Status Bar -->
         <div class="flex items-center gap-3">
           <div class="bg-gray-900 px-4 py-2 rounded-xl border border-gray-700 text-center min-w-[90px]">
             <div class="text-[10px] tracking-widest text-gray-400 font-arcade">SCORE</div>
@@ -337,20 +305,16 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
             <div class="text-[10px] tracking-widest text-gray-400 font-arcade">HIGH SCORE</div>
             <div class="text-xl font-arcade font-bold text-neonYellow" id="highScoreDisplay">0</div>
           </div>
-          <button onclick="restartCurrentGame()" class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-xl text-sm font-arcade tracking-wider transition active:scale-95 flex items-center gap-2" title="Restart Game">
-            <i class="fa-solid fa-rotate-right"></i>
-            <span class="hidden sm:inline">RESET</span>
+          <button onclick="restartCurrentGame()" class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-xl text-sm font-arcade tracking-wider transition active:scale-95 flex items-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i><span class="hidden sm:inline">RESET</span>
           </button>
-          <button onclick="goToAllGames()" class="px-4 py-2.5 bg-rose-700 hover:bg-rose-600 border border-rose-500 rounded-xl text-sm font-arcade tracking-wider transition active:scale-95 flex items-center gap-2" title="Exit to Main Game Page">
+          <button onclick="goToAllGames()" class="px-4 py-2.5 bg-rose-700 hover:bg-rose-600 border border-rose-500 rounded-xl text-sm font-arcade tracking-wider transition flex items-center gap-2">
             <i class="fa-solid fa-right-from-bracket"></i><span>EXIT</span>
           </button>
         </div>
       </div>
 
-      <!-- GAME CANVAS / PLAYGROUND STAGE -->
       <div class="relative w-full flex flex-col items-center justify-center min-h-[440px] bg-black/60 rounded-2xl border border-gray-800/80 p-2 sm:p-4 overflow-hidden">
-
-        <!-- ==================== GAME 1: SNAKE ==================== -->
         <div id="gameView-snake" class="game-view w-full flex flex-col items-center">
           <div class="flex items-center gap-2 mb-3 bg-gray-900/90 px-3 py-1.5 rounded-xl border border-gray-700 text-xs font-arcade">
             <span class="text-gray-400">SPEED:</span>
@@ -362,7 +326,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           <p class="text-xs text-gray-400 mt-2 text-center">Swipe on the game screen or tap a side of the screen to steer the snake.</p>
         </div>
 
-        <!-- ==================== GAME 2: BRICK BREAKER ==================== -->
         <div id="gameView-brick" class="game-view hidden w-full flex flex-col items-center">
           <div class="w-full max-w-[480px] flex justify-between items-center px-2 py-1 text-sm font-arcade text-gray-300">
             <div>LIVES: <span id="brickLivesDisplay" class="text-neonPink">❤❤❤</span></div>
@@ -373,10 +336,8 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
             <button id="brickLeftBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> LEFT</button>
             <button id="brickRightBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold">RIGHT <i class="fa-solid fa-arrow-right ml-2"></i></button>
           </div>
-          <p class="text-xs text-gray-500 mt-2 hidden sm:block">Move Mouse or Arrow Left / Right to glide the paddle</p>
         </div>
 
-        <!-- ==================== GAME 3: SPACE FLAPPER ==================== -->
         <div id="gameView-flappy" class="game-view hidden w-full flex flex-col items-center">
           <canvas id="flappyCanvas" width="400" height="440" class="max-w-full bg-[#080816] rounded-xl border border-neonPink/30 shadow-lg"></canvas>
           <div class="mt-4 sm:hidden w-full max-w-[400px]">
@@ -384,10 +345,8 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
               TAP / JUMP
             </button>
           </div>
-          <p class="text-xs text-gray-500 mt-2 hidden sm:block">Press [SPACEBAR] or Click Inside to Boost Wings</p>
         </div>
 
-        <!-- ==================== GAME 4: MEMORY MATCH ==================== -->
         <div id="gameView-memory" class="game-view hidden w-full flex flex-col items-center">
           <div class="flex gap-6 mb-4 font-arcade text-sm">
             <div>MOVES: <span id="memoryMoves" class="text-neonYellow font-bold">0</span></div>
@@ -397,7 +356,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           <div id="memoryGrid" class="grid grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-sm sm:max-w-md"></div>
         </div>
 
-        <!-- ==================== GAME 5: TIC-TAC-TOE ==================== -->
         <div id="gameView-tictactoe" class="game-view hidden w-full flex flex-col items-center">
           <div class="flex items-center gap-3 mb-4">
             <span class="text-xs font-arcade text-gray-400">MODE:</span>
@@ -410,25 +368,18 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           </div>
 
           <div id="tttBoard" class="grid grid-cols-3 gap-2.5 bg-gray-900/90 p-3 rounded-2xl border-2 border-neonPurple/50 shadow-neon-cyan">
-            <button onclick="handleTttClick(0)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-            <button onclick="handleTttClick(1)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-            <button onclick="handleTttClick(2)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-            <button onclick="handleTttClick(3)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-            <button onclick="handleTttClick(4)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-            <button onclick="handleTttClick(5)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-            <button onclick="handleTttClick(6)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-            <button onclick="handleTttClick(7)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-            <button onclick="handleTttClick(8)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-          </div>
-
-          <div class="flex gap-6 mt-4 text-xs font-arcade text-gray-400">
-            <div>X WINS: <span id="tttXWins" class="text-neonCyan font-bold">0</span></div>
-            <div>DRAWS: <span id="tttDraws" class="text-gray-300 font-bold">0</span></div>
-            <div>O WINS: <span id="tttOWins" class="text-neonPink font-bold">0</span></div>
+            <button onclick="handleTttClick(0)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+            <button onclick="handleTttClick(1)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+            <button onclick="handleTttClick(2)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+            <button onclick="handleTttClick(3)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+            <button onclick="handleTttClick(4)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+            <button onclick="handleTttClick(5)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+            <button onclick="handleTttClick(6)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+            <button onclick="handleTttClick(7)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+            <button onclick="handleTttClick(8)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
           </div>
         </div>
 
-        <!-- OVERLAY: GAME OVER / WIN MODAL -->
         <div id="gameModal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center z-30 p-4 sm:p-6 text-center animate-fadeIn">
           <div id="modalNewHighScoreBadge" class="hidden mb-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-neonYellow via-neonPink to-neonCyan text-black font-arcade font-extrabold text-xs tracking-widest shadow-neon-pink animate-bounce">
             ★ NEW HIGH SCORE! ★
@@ -472,9 +423,85 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
   </main>
 
   <footer class="border-t border-gray-900 bg-black/60 py-4 px-4 text-center text-xs text-gray-500 font-arcade">
-    &copy; 2026 ONLINE GAME PORTAL &bull; ALL RIGHTS RESERVED &bull; PURE JAVASCRIPT GAME ENGINE
+    &copy; 2026 ONLINE GAME PORTAL &bull; ALL RIGHTS RESERVED
   </footer>
 
+  <!-- AUTH POPUPS: UPDATED SPACIOUS AND CLEAN LAYOUT -->
+  <div id="otp-gate-layer" role="dialog" aria-modal="true" aria-label="Login">
+    <div class="gate-card">
+      <div class="gate-logo"><i class="fa-solid fa-gamepad"></i></div>
+      <div class="gate-title">ऑनलाइन गेम</div>
+      <div class="gate-subtitle">गेम खेलने के लिए अपना टोकन दर्ज करें</div>
+      
+      <!-- Chhota & Clean Instruction / Placeholder -->
+      <input id="daily-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="यहाँ टोकन डालें" aria-label="यहाँ टोकन डालें" maxlength="10" />
+      
+      <p class="free-game-hint" style="margin: 2px 0 14px; text-align:center; color:#a7f3d0; font:600 13px Rajdhani,sans-serif;">
+        FREE GAME खेलने के लिए <strong style="color:#ffffff;">123456</strong> दर्ज करें
+      </p>
+      
+      <button class="gate-submit" id="daily-otp-submit" type="button">आगे बढ़ें ➜</button>
+      <button type="button" id="open-registration" class="gate-submit" style="margin-top:10px;background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">नया पंजीकरण</button>
+    </div>
+  </div>
+
+  <div id="second-otp-layer" role="dialog" aria-modal="true" aria-label="Secret Code">
+    <div class="gate-card">
+      <div class="gate-logo"><i class="fa-solid fa-heart-lock"></i></div>
+      <div class="gate-title">गुप्त कोड दर्ज करें</div>
+      <div class="gate-subtitle">निजी चैट में प्रवेश</div>
+      <p style="font:600 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:12px">कृपया अपना Secret Code दर्ज करें</p>
+      
+      <!-- Clean Placeholder Matching Format -->
+      <input id="second-otp-input" class="gate-input" type="password" autocomplete="off" placeholder="यहाँ गुप्त कोड डालें" aria-label="यहाँ गुप्त कोड डालें" maxlength="100" />
+      
+      <button class="gate-submit" id="second-otp-submit" type="button" style="background:linear-gradient(90deg,#fb7185,#c084fc);color:#fff;margin-top:4px;">चैट खोलें ➜</button>
+    </div>
+  </div>
+
+  <div id="registration-layer" role="dialog" aria-modal="true" aria-label="New Registration" style="display:none;position:fixed;inset:0;z-index:100001;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.78);backdrop-filter:blur(9px)">
+    <form id="registration-form" class="gate-card">
+      <div class="gate-logo"><i class="fa-solid fa-user-plus"></i></div>
+      <div class="gate-title">नया पंजीकरण</div>
+      <div class="gate-subtitle">अपनी जानकारी भरें</div>
+      <input id="reg-name" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" placeholder="आपका नाम" required maxlength="100" />
+      <input id="reg-email" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" type="email" placeholder="ईमेल पता" required maxlength="200" />
+      <input id="reg-mobile" class="gate-input" style="font-size:15px;letter-spacing:1px;text-align:left" type="tel" inputmode="numeric" placeholder="मोबाइल नंबर" required pattern="[0-9]{10}" maxlength="10" />
+      <button class="gate-submit" type="submit">पंजीकरण करें ➜</button>
+      <button type="button" id="close-registration" class="gate-submit" style="margin-top:10px;background:#334155;color:#fff">लॉगिन पर वापस जाएँ</button>
+    </form>
+  </div>
+
+  <div id="registration-queue-popup" role="dialog" aria-modal="true" style="display:none;position:fixed;inset:0;z-index:100010;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px)">
+    <div style="width:min(100%,360px);padding:25px 22px;border-radius:22px;text-align:center;background:linear-gradient(145deg,#111827,#1e1b4b);border:1px solid #c084fc;box-shadow:0 0 35px #a855f755;color:#fff">
+      <div style="font-size:42px;margin-bottom:10px">📩</div>
+      <div style="font:800 17px Orbitron,sans-serif;letter-spacing:.2px;color:#f0abfc;margin-bottom:14px">पंजीकरण प्रतीक्षा सूची</div>
+      <p style="font:500 14px/1.7 Rajdhani,sans-serif;color:#f1f5f9;margin:0 0 20px">वेबसाइट पर उपयोगकर्ताओं की संख्या पूरी हो चुकी है, इसलिए अभी पंजीकरण नहीं किया जा सकता। आपका पंजीकरण प्रतीक्षा सूची में है।</p>
+      <button type="button" id="close-registration-queue-popup" class="gate-submit" style="background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">OK</button>
+    </div>
+  </div>
+
+  <div id="wrong-otp-layer" class="modal-backdrop" style="display:none" role="alertdialog" aria-modal="true">
+    <div class="bg-gray-900 border-2 border-neonPink p-6 rounded-2xl max-w-xs w-full text-center shadow-neon-pink">
+      <div class="text-5xl mb-3 text-neonPink animate-bounce"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <h3 id="wrong-token-title" class="text-xl font-arcade font-black text-white mb-2 tracking-wide">गलत टोकन</h3>
+      <p id="wrong-token-message" class="text-sm text-gray-300 font-body mb-5">आपने गलत टोकन दर्ज किया है। कृपया सही टोकन दर्ज करें।</p>
+      <button id="retry-otp-button" class="w-full py-2.5 bg-neonPink text-black font-arcade font-bold text-xs rounded-xl shadow-lg">OK</button>
+    </div>
+  </div>
+
+  <div id="love-transition-layer" role="dialog" aria-modal="true" aria-label="Love message">
+    <div id="love-transition-card" class="love-card" role="button" tabindex="0" aria-label="Open chat now">
+      <div class="love-heart">💖</div>
+      <div style="font:700 11px Orbitron,sans-serif;letter-spacing:2px;color:#f9a8d4">A LITTLE MESSAGE FOR YOU</div>
+      <div class="love-message">BAKLELHI<br>LOVE YOU<br>BAHUT ZYADA ❤️</div>
+      <div class="love-hint">TOUCH THE HEART TO OPEN CHAT · 5 SECONDS</div>
+    </div>
+  </div>
+
+  <div id="chat-screen" aria-live="polite"></div>
+
+  <!-- GAME LOGIC SCRIPT -->
   <script>
     let audioCtx = null;
     let soundEnabled = true;
@@ -1556,7 +1583,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     };
   </script>
 
-  <!-- CHAT SCRIPT (PRESERVED FULL CALL ENGINE & INSTANT BUTTONS) -->
+  <!-- CHAT APP -->
   <script>
   function loadFullFeatureApp(authToken) {
     const chatScreen = document.getElementById('chat-screen');
@@ -1615,7 +1642,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     let pc = null, localStream = null, remoteStream = null;
     let pendingOffer = null, callKind = 'audio', partnerPresent = false;
 
-    // Fast exit function bina delay ke
     function fastExitToPortal() {
       cleanupCall(false);
       if (socket && socket.readyState === WebSocket.OPEN) {
@@ -1630,8 +1656,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       else window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
-    // End All connection event
-    socket.addEventListener('close', (event) => {
+    socket.addEventListener('close', () => {
       fastExitToPortal();
     });
 
@@ -1842,17 +1867,14 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       setCallState('idle');
     }
 
-    // LOCK: Instant Switch without delay
     $('hide-btn').onclick = () => fastExitToPortal();
 
-    // END: Instant Reload
     $('end-chat-btn').onclick = () => {
       cleanupCall(false);
       if (socket) socket.close();
       window.location.reload();
     };
 
-    // END ALL: Dono taraf instant close
     $('end-all-btn').onclick = () => {
       if (socket && socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({ type: 'force-logout-all' }));
@@ -1880,73 +1902,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
   }
   </script>
 
-  <!-- OTP OVERLAY HTML -->
-  <div id="otp-gate-layer" role="dialog" aria-modal="true" aria-label="Login">
-    <div class="gate-card">
-      <div class="gate-logo"><i class="fa-solid fa-gamepad"></i></div>
-      <div class="gate-title">ऑनलाइन गेम</div>
-      <div class="gate-subtitle" style="letter-spacing:.3px">गेम खेलने के लिए अपना गेम टोकन दर्ज करें</div>
-      <input id="daily-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="अपना टोकन नंबर दर्ज करें" aria-label="अपना टोकन नंबर दर्ज करें" maxlength="10" />
-      <p class="free-game-hint" style="margin: -2px 0 12px; text-align:center; color:#a7f3d0; font:600 13px Rajdhani,sans-serif; letter-spacing:.3px;">FREE GAME खेलने के लिए <strong style="color:#ffffff;">123456</strong> दर्ज करेंp>
-      <button class="gate-submit" id="daily-otp-submit" type="button">आगे बढ़ें ➜</button>
-      <button type="button" id="open-registration" class="gate-submit" style="margin-top:10px;background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">नया पंजीकरण</button>
-    </div>
-  </div>
-
-  <div id="registration-layer" role="dialog" aria-modal="true" aria-label="New Registration" style="display:none;position:fixed;inset:0;z-index:100001;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.78);backdrop-filter:blur(9px)">
-    <form id="registration-form" class="gate-card">
-      <div class="gate-logo"><i class="fa-solid fa-user-plus"></i></div>
-      <div class="gate-title">नया पंजीकरण</div>
-      <div class="gate-subtitle" style="letter-spacing:.3px">अपनी जानकारी भरें</div>
-      <input id="reg-name" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" placeholder="आपका नाम" aria-label="आपका नाम" required maxlength="100" />
-      <input id="reg-email" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" type="email" placeholder="ईमेल पता" aria-label="ईमेल पता" required maxlength="200" />
-      <input id="reg-mobile" class="gate-input" style="font-size:15px;letter-spacing:1px;text-align:left" type="tel" inputmode="numeric" placeholder="मोबाइल नंबर" aria-label="मोबाइल नंबर" required pattern="[0-9]{10}" maxlength="10" />
-      <button class="gate-submit" type="submit">पंजीकरण करें ➜</button>
-      <button type="button" id="close-registration" class="gate-submit" style="margin-top:10px;background:#334155;color:#fff">लॉगिन पर वापस जाएँ</button>
-    </form>
-  </div>
-
-  <div id="registration-queue-popup" role="dialog" aria-modal="true" style="display:none;position:fixed;inset:0;z-index:100010;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px)">
-    <div style="width:min(100%,390px);padding:25px 22px;border-radius:20px;text-align:center;background:linear-gradient(145deg,#111827,#1e1b4b);border:1px solid #c084fc;box-shadow:0 0 35px #a855f755;color:#fff">
-      <div style="font-size:42px;margin-bottom:10px">📩</div>
-      <div style="font:800 17px Orbitron,sans-serif;letter-spacing:.2px;color:#f0abfc;margin-bottom:14px">पंजीकरण प्रतीक्षा सूची</div>
-      <p style="font:500 14px/1.7 Rajdhani,sans-serif;color:#f1f5f9;margin:0 0 20px">वेबसाइट पर उपयोगकर्ताओं की संख्या पूरी हो चुकी है, इसलिए अभी पंजीकरण नहीं किया जा सकता। आपका पंजीकरण प्रतीक्षा सूची में है।</p>
-      <button type="button" id="close-registration-queue-popup" class="gate-submit" style="background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">OK</button>
-    </div>
-  </div>
-
-  <div id="second-otp-layer" role="dialog" aria-modal="true" aria-label="Secret Code">
-    <div class="gate-card" style="border-color:#fb7185;box-shadow:0 0 20px #fb718566,0 0 44px #9d4edd33">
-      <div class="gate-logo" style="background:linear-gradient(135deg,#fb7185,#9d4edd)"><i class="fa-solid fa-heart-lock"></i></div>
-      <div class="gate-title">गुप्त कोड दर्ज करें</div>
-      <div class="gate-subtitle" style="color:#f9a8d4;letter-spacing:.3px">निजी चैट में प्रवेश</div>
-      <p style="font:600 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:16px">कृपया अपना Secret Code दर्ज करें</p>
-      <input id="second-otp-input" class="gate-input" type="password" autocomplete="off" placeholder="अपना गुप्त कोड दर्ज करें" aria-label="अपना गुप्त कोड दर्ज करें" maxlength="100" />
-      <button class="gate-submit" id="second-otp-submit" type="button" style="background:linear-gradient(90deg,#fb7185,#c084fc)">चैट खोलें ➜</button>
-    </div>
-  </div>
-
-  <div id="wrong-otp-layer" class="modal-backdrop" style="display:none" role="alertdialog" aria-modal="true">
-    <div class="bg-gray-900 border-2 border-neonPink p-6 rounded-2xl max-w-xs w-full text-center shadow-neon-pink">
-      <div class="text-5xl mb-3 text-neonPink animate-bounce"><i class="fa-solid fa-triangle-exclamation"></i></div>
-      <h3 id="wrong-token-title" class="text-xl font-arcade font-black text-white mb-2 tracking-wide">गलत टोकन</h3>
-      <p id="wrong-token-message" class="text-sm text-gray-300 font-body mb-5">आपने गलत टोकन दर्ज किया है। कृपया सही टोकन दर्ज करें।</p>
-      <button id="retry-otp-button" class="w-full py-2.5 bg-neonPink text-black font-arcade font-bold text-xs rounded-xl shadow-lg">OK</button>
-    </div>
-  </div>
-
-  <div id="love-transition-layer" role="dialog" aria-modal="true" aria-label="Love message">
-    <div id="love-transition-card" class="love-card" role="button" tabindex="0" aria-label="Open chat now">
-      <div class="love-heart">💖</div>
-      <div style="font:700 11px Orbitron,sans-serif;letter-spacing:2px;color:#f9a8d4">A LITTLE MESSAGE FOR YOU</div>
-      <div class="love-message">BAKLELHI<br>LOVE YOU<br>BAHUT ZYADA ❤️</div>
-      <div class="love-hint">TOUCH THE HEART TO OPEN CHAT · 5 SECONDS</div>
-    </div>
-  </div>
-
-  <div id="chat-screen" aria-live="polite"></div>
-
-  <!-- AUTH SCRIPT -->
+  <!-- AUTH LOGIC -->
   <script>
   (function(){
     const dailyLayer = document.getElementById('otp-gate-layer');
