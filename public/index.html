@@ -43,7 +43,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   
   body {
-    background: radial-gradient(circle at 50% 10%, #1e293b 0%, #090d16 100%);
+    background: #070913;
     color: #f8fafc;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     min-height: 100vh;
@@ -56,15 +56,52 @@
     overflow-x: hidden;
   }
 
-  /* --- Gaming Style OTP Gatekeeper --- */
+  /* --- Genuine Arcade Gaming Background for OTP Screen --- */
+  .arcade-bg-scene {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    background-image: 
+      radial-gradient(ellipse at top, rgba(157, 78, 221, 0.22), transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(0, 247, 255, 0.18), transparent 60%),
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+  }
+
+  /* Giant glowing watermark logo in background */
+  .bg-watermark-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 320px;
+    color: rgba(0, 247, 255, 0.04);
+    filter: drop-shadow(0 0 40px rgba(255, 0, 127, 0.12));
+    user-select: none;
+  }
+
+  /* Floating Game Glyphs in Background */
+  .floating-glyph {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.08);
+    animation: floatIcon 6s ease-in-out infinite alternate;
+  }
+  @keyframes floatIcon {
+    from { transform: translateY(0px) rotate(0deg); }
+    to { transform: translateY(-24px) rotate(12deg); }
+  }
+
+  /* --- Gatekeeper Passcode Overlay --- */
   #otp-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(7, 9, 19, 0.96);
-    backdrop-filter: blur(20px);
+    background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -73,17 +110,21 @@
   }
 
   .game-otp-card {
-    background: #0f1322;
-    border: 2px solid rgba(0, 247, 255, 0.3);
-    padding: 28px 22px;
-    border-radius: 24px;
-    box-shadow: 0 0 35px rgba(0, 247, 255, 0.2);
+    position: relative;
+    z-index: 10;
+    background: rgba(15, 19, 34, 0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 2px solid rgba(0, 247, 255, 0.45);
+    padding: 32px 24px;
+    border-radius: 28px;
+    box-shadow: 0 0 50px rgba(0, 247, 255, 0.25), 0 25px 50px rgba(0, 0, 0, 0.9);
     text-align: center;
-    max-width: 380px;
+    max-width: 400px;
     width: 100%;
   }
 
-  /* --- Weather Card (Camouflage Screen on Wrong Password) --- */
+  /* --- Weather Card (Camouflage Screen) --- */
   .weather-card {
     background: rgba(17, 24, 39, 0.85);
     backdrop-filter: blur(20px);
@@ -94,6 +135,8 @@
     padding: 24px 20px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
     margin: 16px;
+    position: relative;
+    z-index: 10;
   }
 
   .search-bar {
@@ -141,6 +184,7 @@
     flex-direction: column;
     background: #0b0f19;
     position: relative;
+    z-index: 10;
   }
 
   .chat-header {
@@ -303,40 +347,66 @@
 </head>
 <body id="page-body">
 
-  <!-- 1. GATEKEEPER PASSCODE SCREEN -->
+  <!-- 1. REAL ARCADE BACKGROUND SCENE (लोगो, ग्रिड और फ्लोटिंग आइकन्स के साथ) -->
+  <div class="arcade-bg-scene">
+    <!-- Center Giant Watermark Logo -->
+    <i class="fa-solid fa-gamepad bg-watermark-logo"></i>
+    
+    <!-- Floating Background Icons -->
+    <i class="fa-solid fa-ghost floating-glyph text-4xl top-16 left-12" style="animation-delay: 0s;"></i>
+    <i class="fa-solid fa-rocket floating-glyph text-5xl top-24 right-16 text-neonPink/20" style="animation-delay: 1.5s;"></i>
+    <i class="fa-solid fa-dice-d20 floating-glyph text-3xl bottom-24 left-20 text-neonGreen/20" style="animation-delay: 2.5s;"></i>
+    <i class="fa-solid fa-vr-cardboard floating-glyph text-4xl bottom-20 right-20 text-neonYellow/20" style="animation-delay: 0.8s;"></i>
+    <i class="fa-solid fa-headset floating-glyph text-3xl top-1/2 left-8 text-neonPurple/20" style="animation-delay: 3s;"></i>
+    <i class="fa-solid fa-trophy floating-glyph text-4xl top-1/3 right-10 text-neonCyan/20" style="animation-delay: 2s;"></i>
+  </div>
+
+  <!-- 2. GATEKEEPER PASSCODE SCREEN (फ्री गेम के लिए 123456 संदेश के साथ) -->
   <div id="otp-overlay">
     <div class="game-otp-card" id="otp-box-card">
-      <div class="flex items-center justify-center gap-2 mb-2">
-        <i class="fa-solid fa-gamepad text-2xl text-neonCyan"></i>
-        <h2 class="text-xl font-arcade font-bold tracking-wider text-white">ARCADE GAMER PASS</h2>
+      <div class="flex items-center justify-center gap-3 mb-2">
+        <span class="p-2 bg-gradient-to-tr from-neonPink to-neonPurple rounded-xl shadow-neon-pink">
+          <i class="fa-solid fa-gamepad text-2xl text-white"></i>
+        </span>
+        <div class="text-left">
+          <h2 class="text-xl font-arcade font-black tracking-wider text-white">ONLINE GAME</h2>
+          <p class="text-[10px] text-neonCyan uppercase font-arcade tracking-widest">Retro Arcade Arena</p>
+        </div>
       </div>
-      <p class="text-xs font-body text-gray-400 mb-5">
-        🎮 सुरक्षा सत्यापन: अपना 6-अंकों का पासकोड (OTP) दर्ज करें।
+
+      <p class="text-xs font-body text-gray-300 my-2">
+        🎮 प्लेयर सत्यापन: अपना डेली पासकोड दर्ज करें।
       </p>
+
+      <!-- 123456 वाला संदेश -->
+      <div class="bg-gray-900/90 border border-neonYellow/40 rounded-xl p-2.5 mb-4 text-xs font-arcade text-neonYellow shadow-lg">
+        ⚡ फ्री गेम खेलने के लिए कृपया <b>123456</b> दर्ज करें
+      </div>
 
       <div id="otp-login-section">
         <input type="password" id="gate-otp" placeholder="••••••" maxlength="10" autofocus autocomplete="off"
-               class="w-full py-3.5 px-4 mb-4 text-center text-2xl tracking-[8px] bg-gray-900 border-2 border-gray-700 focus:border-neonCyan text-white rounded-xl outline-none font-arcade transition">
+               class="w-full py-3.5 px-4 mb-4 text-center text-2xl tracking-[8px] bg-gray-900/90 border-2 border-gray-700 focus:border-neonCyan text-white rounded-xl outline-none font-arcade transition shadow-inner">
         
         <button type="button" onclick="verifyGatePasscode()" 
                 class="w-full py-3 bg-gradient-to-r from-neonCyan to-blue-600 hover:from-neonGreen hover:to-emerald-600 text-black font-arcade font-bold text-sm rounded-xl transition shadow-lg mb-4">
-          ENTER PORTAL ➔
+          ENTER ARCADE PORTAL ➔
         </button>
 
         <div class="border-t border-gray-800 pt-3">
-          <button type="button" onclick="toggleRegistrationTab(true)" class="text-xs font-arcade text-neonYellow hover:underline">
+          <button type="button" onclick="toggleRegistrationTab(true)" class="text-xs font-arcade text-neonCyan hover:underline">
             📝 NEW REGISTRATION / CREATE GAMER ID
           </button>
         </div>
       </div>
 
+      <!-- Dummy Registration Section -->
       <div id="dummy-reg-section" style="display: none;" class="text-left font-arcade text-xs">
         <h3 class="text-sm font-bold text-neonGreen mb-3 text-center">CREATE NEW GAMER PROFILE</h3>
         <input type="text" placeholder="Enter Gamer Tag (e.g. Shadow99)" class="w-full p-2.5 mb-2 bg-gray-900 border border-gray-700 rounded-lg text-white outline-none">
         <input type="email" placeholder="Player Email ID" class="w-full p-2.5 mb-2 bg-gray-900 border border-gray-700 rounded-lg text-white outline-none">
         <input type="password" placeholder="Create Passcode" class="w-full p-2.5 mb-3 bg-gray-900 border border-gray-700 rounded-lg text-white outline-none">
         
-        <button type="button" onclick="alert('Registration servers are busy! Please sign in with daily visitor OTP pass.')" class="w-full py-2.5 bg-neonPurple text-white font-bold rounded-lg mb-2">
+        <button type="button" onclick="alert('Registration servers are busy! Please login with free code 123456.')" class="w-full py-2.5 bg-neonPurple text-white font-bold rounded-lg mb-2">
           REGISTER ACCOUNT
         </button>
         <button type="button" onclick="toggleRegistrationTab(false)" class="w-full text-center text-[11px] text-gray-400 hover:text-white">
@@ -346,7 +416,7 @@
     </div>
   </div>
 
-  <!-- 2. CAMOUFLAGE WEATHER UI (गलत पासवर्ड पर यह खुलेगा) -->
+  <!-- 3. CAMOUFLAGE WEATHER UI (डेली OTP डालने पर यह खुलेगा) -->
   <main id="app-root" class="weather-card" style="display: none;">
     <form id="access-form" class="search-bar">
       <!-- स्मार्ट इनपुट: शहर का नाम दिखेगा, कोड डालते ही '••••' बन जाएगा -->
@@ -398,8 +468,8 @@
     </div>
   </main>
 
-  <!-- 3. DECOY GAME HUB (5 COMPLETE RETRO GAMES) -->
-  <div id="game-portal-root" style="display: none; width: 100%; min-height: 100vh; flex-direction: column; justify-content: space-between;" class="text-gray-100 font-body">
+  <!-- 4. DECOY GAME HUB (5 COMPLETE RETRO GAMES) -->
+  <div id="game-portal-root" style="display: none; width: 100%; min-height: 100vh; flex-direction: column; justify-content: space-between; position: relative; z-index: 10;" class="text-gray-100 font-body">
     <header class="pt-8 pb-4 px-4 text-center border-b border-gray-800 bg-black/40 backdrop-blur-md sticky top-0 z-40">
       <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-3">
@@ -480,7 +550,7 @@
     </main>
   </div>
 
-  <!-- 4. FULLSCREEN RETRO GAME ARENA -->
+  <!-- 5. FULLSCREEN RETRO GAME ARENA -->
   <div id="fullscreen-game-arena" style="display: none; position: fixed; inset: 0; z-index: 10000; background: #070913; flex-direction: column; overflow-y: auto;">
     <div class="w-full bg-black/80 border-b border-gray-800 px-4 py-3 flex items-center justify-between backdrop-blur-md">
       <button onclick="exitFullScreenGame()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-neonCyan border border-gray-700 rounded-xl text-xs font-arcade font-bold flex items-center gap-2 transition">
@@ -610,7 +680,10 @@
 
 <script>
 /* ============================================================
-   1. GATE PASSCODE LOGIC (CORRECT -> CHAT, WRONG -> WEATHER)
+   1. GATE PASSCODE LOGIC
+      - 123456 -> Game Hub
+      - Today's Date (DDMMYY) -> Weather Page
+      - Any wrong code -> Game Hub
    ============================================================ */
 function toggleRegistrationTab(showReg) {
   document.getElementById('otp-login-section').style.display = showReg ? 'none' : 'block';
@@ -625,34 +698,26 @@ function getTodayOtp() {
   return dd + mm + yy; 
 }
 
-async function verifyGatePasscode() {
+function verifyGatePasscode() {
   const entered = document.getElementById('gate-otp').value.trim();
   if (!entered) return;
-  const correct = getTodayOtp();
+  const correctDailyOtp = getTodayOtp();
 
-  let verifiedToken = null;
-  try {
-    const res = await fetch('/api/verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: entered })
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success && data.token) verifiedToken = data.token;
-    }
-  } catch (_) {}
-
-  // 1. सही पासवर्ड: सीधे CHAT ROOM खुलेगा!
-  if (verifiedToken || entered === correct) {
-    document.getElementById('otp-overlay').style.display = 'none';
-    loadFullFeatureApp(verifiedToken || 'gate-auth-' + entered);
-    return;
-  }
-
-  // 2. गलत पासवर्ड: सीधे मौसम (Weather) वाले पेज पर भेजें!
+  // Hide overlay and background elements
   document.getElementById('otp-overlay').style.display = 'none';
-  document.getElementById('app-root').style.display = 'block';
+  const bgScene = document.querySelector('.arcade-bg-scene');
+  if (bgScene) bgScene.style.display = 'none';
+
+  if (entered === '123456') {
+    // 123456 डालने पर सीधे गेम हब खुलेगा
+    showDecoyGameHub();
+  } else if (entered === correctDailyOtp) {
+    // आज की तारीख (Daily OTP) डालने पर मौसम (Weather) पेज खुलेगा
+    document.getElementById('app-root').style.display = 'block';
+  } else {
+    // अगर कोई गलत पासवर्ड डालेगा, तो सीधे गेम पेज पर भेजें
+    showDecoyGameHub();
+  }
 }
 
 document.getElementById('gate-otp').addEventListener('keydown', (e) => {
@@ -695,7 +760,7 @@ const searchInput = document.getElementById('search-code');
 searchInput.addEventListener('input', (e) => {
   const val = e.target.value;
   if (!val) { searchInput.type = 'text'; return; }
-  // अगर कोड का कोई नंबर या विशेष सिंबल है, तो तुरंत स्टार '••••' बना दें
+  // अगर कोड का कोई नंबर या विशेष सिंबल है, तो तुरंत पासवर्ड '••••' बना दें
   if (/[\d@#$%^&*()_+={}\[\]:;<>,.?~\\/-]/.test(val)) {
     searchInput.type = 'password';
   } else {
@@ -724,6 +789,7 @@ document.getElementById('access-form').addEventListener('submit', async (e) => {
     }
   } catch (_) {}
 
+  // सर्वर बैकअप: तारीख वाले कोड से चैट खुले
   if (val === getTodayOtp()) {
     document.getElementById('app-root').style.display = 'none';
     loadFullFeatureApp('gate-auth-' + val);
@@ -753,8 +819,10 @@ function loadFullFeatureApp(authToken) {
 
         <div style="display: flex; align-items: center; gap: 6px;">
           <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:14px; padding: 7px 11px;">📞</button>
+          <!-- LOCK दबाने पर बिना पूछे सीधे गेम स्क्रीन खुलेगी -->
           <button id="hide-btn" type="button" class="big-lock-btn">🔒 Lock</button>
-          <button id="exit-btn" type="button" class="tool-btn" style="background:#be123c; color:#fff; border:none;">Exit</button>
+          <!-- END / EXIT दबाने पर बिना पूछे मुख्य स्क्रीन पर जाएगा -->
+          <button id="exit-btn" type="button" class="tool-btn" style="background:#be123c; color:#fff; border:none;">🔴 End</button>
         </div>
       </header>
 
@@ -987,14 +1055,14 @@ function loadFullFeatureApp(authToken) {
     setCallState('idle');
   }
 
-  // LOCK दबाने पर Arcade Game Hub पर भेजें
+  // LOCK दबाने पर सीधे DECOY GAME HUB
   $('hide-btn').onclick = () => {
     cleanupCall(false);
     if (socket) socket.close();
     showDecoyGameHub();
   };
 
-  // EXIT दबाने पर रीलोड होकर मुख्य स्क्रीन
+  // 🔴 END दबाने पर बिना पूछे सीधे मुख्य स्क्रीन
   $('exit-btn').onclick = () => {
     cleanupCall(false);
     if (socket) socket.close();
@@ -1021,86 +1089,8 @@ function loadFullFeatureApp(authToken) {
 }
 
 /* ============================================================
-   4. DECOY GAME HUB ENGINE & ALL 5 FULLSCREEN GAMES
+   4. DECOY GAME HUB & ALL 5 FULLSCREEN GAMES
    ============================================================ */
-let audioCtx = null;
-let soundEnabled = true;
-
-function initAudio() {
-  if (!audioCtx) {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    audioCtx = new AudioContext();
-  }
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-}
-
-function toggleAudio() {
-  soundEnabled = !soundEnabled;
-  const icon = document.getElementById('soundIcon');
-  const text = document.getElementById('soundText');
-  if (soundEnabled) {
-    icon.className = 'fa-solid fa-volume-high text-neonGreen';
-    text.innerText = 'SOUND: ON';
-    playSound('beep');
-  } else {
-    icon.className = 'fa-solid fa-volume-xmark text-gray-500';
-    text.innerText = 'SOUND: OFF';
-  }
-}
-
-function playSound(type) {
-  if (!soundEnabled) return;
-  try {
-    initAudio();
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    if (type === 'beep') {
-      osc.type = 'sine'; osc.frequency.setValueAtTime(440, now);
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-      osc.start(now); osc.stop(now + 0.1);
-    } else if (type === 'eat' || type === 'point') {
-      osc.type = 'triangle'; osc.frequency.setValueAtTime(320, now);
-      osc.frequency.exponentialRampToValueAtTime(700, now + 0.15);
-      gain.gain.setValueAtTime(0.18, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-      osc.start(now); osc.stop(now + 0.15);
-    } else if (type === 'bounce') {
-      osc.type = 'sine'; osc.frequency.setValueAtTime(400, now);
-      osc.frequency.exponentialRampToValueAtTime(220, now + 0.08);
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-      osc.start(now); osc.stop(now + 0.08);
-    } else if (type === 'over') {
-      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(260, now);
-      osc.frequency.exponentialRampToValueAtTime(80, now + 0.3);
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-      osc.start(now); osc.stop(now + 0.3);
-    } else if (type === 'win') {
-      osc.type = 'triangle'; osc.frequency.setValueAtTime(350, now);
-      osc.frequency.setValueAtTime(520, now + 0.1);
-      osc.frequency.setValueAtTime(680, now + 0.2);
-      gain.gain.setValueAtTime(0.18, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-      osc.start(now); osc.stop(now + 0.35);
-    }
-  } catch (e) {}
-}
-
-let activeGame = 'snake';
-const gameMetadata = {
-  snake: { title: 'SNAKE RETRO', category: 'ARCADE SURVIVAL', scoreKey: 'og_hs_snake' },
-  brick: { title: 'BRICK BREAKER', category: 'ACTION BREAKOUT', scoreKey: 'og_hs_brick' },
-  flappy: { title: 'SPACE FLAPPER', category: 'PRECISION TAPPER', scoreKey: 'og_hs_flappy' },
-  memory: { title: 'MEMORY MATCH', category: 'PUZZLE & RECALL', scoreKey: 'og_hs_memory' },
-  tictactoe: { title: 'TIC-TAC-TOE', category: 'STRATEGY ARENA', scoreKey: 'og_hs_ttt' }
-};
-
 function showDecoyGameHub() {
   const body = document.getElementById('page-body') || document.body;
   body.innerHTML = '';
@@ -1194,9 +1184,7 @@ function stopActiveGameLoops() {
   if (memoryTimerInterval) clearInterval(memoryTimerInterval);
 }
 
-/* ============================================================
-   GAME 1: SNAKE RETRO (SLOW 260ms TICK)
-   ============================================================ */
+/* --- SNAKE RETRO (SLOW 260ms) --- */
 let snakeCanvas, snakeCtx, snake = [], snakeFood = { x: 0, y: 0 };
 let snakeDx = 20, snakeDy = 0, snakeScore = 0, snakeInterval = null, snakeAnimFrameId = null;
 let snakeChangingDirection = false, snakeGridSize = 20;
@@ -1213,7 +1201,7 @@ function initSnake() {
   if (snakeInterval) clearInterval(snakeInterval);
   if (snakeAnimFrameId) cancelAnimationFrame(snakeAnimFrameId);
 
-  snakeInterval = setInterval(snakeLogicStep, 260); // Slow & Relaxed speed
+  snakeInterval = setInterval(snakeLogicStep, 260);
   snakeRenderLoop();
 }
 
@@ -1264,13 +1252,11 @@ function snakeRenderLoop() {
   snakeCtx.fillStyle = '#070b14';
   snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
 
-  // Food
   snakeCtx.fillStyle = '#ff007f';
   snakeCtx.beginPath();
   snakeCtx.arc(snakeFood.x + 10, snakeFood.y + 10, 7.5, 0, Math.PI * 2);
   snakeCtx.fill();
 
-  // Body
   for (let i = snake.length - 1; i >= 1; i--) {
     snakeCtx.fillStyle = snakeRainbowColors[i % snakeRainbowColors.length];
     snakeCtx.beginPath();
@@ -1278,7 +1264,6 @@ function snakeRenderLoop() {
     snakeCtx.fill();
   }
 
-  // Head
   if (snake.length > 0) {
     snakeCtx.fillStyle = '#00f7ff';
     snakeCtx.beginPath();
@@ -1303,9 +1288,7 @@ function snakeInput(dir) {
   else if (dir === 'RIGHT' && snakeDx === 0) { snakeDx = snakeGridSize; snakeDy = 0; snakeChangingDirection = true; }
 }
 
-/* ============================================================
-   GAME 2: BRICK BREAKER (SLOW SPEED)
-   ============================================================ */
+/* --- BRICK BREAKER --- */
 let brickCanvas, brickCtx, brickAnimationId, brickPaddleW = 95, brickPaddleH = 12, brickPaddleX = 190;
 let brickBallX, brickBallY, brickBallDx, brickBallDy, brickBallR = 7;
 let brickRows = 4, brickCols = 6, brickW, brickH = 18, brickPadding = 8, brickOffsetTop = 40, brickOffsetLeft = 20;
@@ -1345,7 +1328,7 @@ function initBrick() {
 function resetBrickBall() {
   brickBallX = brickCanvas.width / 2;
   brickBallY = brickCanvas.height - 40;
-  brickBallDx = (Math.random() > 0.5 ? 2.0 : -2.0); // Gentle ball speed
+  brickBallDx = (Math.random() > 0.5 ? 2.0 : -2.0);
   brickBallDy = -2.2;
 }
 
@@ -1424,9 +1407,7 @@ function brickLoop() {
   brickAnimationId = requestAnimationFrame(brickLoop);
 }
 
-/* ============================================================
-   GAME 3: SPACE FLAPPER (EASY GRAVITY)
-   ============================================================ */
+/* --- SPACE FLAPPER --- */
 let flappyCanvas, flappyCtx, flappyAnimationId, birdY, birdVelocity, pipes = [], pipeTimer = 0, flappyScore = 0;
 
 function initFlappy() {
@@ -1494,9 +1475,7 @@ function flappyLoop() {
   flappyAnimationId = requestAnimationFrame(flappyLoop);
 }
 
-/* ============================================================
-   GAME 4: MEMORY MATCH
-   ============================================================ */
+/* --- MEMORY MATCH --- */
 const emojis = ['👾', '🕹️', '⚡', '🚀', '💎', '🔥', '👑', '🔮'];
 let flippedCards = [], matchedCount = 0, memoryMovesCount = 0, memorySeconds = 0, memoryTimerInterval = null, isMemoryBusy = false;
 
@@ -1570,9 +1549,7 @@ function flipMemoryCard(card) {
   }
 }
 
-/* ============================================================
-   GAME 5: TIC-TAC-TOE
-   ============================================================ */
+/* --- TIC-TAC-TOE --- */
 let tttBoardState = Array(9).fill(null), tttTurn = 'X', tttMode = 'ai', tttWinsX = 0, tttWinsO = 0, tttDrawsCount = 0, tttGameOver = false;
 
 function initTicTacToe() {
