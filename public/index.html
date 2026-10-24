@@ -148,7 +148,7 @@
 @keyframes heartBeat {0%,100%{transform:scale(1)}50%{transform:scale(1.12)}} @keyframes lovePop {from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
 @media(max-width:380px){#chat-screen .chat-header{padding:0 7px;}#chat-screen .tool-btn{padding:6px 7px;font-size:10px;} .gate-card{padding:24px 18px;}}
 
-/* Full-page gameplay: activate only after a game is selected. The original portal is restored by ALL GAMES. */
+/* Full-page gameplay */
 html.arcade-fullscreen, body.arcade-fullscreen { width:100%; height:100%; min-height:100%; overflow:hidden!important; }
 body.arcade-fullscreen { display:block!important; margin:0!important; }
 body.arcade-fullscreen > header, body.arcade-fullscreen > footer { display:none!important; }
@@ -162,9 +162,6 @@ body.arcade-fullscreen #flappyCanvas { width:min(60vh, 88vw)!important; height:m
 body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
 @media(max-height:600px){body.arcade-fullscreen #snakeCanvas{width:min(62vh,80vw)!important;height:min(62vh,80vw)!important;max-height:62vh!important;}body.arcade-fullscreen #arenaContainer{padding:6px!important;}body.arcade-fullscreen #arenaContainer > .flex.flex-wrap.items-center.justify-between{padding-bottom:6px!important;margin-bottom:6px!important;}}
 
-
-
-/* Focused polish: compact zoom-in dialogs, selected-game-only play, and a cleaner compact chat. */
 @keyframes dialogZoomIn { 0% { opacity:0; transform:scale(.86); } 70% { opacity:1; transform:scale(1.025); } 100% { opacity:1; transform:scale(1); } }
 #otp-gate-layer .gate-card, #second-otp-layer .gate-card,
 #wrong-otp-layer > div, #registration-queue-popup > div { animation:dialogZoomIn .28s cubic-bezier(.2,.8,.2,1) both; }
@@ -185,47 +182,16 @@ body.arcade-fullscreen #arenaContainer > .mt-4.pt-4 { flex-shrink:0!important; }
 #registration-queue-title { font-size:15px!important; margin-bottom:9px!important; }
 #registration-queue-popup p { font-size:12px!important; line-height:1.55!important; margin-bottom:12px!important; }
 #registration-queue-popup button { padding:10px!important; }
-/* The game arena stays idle/hidden on the portal until the visitor selects a game. */
+
 #arenaContainer { display:none; }
 body.arcade-fullscreen #arenaContainer { display:flex!important; }
-/* Compact, attractive chat layout with clear sender/receiver bubbles. */
-#chat-screen { padding:0; }
-#chat-screen #chat-app { width:min(100%,460px); height:100dvh; max-height:100dvh; border-left:1px solid rgba(148,163,184,.16); border-right:1px solid rgba(148,163,184,.16); box-shadow:0 0 55px rgba(56,189,248,.09); }
-#chat-screen .chat-header { height:60px; min-height:60px; padding:0 10px; background:linear-gradient(120deg,rgba(15,23,42,.98),rgba(30,41,59,.96)); }
-#chat-screen .avatar { width:38px; height:38px; font-size:17px; border-color:#a78bfa; box-shadow:0 0 12px rgba(167,139,250,.18); }
-#chat-screen #chat-box { padding:14px 11px; gap:10px; background-color:#080c17; }
-#chat-screen .msg-row { align-items:flex-end; }
-#chat-screen .bubble { max-width:80%; padding:8px 11px 6px; font-size:14px; border-radius:16px; box-shadow:0 4px 14px rgba(0,0,0,.12); }
-#chat-screen .msg-row.me .bubble { background:linear-gradient(135deg,#0f9f78,#047857); border:1px solid rgba(110,231,183,.2); border-bottom-right-radius:5px; }
-#chat-screen .msg-row.them .bubble { background:linear-gradient(135deg,#1e293b,#172033); border:1px solid rgba(129,140,248,.18); border-bottom-left-radius:5px; }
-#chat-screen .sender-label { display:block; font-size:9px; font-weight:800; letter-spacing:.5px; margin-bottom:3px; opacity:.82; }
-#chat-screen .msg-row.me .sender-label { color:#a7f3d0; text-align:right; }
-#chat-screen .msg-row.them .sender-label { color:#c4b5fd; }
-#chat-screen .chat-footer { min-height:58px; padding:8px 10px; gap:8px; background:rgba(12,18,31,.99); }
-#chat-screen .msg-input-field { padding:10px 14px; font-size:14px; }
-#chat-screen .send-circle-btn { width:40px; height:40px; }
-@media(max-width:380px){#chat-screen #chat-app{width:100%;border:0;}#chat-screen .chat-header{height:56px;min-height:56px;}#chat-screen .bubble{max-width:84%;font-size:13.5px;}#chat-screen #chat-box{padding:11px 8px;}}
 
-
-/* User-requested final adjustment: reduce only instruction/placeholder lettering; keep popup/input box dimensions unchanged. */
-#otp-gate-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; }
-#otp-gate-layer #daily-otp-input::placeholder { font-size:11px!important; letter-spacing:0!important; opacity:.9; }
-#second-otp-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; }
-#second-otp-layer .gate-card p { font-size:10px!important; line-height:1.4!important; }
-#second-otp-layer #second-otp-input::placeholder { font-size:11px!important; letter-spacing:0!important; opacity:.9; }
-/* Final requested polish: smaller instruction text, without changing flows/features. */
-#otp-gate-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; margin-bottom:9px!important; letter-spacing:.2px!important; }
-#otp-gate-layer .free-game-hint { font-size:10px!important; line-height:1.35!important; margin-bottom:8px!important; }
-#second-otp-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; margin-bottom:7px!important; }
-#second-otp-layer .gate-card p { font-size:10px!important; line-height:1.4!important; margin:0 0 8px!important; }
-#otp-gate-layer .gate-card, #second-otp-layer .gate-card { animation:dialogZoomIn .28s cubic-bezier(.2,.8,.2,1) both; }
-/* Chat: polished dark navy + violet/blue, visually distinct sender/receiver, compact viewport. */
-#chat-screen { background:radial-gradient(ellipse at top left,#101d3a 0%,#050b18 52%,#030712 100%)!important; }
-#chat-screen #chat-app { width:min(100%,1000px)!important; max-width:1000px!important; height:100dvh!important; max-height:100dvh!important; background:#061226!important; border:1px solid rgba(59,130,246,.65)!important; border-radius:18px!important; overflow:hidden!important; box-shadow:0 0 42px rgba(37,99,235,.14)!important; }
-#chat-screen .chat-header { height:68px!important; min-height:68px!important; padding:0 16px!important; background:linear-gradient(110deg,#06152d,#0b1b37 58%,#111638)!important; border-bottom:1px solid rgba(59,130,246,.32)!important; }
+#chat-screen { padding:0; background:radial-gradient(ellipse at top left,#101d3a 0%,#050b18 52%,#030712 100%)!important; }
+#chat-screen #chat-app { width:min(100%,1000px)!important; max-width:1000px!important; height:100dvh!important; max-height:100dvh!important; background:#061226!important; border:1px solid rgba(59,130,246,.65)!important; border-radius:18px!important; overflow:hidden!important; box-shadow:0 0 42px rgba(37,99,235,.14)!important; display:flex!important; flex-direction:column!important; }
+#chat-screen .chat-header { height:68px!important; min-height:68px!important; padding:0 16px!important; background:linear-gradient(110deg,#06152d,#0b1b37 58%,#111638)!important; border-bottom:1px solid rgba(59,130,246,.32)!important; position:relative!important; top:0!important; z-index:5!important; flex:0 0 auto!important; }
 #chat-screen .avatar { border:2px solid #38bdf8!important; background:linear-gradient(135deg,#312e81,#0e7490)!important; box-shadow:0 0 12px rgba(56,189,248,.2)!important; }
 #chat-screen .online-indicator { background:#34d399!important; box-shadow:0 0 8px #34d39999!important; }
-#chat-screen #chat-box { padding:18px clamp(10px,3vw,28px)!important; gap:14px!important; background-color:#041022!important; background-image:radial-gradient(rgba(96,165,250,.075) 1px,transparent 1px)!important; background-size:22px 22px!important; }
+#chat-screen #chat-box { padding:18px clamp(10px,3vw,28px)!important; gap:14px!important; background-color:#041022!important; background-image:radial-gradient(rgba(96,165,250,.075) 1px,transparent 1px)!important; background-size:22px 22px!important; min-height:0!important; flex:1 1 auto!important; overflow-y:auto!important; }
 #chat-screen .msg-row { align-items:flex-end!important; }
 #chat-screen .bubble { max-width:min(78%,620px)!important; padding:10px 14px 8px!important; font-size:14px!important; line-height:1.45!important; border-radius:17px!important; box-shadow:0 5px 18px rgba(0,0,0,.18)!important; }
 #chat-screen .msg-row.me .bubble { background:linear-gradient(135deg,#4f46e5,#7c3aed 58%,#c026d3)!important; border:1px solid rgba(196,181,253,.28)!important; border-bottom-right-radius:5px!important; color:#fff!important; }
@@ -236,17 +202,8 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 #chat-screen .msg-input-field { border:1px solid rgba(99,102,241,.55)!important; background:#0b1b34!important; border-radius:18px!important; padding:12px 16px!important; }
 #chat-screen .msg-input-field:focus { border-color:#a78bfa!important; box-shadow:0 0 0 3px rgba(139,92,246,.14)!important; }
 #chat-screen .send-circle-btn { background:linear-gradient(135deg,#4f46e5,#a21caf)!important; box-shadow:0 4px 14px rgba(124,58,237,.28)!important; }
-#chat-screen .tool-btn { border-radius:10px!important; }
-@media(max-width:600px){#chat-screen #chat-app{width:100%!important;border-radius:0!important;border:0!important;}#chat-screen .chat-header{padding:0 9px!important;height:58px!important;min-height:58px!important;}#chat-screen .chat-header .tool-btn{padding:6px 7px!important;font-size:10px!important;}#chat-screen .bubble{max-width:86%!important;padding:8px 10px 6px!important;font-size:13px!important;}#chat-screen #chat-box{padding:12px 8px!important;gap:10px!important;}#chat-screen .chat-footer{min-height:58px!important;padding:7px 8px!important;}}
-/* Requested chat controls: keep header fixed while messages scroll and make controls easier to tap. */
-#chat-screen #chat-app { display:flex!important; flex-direction:column!important; }
-#chat-screen .chat-header { position:relative!important; top:0!important; z-index:5!important; flex:0 0 auto!important; }
-#chat-screen .chat-header > div:last-child { flex-shrink:0!important; gap:8px!important; }
-#chat-screen .chat-header .tool-btn { flex-shrink:0!important; padding:10px 12px!important; font-size:12px!important; min-height:40px!important; }
-#chat-screen #chat-box { min-height:0!important; flex:1 1 auto!important; overflow-y:auto!important; }
-@media(max-width:600px){#chat-screen .chat-header{padding:0 7px!important;gap:5px!important;}#chat-screen .chat-header > div:last-child{gap:4px!important;}#chat-screen .chat-header .tool-btn{padding:8px 9px!important;font-size:11px!important;min-height:38px!important;}}
-
-
+#chat-screen .tool-btn { border-radius:10px!important; padding:10px 12px!important; font-size:12px!important; min-height:40px!important; }
+@media(max-width:600px){#chat-screen #chat-app{width:100%!important;border-radius:0!important;border:0!important;}#chat-screen .chat-header{padding:0 7px!important;gap:5px!important;height:58px!important;min-height:58px!important;}#chat-screen .chat-header .tool-btn{padding:8px 9px!important;font-size:11px!important;min-height:38px!important;}#chat-screen .bubble{max-width:86%!important;padding:8px 10px 6px!important;font-size:13px!important;}#chat-screen #chat-box{padding:12px 8px!important;gap:10px!important;}#chat-screen .chat-footer{min-height:58px!important;padding:7px 8px!important;}}
 </style>
 </head>
 <body class="text-gray-100 font-body min-h-screen flex flex-col justify-between selection:bg-neonPink selection:text-white">
@@ -358,7 +315,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 
     <!-- MAIN GAME ARENA CONTAINER -->
     <div class="w-full bg-darkCard/95 border-2 border-gray-800 rounded-3xl p-4 sm:p-6 shadow-2xl relative overflow-hidden" id="arenaContainer">
-      <!-- Glow ambient lights -->
       <div class="absolute -top-24 -left-24 w-60 h-60 bg-neonCyan/10 rounded-full blur-3xl pointer-events-none"></div>
       <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-neonPink/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -396,7 +352,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 
         <!-- ==================== GAME 1: SNAKE ==================== -->
         <div id="gameView-snake" class="game-view w-full flex flex-col items-center">
-          <!-- Speed / Difficulty Control -->
           <div class="flex items-center gap-2 mb-3 bg-gray-900/90 px-3 py-1.5 rounded-xl border border-gray-700 text-xs font-arcade">
             <span class="text-gray-400">SPEED:</span>
             <button id="snakeSpeedSlow" onclick="setSnakeSpeed('slow')" class="px-2.5 py-1 rounded bg-neonGreen text-black font-bold border border-neonGreen transition">SLOW</button>
@@ -414,7 +369,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
             <div>LEVEL: <span class="text-neonCyan">1</span></div>
           </div>
           <canvas id="brickCanvas" width="480" height="380" class="max-w-full bg-[#0a0f1d] rounded-xl border border-neonCyan/30 shadow-lg cursor-none"></canvas>
-          <!-- Mobile Touch Slide Controls -->
           <div class="w-full max-w-[480px] flex gap-3 mt-4 sm:hidden">
             <button id="brickLeftBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> LEFT</button>
             <button id="brickRightBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold">RIGHT <i class="fa-solid fa-arrow-right ml-2"></i></button>
@@ -440,9 +394,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
             <div>MATCHES: <span id="memoryMatches" class="text-neonGreen font-bold">0 / 8</span></div>
             <div>TIME: <span id="memoryTimer" class="text-neonCyan font-bold">0s</span></div>
           </div>
-          <div id="memoryGrid" class="grid grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-sm sm:max-w-md">
-            <!-- Cards injected via JS -->
-          </div>
+          <div id="memoryGrid" class="grid grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-sm sm:max-w-md"></div>
         </div>
 
         <!-- ==================== GAME 5: TIC-TAC-TOE ==================== -->
@@ -458,7 +410,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           </div>
 
           <div id="tttBoard" class="grid grid-cols-3 gap-2.5 bg-gray-900/90 p-3 rounded-2xl border-2 border-neonPurple/50 shadow-neon-cyan">
-            <!-- 9 Interactive tiles -->
             <button onclick="handleTttClick(0)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
             <button onclick="handleTttClick(1)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
             <button onclick="handleTttClick(2)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
@@ -477,7 +428,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           </div>
         </div>
 
-        <!-- OVERLAY: GAME OVER / WIN MODAL WITH YOUR SCORE & HIGH SCORE -->
+        <!-- OVERLAY: GAME OVER / WIN MODAL -->
         <div id="gameModal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center z-30 p-4 sm:p-6 text-center animate-fadeIn">
           <div id="modalNewHighScoreBadge" class="hidden mb-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-neonYellow via-neonPink to-neonCyan text-black font-arcade font-extrabold text-xs tracking-widest shadow-neon-pink animate-bounce">
             ★ NEW HIGH SCORE! ★
@@ -486,7 +437,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           <h3 id="modalTitle" class="text-2xl sm:text-3xl font-arcade font-black text-white mb-1 tracking-wider">GAME OVER</h3>
           <p id="modalMsg" class="text-gray-300 text-xs sm:text-sm max-w-sm mb-5">Game finished.</p>
 
-          <!-- Score Comparison Cards -->
           <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-xs mb-6">
             <div class="bg-gray-900/90 border border-neonCyan/50 rounded-2xl p-3 shadow-neon-cyan">
               <div class="text-[10px] sm:text-xs font-arcade text-neonCyan font-bold tracking-wider uppercase" id="modalScoreLabel">YOUR SCORE</div>
@@ -510,7 +460,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 
       </div>
 
-      <!-- Instructions & Details footer for active game -->
       <div class="mt-4 pt-4 border-t border-gray-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400 gap-2">
         <div id="instructionsBar">
           <i class="fa-solid fa-circle-info text-neonCyan mr-1"></i> Control snake with arrow keys or swipe. Food gives +10 pts.
@@ -522,18 +471,11 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     </div>
   </main>
 
-  <!-- FOOTER -->
   <footer class="border-t border-gray-900 bg-black/60 py-4 px-4 text-center text-xs text-gray-500 font-arcade">
     &copy; 2026 ONLINE GAME PORTAL &bull; ALL RIGHTS RESERVED &bull; PURE JAVASCRIPT GAME ENGINE
   </footer>
 
-  <!-- ========================================== -->
-  <!-- JAVASCRIPT: ENGINE, SOUNDS, AND GAME LOGIC -->
-  <!-- ========================================== -->
   <script>
-    /* ======================================================
-       1. SYNTHESIZED SOUND EFFECTS VIA WEB AUDIO API (NO URLS)
-       ====================================================== */
     let audioCtx = null;
     let soundEnabled = true;
 
@@ -620,14 +562,9 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           osc.start(now);
           osc.stop(now + 0.35);
         }
-      } catch (e) {
-        // AudioContext initialization fallback
-      }
+      } catch (e) {}
     }
 
-    /* ======================================================
-       2. GLOBAL HUB CONTROLLER & HIGHSCORES
-       ====================================================== */
     let activeGame = 'snake';
 
     const gameMetadata = {
@@ -687,40 +624,32 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       document.documentElement.classList.add('arcade-fullscreen');
       document.body.classList.add('arcade-fullscreen');
       document.getElementById('arenaContainer').style.display = 'flex';
-      // Stop ongoing loops of previous game
       stopActiveGameLoops();
       activeGame = gameKey;
 
-      // Update titles and headers
       document.getElementById('activeGameTitle').innerText = gameMetadata[gameKey].title;
       document.getElementById('gameCategory').innerText = gameMetadata[gameKey].category;
       document.getElementById('instructionsBar').innerHTML = gameMetadata[gameKey].instructions;
 
-      // Show/hide game panels
       document.querySelectorAll('.game-view').forEach(el => el.classList.add('hidden'));
       const activeEl = document.getElementById(`gameView-${gameKey}`);
       if (activeEl) activeEl.classList.remove('hidden');
 
-      // Hide modal
       document.getElementById('gameModal').classList.add('hidden');
 
-      // Update high scores display
       const hs = parseInt(localStorage.getItem(gameMetadata[gameKey].scoreKey) || '0', 10);
       document.getElementById('highScoreDisplay').innerText = hs;
       document.getElementById('currentScoreDisplay').innerText = '0';
 
-      // Initialize selected game
       if (gameKey === 'snake') initSnake();
       else if (gameKey === 'brick') initBrick();
       else if (gameKey === 'flappy') initFlappy();
       else if (gameKey === 'memory') initMemory();
       else if (gameKey === 'tictactoe') initTicTacToe();
 
-      // Smooth scroll to arena
       document.getElementById('arenaContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
       playSound('beep');
     }
-
 
     document.addEventListener('keydown', function(event) {
       if (event.key === 'Escape' && document.body.classList.contains('arcade-fullscreen')) {
@@ -737,7 +666,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       const prevHighScore = parseInt(localStorage.getItem(key) || '0', 10);
       const isNewHighScore = typeof score === 'number' && score > prevHighScore && score > 0;
 
-      // Update High Score if beaten
       if (typeof score === 'number' && score > prevHighScore) {
         localStorage.setItem(key, score);
         document.getElementById('highScoreDisplay').innerText = score;
@@ -746,7 +674,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 
       const currentHighScore = parseInt(localStorage.getItem(key) || '0', 10);
 
-      // Play Sound
       if (isNewHighScore || options.isWin) {
         playSound('win');
       } else {
@@ -757,13 +684,11 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       document.getElementById('modalTitle').innerText = title;
       document.getElementById('modalMsg').innerText = message;
 
-      // Labels & Values customization
       document.getElementById('modalScoreLabel').innerText = options.scoreLabel || 'YOUR SCORE';
       document.getElementById('modalHighScoreLabel').innerText = options.highScoreLabel || 'HIGH SCORE';
       document.getElementById('modalYourScore').innerText = options.yourScoreDisplay !== undefined ? options.yourScoreDisplay : score;
       document.getElementById('modalHighScore').innerText = options.highScoreDisplay !== undefined ? options.highScoreDisplay : currentHighScore;
 
-      // Icon customization
       const iconContainer = document.getElementById('modalIcon');
       if (options.icon) {
         iconContainer.innerHTML = options.icon;
@@ -775,7 +700,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         iconContainer.innerHTML = '<i class="fa-solid fa-skull text-neonPink"></i>';
       }
 
-      // New High Score Badge
       const badge = document.getElementById('modalNewHighScoreBadge');
       if (isNewHighScore) {
         badge.classList.remove('hidden');
@@ -813,9 +737,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       if (memoryTimerInterval) clearInterval(memoryTimerInterval);
     }
 
-    /* ======================================================
-       3. GAME 1: SNAKE RETRO (ENHANCED COLORFUL & DETAILED)
-       ====================================================== */
+    /* SNAKE RETRO */
     let snakeCanvas, snakeCtx;
     let snake = [];
     let snakeFood = { x: 0, y: 0, type: 'apple', pulse: 0, angle: 0 };
@@ -825,14 +747,13 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     let snakeAnimFrameId = null;
     let snakeChangingDirection = false;
     const snakeGridSize = 20;
-    let snakeSpeedMode = 'slow'; // default to relaxed, slow pace
+    let snakeSpeedMode = 'slow';
     const snakeSpeedIntervals = {
-      slow: 270,    // Extra relaxed pace
-      normal: 220,  // Comfortable pace
-      fast: 170      // Faster, but still controllable
+      slow: 270,
+      normal: 220,
+      fast: 170
     };
 
-    // Colorful particles and floating text system
     let snakeParticles = [];
     let snakePopups = [];
     let snakeTongueState = 0;
@@ -840,18 +761,17 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     let snakePulseWave = -1;
     let snakeFrameTick = 0;
 
-    // Rich Rainbow Neon Hue progression palette
     const snakeRainbowHues = [
-      { fill: '#00f7ff', glow: '#00f7ff', border: '#ffffff' }, // Neon Cyan Head
+      { fill: '#00f7ff', glow: '#00f7ff', border: '#ffffff' },
       { fill: '#00e5ff', glow: '#00e5ff', border: '#99ffff' },
       { fill: '#00ffb7', glow: '#00ffb7', border: '#ccffea' },
-      { fill: '#00ff66', glow: '#00ff66', border: '#b3ffcc' }, // Electric Lime
+      { fill: '#00ff66', glow: '#00ff66', border: '#b3ffcc' },
       { fill: '#76ff03', glow: '#76ff03', border: '#dcedc8' },
-      { fill: '#ffea00', glow: '#ffea00', border: '#fff9c4' }, // Sun Gold
-      { fill: '#ff9100', glow: '#ff9100', border: '#ffe0b2' }, // Neon Orange
-      { fill: '#ff007f', glow: '#ff007f', border: '#ffc1e3' }, // Hot Pink
-      { fill: '#d500f9', glow: '#d500f9', border: '#f3e5f5' }, // Neon Purple
-      { fill: '#7c4dff', glow: '#7c4dff', border: '#d1c4e9' }, // Indigo Violet
+      { fill: '#ffea00', glow: '#ffea00', border: '#fff9c4' },
+      { fill: '#ff9100', glow: '#ff9100', border: '#ffe0b2' },
+      { fill: '#ff007f', glow: '#ff007f', border: '#ffc1e3' },
+      { fill: '#d500f9', glow: '#d500f9', border: '#f3e5f5' },
+      { fill: '#7c4dff', glow: '#7c4dff', border: '#d1c4e9' },
     ];
 
     function setSnakeSpeed(mode) {
@@ -919,7 +839,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       snakeFood.angle = 0;
     }
 
-    // Fixed logic step for movement & grid collision
     function snakeLogicStep() {
       if (checkSnakeCollision()) {
         clearInterval(snakeInterval);
@@ -929,55 +848,42 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       }
 
       snakeChangingDirection = false;
-
-      // Calculate head target
       const head = { x: snake[0].x + snakeDx, y: snake[0].y + snakeDy };
       snake.unshift(head);
 
-      // Eat Food Event
       if (head.x === snakeFood.x && head.y === snakeFood.y) {
         snakeScore += 10;
         updateScoreboard(snakeScore);
-        
-        // Trigger sweet melody notification sound
         playSound('eat');
-
-        // Trigger animations: chomp, body light-wave, explosion particles & popup
         snakeChompTimer = 10;
         snakePulseWave = 0;
         createFoodExplosion(snakeFood.x + snakeGridSize / 2, snakeFood.y + snakeGridSize / 2);
         createFloatingScore(snakeFood.x + snakeGridSize / 2, snakeFood.y, '+10');
-
         spawnSnakeFood();
       } else {
         snake.pop();
       }
 
-      // Propagate body glow wave
       if (snakePulseWave >= 0) {
         snakePulseWave++;
         if (snakePulseWave > snake.length + 3) snakePulseWave = -1;
       }
     }
 
-    // Continuous 60fps render loop for smooth wiggles, eyes, tongue flick, sparkles & particles
     function snakeRenderLoop() {
       if (activeGame !== 'snake') return;
-
       snakeFrameTick++;
-      snakeTongueState = Math.sin(snakeFrameTick * 0.15); // gentle oscillating tongue
+      snakeTongueState = Math.sin(snakeFrameTick * 0.15);
 
-      // 1. Clear background
       snakeCtx.fillStyle = '#070b14';
       snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
 
-      // Subtle Cyber Grid
       snakeCtx.strokeStyle = 'rgba(0, 247, 255, 0.05)';
       snakeCtx.lineWidth = 1;
       for (let x = 0; x < snakeCanvas.width; x += snakeGridSize) {
         snakeCtx.beginPath();
         snakeCtx.moveTo(x, 0);
-        snakeCtx.lineTo(x, snakeCanvas.height);
+        snakeCtx.lineTo(snakeCanvas.width, snakeCanvas.height);
         snakeCtx.stroke();
       }
       for (let y = 0; y < snakeCanvas.height; y += snakeGridSize) {
@@ -987,20 +893,12 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         snakeCtx.stroke();
       }
 
-      // 2. Draw Food with glowing aura and floating particles
       drawColorfulFood();
-
-      // 3. Draw Snake Body (From tail to neck)
       drawSnakeBody();
-
-      // 4. Draw Detailed Animated Snake Head (Muh, Eyes, Crown, Tongue)
       drawSnakeHead();
-
-      // 5. Update and Draw Particles & Popups
       renderParticlesAndPopups();
 
       if (snakeChompTimer > 0) snakeChompTimer--;
-
       snakeAnimFrameId = requestAnimationFrame(snakeRenderLoop);
     }
 
@@ -1010,7 +908,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       const pulse = Math.sin(snakeFrameTick * 0.1) * 2;
       const r = 8 + pulse;
 
-      // Ambient radial halo
       const halo = snakeCtx.createRadialGradient(cx, cy, 2, cx, cy, 22);
       if (snakeFood.type === 'apple') {
         halo.addColorStop(0, 'rgba(255, 0, 127, 0.45)');
@@ -1030,25 +927,10 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       snakeCtx.arc(cx, cy, 24, 0, Math.PI * 2);
       snakeCtx.fill();
 
-      // Sparkling mini stars around food
-      if (snakeFrameTick % 12 === 0 && Math.random() > 0.5) {
-        snakeParticles.push({
-          x: cx + (Math.random() - 0.5) * 26,
-          y: cy + (Math.random() - 0.5) * 26,
-          vx: (Math.random() - 0.5) * 0.6,
-          vy: -Math.random() * 0.8 - 0.3,
-          color: ['#00f7ff', '#ffea00', '#ff007f', '#00ff66'][Math.floor(Math.random() * 4)],
-          size: Math.random() * 2.5 + 1,
-          alpha: 1,
-          life: 25
-        });
-      }
-
       snakeCtx.save();
       snakeCtx.translate(cx, cy);
 
       if (snakeFood.type === 'apple') {
-        // Glowing Ruby Apple
         snakeCtx.shadowColor = '#ff007f';
         snakeCtx.shadowBlur = 14;
         snakeCtx.fillStyle = '#ff0055';
@@ -1056,20 +938,17 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         snakeCtx.arc(0, 1, r, 0, Math.PI * 2);
         snakeCtx.fill();
 
-        // Shiny Highlight
         snakeCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
         snakeCtx.beginPath();
         snakeCtx.arc(-2.5, -2.5, r * 0.35, 0, Math.PI * 2);
         snakeCtx.fill();
 
-        // Cute green leaf
         snakeCtx.shadowBlur = 0;
         snakeCtx.fillStyle = '#00ff66';
         snakeCtx.beginPath();
         snakeCtx.ellipse(3, -r - 1, 4, 2, Math.PI / 4, 0, Math.PI * 2);
         snakeCtx.fill();
       } else if (snakeFood.type === 'star') {
-        // Glowing Star Gem
         snakeCtx.shadowColor = '#ffea00';
         snakeCtx.shadowBlur = 14;
         snakeCtx.fillStyle = '#ffe600';
@@ -1082,24 +961,20 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         snakeCtx.closePath();
         snakeCtx.fill();
       } else if (snakeFood.type === 'gem') {
-        // Glowing Diamond
         snakeCtx.shadowColor = '#00f7ff';
         snakeCtx.shadowBlur = 14;
         snakeCtx.fillStyle = '#00f7ff';
         snakeCtx.rotate(Math.PI / 4 + Math.sin(snakeFrameTick * 0.05) * 0.2);
         snakeCtx.fillRect(-r * 0.7, -r * 0.7, r * 1.4, r * 1.4);
-
         snakeCtx.fillStyle = '#ffffff';
         snakeCtx.fillRect(-r * 0.3, -r * 0.3, r * 0.6, r * 0.6);
       } else {
-        // Electric Emerald Berry
         snakeCtx.shadowColor = '#00ff66';
         snakeCtx.shadowBlur = 14;
         snakeCtx.fillStyle = '#00ff66';
         snakeCtx.beginPath();
         snakeCtx.arc(0, 0, r, 0, Math.PI * 2);
         snakeCtx.fill();
-
         snakeCtx.fillStyle = '#ffffff';
         snakeCtx.beginPath();
         snakeCtx.arc(-2, -2, r * 0.3, 0, Math.PI * 2);
@@ -1110,57 +985,37 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 
     function drawSnakeBody() {
       const len = snake.length;
-
-      // Draw from tail forward so head stays cleanly on top
       for (let i = len - 1; i >= 1; i--) {
         const seg = snake[i];
         const cx = seg.x + snakeGridSize / 2;
         const cy = seg.y + snakeGridSize / 2;
-
-        // Size taper toward tail
         const progress = i / len;
         const taperRadius = Math.max(5.5, (snakeGridSize / 2) - (progress * 3.5));
-
-        // Color Palette index
         const colorObj = snakeRainbowHues[i % snakeRainbowHues.length];
-
-        // Wave effect when eating food
         const isPulseActive = (snakePulseWave === i || snakePulseWave === i + 1);
 
         snakeCtx.save();
         snakeCtx.translate(cx, cy);
 
-        // Body segment outer neon glow
         snakeCtx.shadowColor = isPulseActive ? '#ffffff' : colorObj.glow;
         snakeCtx.shadowBlur = isPulseActive ? 18 : 8;
 
-        // Body segment circle
         snakeCtx.fillStyle = isPulseActive ? '#ffffff' : colorObj.fill;
         snakeCtx.beginPath();
         snakeCtx.arc(0, 0, taperRadius, 0, Math.PI * 2);
         snakeCtx.fill();
 
-        // Glossy Inner Highlight
         snakeCtx.fillStyle = 'rgba(255, 255, 255, 0.45)';
         snakeCtx.beginPath();
         snakeCtx.arc(-taperRadius * 0.28, -taperRadius * 0.28, taperRadius * 0.38, 0, Math.PI * 2);
         snakeCtx.fill();
 
-        // Cute scale ridge pattern / border
-        snakeCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-        snakeCtx.lineWidth = 1;
-        snakeCtx.beginPath();
-        snakeCtx.arc(0, 0, taperRadius - 1.5, 0, Math.PI * 2);
-        snakeCtx.stroke();
-
-        // Cute Rattle rings on the final tail tip
         if (i === len - 1) {
           snakeCtx.fillStyle = '#ffea00';
           snakeCtx.beginPath();
           snakeCtx.arc(0, 0, 3, 0, Math.PI * 2);
           snakeCtx.fill();
         }
-
         snakeCtx.restore();
       }
     }
@@ -1172,240 +1027,102 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       const cy = head.y + snakeGridSize / 2;
       const headRadius = 11.5;
 
-      // Determine rotation angle based on moving direction
       let angle = 0;
-      if (snakeDx > 0) angle = 0;                  // Right
-      else if (snakeDx < 0) angle = Math.PI;       // Left
-      else if (snakeDy > 0) angle = Math.PI / 2;   // Down
-      else if (snakeDy < 0) angle = -Math.PI / 2;  // Up
+      if (snakeDx > 0) angle = 0;
+      else if (snakeDx < 0) angle = Math.PI;
+      else if (snakeDy > 0) angle = Math.PI / 2;
+      else if (snakeDy < 0) angle = -Math.PI / 2;
 
       snakeCtx.save();
       snakeCtx.translate(cx, cy);
       snakeCtx.rotate(angle);
 
-      // --- 1. ANIMATED FLICKING FORKED TONGUE ---
       if (snakeTongueState > 0.1) {
         const tongueExtension = 7 + (snakeTongueState * 6);
         snakeCtx.strokeStyle = '#ff0055';
-        snakeCtx.fillStyle = '#ff0055';
         snakeCtx.lineWidth = 1.8;
         snakeCtx.beginPath();
         snakeCtx.moveTo(headRadius, 0);
         snakeCtx.lineTo(headRadius + tongueExtension, 0);
-        // Fork tips
         snakeCtx.lineTo(headRadius + tongueExtension + 3, -3);
         snakeCtx.moveTo(headRadius + tongueExtension, 0);
         snakeCtx.lineTo(headRadius + tongueExtension + 3, 3);
         snakeCtx.stroke();
       }
 
-      // --- 2. SNAKE HEAD BASE SHAPE ---
       snakeCtx.shadowColor = '#00f7ff';
       snakeCtx.shadowBlur = 14;
-
-      // Main head bulb
       snakeCtx.fillStyle = '#00f7ff';
       snakeCtx.beginPath();
       snakeCtx.ellipse(1, 0, headRadius + 1, headRadius - 0.5, 0, 0, Math.PI * 2);
       snakeCtx.fill();
 
-      // Cute Snout / Nose
-      snakeCtx.fillStyle = '#00e5ff';
-      snakeCtx.beginPath();
-      snakeCtx.arc(headRadius - 2, 0, 4, 0, Math.PI * 2);
-      snakeCtx.fill();
-
-      // Nostrils
-      snakeCtx.fillStyle = '#034159';
-      snakeCtx.beginPath();
-      snakeCtx.arc(headRadius - 1, -2, 0.9, 0, Math.PI * 2);
-      snakeCtx.arc(headRadius - 1, 2, 0.9, 0, Math.PI * 2);
-      snakeCtx.fill();
-
-      // --- 3. CROWN / NEON CREST ON HEAD ---
-      snakeCtx.shadowBlur = 0;
-      snakeCtx.fillStyle = '#ffea00';
-      snakeCtx.beginPath();
-      snakeCtx.moveTo(-6, -4);
-      snakeCtx.lineTo(-9, -7);
-      snakeCtx.lineTo(-4, -5);
-      snakeCtx.lineTo(-2, -8);
-      snakeCtx.lineTo(0, -5);
-      snakeCtx.lineTo(3, -7);
-      snakeCtx.lineTo(1, -4);
-      snakeCtx.closePath();
-      snakeCtx.fill();
-
-      // Crown central glowing ruby
-      snakeCtx.fillStyle = '#ff007f';
-      snakeCtx.beginPath();
-      snakeCtx.arc(-2, -4.5, 1.2, 0, Math.PI * 2);
-      snakeCtx.fill();
-
-      // --- 4. BLUSHING PINK CHEEKS ---
-      snakeCtx.fillStyle = 'rgba(255, 0, 127, 0.5)';
-      snakeCtx.beginPath();
-      snakeCtx.arc(-1, -7.5, 2.5, 0, Math.PI * 2);
-      snakeCtx.arc(-1, 7.5, 2.5, 0, Math.PI * 2);
-      snakeCtx.fill();
-
-      // --- 5. BIG CARTOON EXPRESSIVE EYES ---
+      // Eyes
       const eyeX = 3;
       const eyeSpacing = 5.2;
       const eyeR = 4.2;
 
-      // Eye Whites (Sclera)
       snakeCtx.fillStyle = '#ffffff';
-      snakeCtx.shadowColor = '#ffffff';
       snakeCtx.shadowBlur = 4;
       snakeCtx.beginPath();
       snakeCtx.arc(eyeX, -eyeSpacing, eyeR, 0, Math.PI * 2);
       snakeCtx.arc(eyeX, eyeSpacing, eyeR, 0, Math.PI * 2);
       snakeCtx.fill();
-      snakeCtx.shadowBlur = 0;
 
-      // Dark Pupils (Looking forward)
       snakeCtx.fillStyle = '#090a15';
       snakeCtx.beginPath();
       snakeCtx.arc(eyeX + 1.2, -eyeSpacing, eyeR * 0.58, 0, Math.PI * 2);
       snakeCtx.arc(eyeX + 1.2, eyeSpacing, eyeR * 0.58, 0, Math.PI * 2);
       snakeCtx.fill();
 
-      // Cute Eye Shine Glints
-      snakeCtx.fillStyle = '#ffffff';
-      snakeCtx.beginPath();
-      snakeCtx.arc(eyeX + 1.8, -eyeSpacing - 1.2, 1.4, 0, Math.PI * 2);
-      snakeCtx.arc(eyeX + 1.8, eyeSpacing - 1.2, 1.4, 0, Math.PI * 2);
-      snakeCtx.fill();
-
-      // Secondary mini glint
-      snakeCtx.beginPath();
-      snakeCtx.arc(eyeX + 0.6, -eyeSpacing + 1.2, 0.7, 0, Math.PI * 2);
-      snakeCtx.arc(eyeX + 0.6, eyeSpacing + 1.2, 0.7, 0, Math.PI * 2);
-      snakeCtx.fill();
-
-      // --- 6. CUTE SMILING / CHOMPING MOUTH ---
-      if (snakeChompTimer > 0) {
-        // Open wide happy chomp when eating point
-        snakeCtx.fillStyle = '#b70038';
-        snakeCtx.beginPath();
-        snakeCtx.arc(headRadius - 1, 0, 4.5, -Math.PI / 2, Math.PI / 2);
-        snakeCtx.fill();
-
-        // Cute white baby fang
-        snakeCtx.fillStyle = '#ffffff';
-        snakeCtx.beginPath();
-        snakeCtx.moveTo(headRadius - 1, -2.5);
-        snakeCtx.lineTo(headRadius + 2, -2.5);
-        snakeCtx.lineTo(headRadius - 1, -0.5);
-        snakeCtx.closePath();
-        snakeCtx.fill();
-      } else {
-        // Gentle happy smile curve
-        snakeCtx.strokeStyle = '#023047';
-        snakeCtx.lineWidth = 1.4;
-        snakeCtx.beginPath();
-        snakeCtx.arc(headRadius - 3.5, 0, 3, -Math.PI / 3, Math.PI / 3);
-        snakeCtx.stroke();
-      }
-
       snakeCtx.restore();
     }
 
-    // Spawn Multi-color Star Burst Confetti when picking up points
     function createFoodExplosion(x, y) {
-      const colors = ['#00f7ff', '#ff007f', '#00ff66', '#ffea00', '#d500f9', '#ffffff', '#ff9100'];
-      const count = 24;
-
-      for (let i = 0; i < count; i++) {
+      const colors = ['#00f7ff', '#ff007f', '#00ff66', '#ffea00', '#d500f9', '#ffffff'];
+      for (let i = 0; i < 20; i++) {
         const speed = Math.random() * 4 + 1.5;
         const angle = Math.random() * Math.PI * 2;
         snakeParticles.push({
-          x: x,
-          y: y,
+          x: x, y: y,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
           color: colors[Math.floor(Math.random() * colors.length)],
           size: Math.random() * 4.5 + 2,
           alpha: 1,
-          life: 30 + Math.floor(Math.random() * 15),
-          isStar: Math.random() > 0.4
+          life: 30
         });
       }
     }
 
-    // Floating glowing "+10" score text
     function createFloatingScore(x, y, text) {
       snakePopups.push({
-        x: x,
-        y: y,
-        text: text,
-        alpha: 1,
-        scale: 1.4,
-        vy: -1.2,
-        life: 35
+        x: x, y: y, text: text, alpha: 1, scale: 1.4, vy: -1.2, life: 35
       });
     }
 
     function renderParticlesAndPopups() {
-      // 1. Render Confetti & Star Sparkles
       for (let i = snakeParticles.length - 1; i >= 0; i--) {
         const p = snakeParticles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.05; // slight gravity
-        p.vx *= 0.96;
-        p.alpha -= 1 / p.life;
-
-        if (p.alpha <= 0) {
-          snakeParticles.splice(i, 1);
-          continue;
-        }
-
+        p.x += p.vx; p.y += p.vy; p.alpha -= 1 / p.life;
+        if (p.alpha <= 0) { snakeParticles.splice(i, 1); continue; }
         snakeCtx.save();
         snakeCtx.globalAlpha = Math.max(0, p.alpha);
         snakeCtx.fillStyle = p.color;
-        snakeCtx.shadowColor = p.color;
-        snakeCtx.shadowBlur = 10;
-
-        if (p.isStar) {
-          // Draw diamond star particle
-          snakeCtx.translate(p.x, p.y);
-          snakeCtx.beginPath();
-          snakeCtx.moveTo(0, -p.size);
-          snakeCtx.lineTo(p.size * 0.4, 0);
-          snakeCtx.lineTo(0, p.size);
-          snakeCtx.lineTo(-p.size * 0.4, 0);
-          snakeCtx.closePath();
-          snakeCtx.fill();
-        } else {
-          // Circle sparkle
-          snakeCtx.beginPath();
-          snakeCtx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
-          snakeCtx.fill();
-        }
+        snakeCtx.beginPath();
+        snakeCtx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+        snakeCtx.fill();
         snakeCtx.restore();
       }
 
-      // 2. Render Floating Text Popups (+10)
       for (let i = snakePopups.length - 1; i >= 0; i--) {
         const pop = snakePopups[i];
-        pop.y += pop.vy;
-        pop.alpha -= 1 / pop.life;
-        if (pop.scale > 1) pop.scale -= 0.02;
-
-        if (pop.alpha <= 0) {
-          snakePopups.splice(i, 1);
-          continue;
-        }
-
+        pop.y += pop.vy; pop.alpha -= 1 / pop.life;
+        if (pop.alpha <= 0) { snakePopups.splice(i, 1); continue; }
         snakeCtx.save();
         snakeCtx.globalAlpha = Math.max(0, pop.alpha);
-        snakeCtx.font = `900 ${Math.round(14 * pop.scale)}px Orbitron, sans-serif`;
+        snakeCtx.font = `900 14px Orbitron, sans-serif`;
         snakeCtx.fillStyle = '#ffea00';
-        snakeCtx.shadowColor = '#ffea00';
-        snakeCtx.shadowBlur = 12;
-        snakeCtx.textAlign = 'center';
         snakeCtx.fillText(pop.text, pop.x, pop.y);
         snakeCtx.restore();
       }
@@ -1413,71 +1130,46 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 
     function checkSnakeCollision() {
       const head = { x: snake[0].x + snakeDx, y: snake[0].y + snakeDy };
-      // Wall collision
-      if (head.x < 0 || head.x >= snakeCanvas.width || head.y < 0 || head.y >= snakeCanvas.height) {
-        return true;
-      }
-      // Self collision
+      if (head.x < 0 || head.x >= snakeCanvas.width || head.y < 0 || head.y >= snakeCanvas.height) return true;
       for (let i = 1; i < snake.length; i++) {
-        if (head.x === snake[i].x && head.y === snake[i].y) {
-          return true;
-        }
+        if (head.x === snake[i].x && head.y === snake[i].y) return true;
       }
       return false;
     }
 
     function snakeInput(direction) {
       if (snakeChangingDirection) return;
-      if (direction === 'UP' && snakeDy === 0) {
-        snakeDx = 0; snakeDy = -snakeGridSize; snakeChangingDirection = true;
-      } else if (direction === 'DOWN' && snakeDy === 0) {
-        snakeDx = 0; snakeDy = snakeGridSize; snakeChangingDirection = true;
-      } else if (direction === 'LEFT' && snakeDx === 0) {
-        snakeDx = -snakeGridSize; snakeDy = 0; snakeChangingDirection = true;
-      } else if (direction === 'RIGHT' && snakeDx === 0) {
-        snakeDx = snakeGridSize; snakeDy = 0; snakeChangingDirection = true;
-      }
+      if (direction === 'UP' && snakeDy === 0) { snakeDx = 0; snakeDy = -snakeGridSize; snakeChangingDirection = true; }
+      else if (direction === 'DOWN' && snakeDy === 0) { snakeDx = 0; snakeDy = snakeGridSize; snakeChangingDirection = true; }
+      else if (direction === 'LEFT' && snakeDx === 0) { snakeDx = -snakeGridSize; snakeDy = 0; snakeChangingDirection = true; }
+      else if (direction === 'RIGHT' && snakeDx === 0) { snakeDx = snakeGridSize; snakeDy = 0; snakeChangingDirection = true; }
     }
 
-    // Touch/swipe and tap-zone steering for Snake. No on-screen D-PAD/console is needed.
     (() => {
       let touchStartX = 0, touchStartY = 0, lastTouchAt = 0;
       const canvas = document.getElementById('snakeCanvas');
       if (!canvas) return;
-      canvas.style.touchAction = 'none';
-      canvas.addEventListener('touchstart', (event) => {
+      canvas.addEventListener('touchstart', (e) => {
         if (activeGame !== 'snake') return;
-        const t = event.changedTouches[0];
-        touchStartX = t.clientX; touchStartY = t.clientY;
+        touchStartX = e.changedTouches[0].clientX; touchStartY = e.changedTouches[0].clientY;
       }, { passive: true });
-      canvas.addEventListener('touchend', (event) => {
+      canvas.addEventListener('touchend', (e) => {
         if (activeGame !== 'snake') return;
         lastTouchAt = Date.now();
-        const t = event.changedTouches[0];
-        const dx = t.clientX - touchStartX, dy = t.clientY - touchStartY;
+        const dx = e.changedTouches[0].clientX - touchStartX, dy = e.changedTouches[0].clientY - touchStartY;
         if (Math.max(Math.abs(dx), Math.abs(dy)) >= 18) {
           if (Math.abs(dx) > Math.abs(dy)) snakeInput(dx > 0 ? 'RIGHT' : 'LEFT');
           else snakeInput(dy > 0 ? 'DOWN' : 'UP');
           return;
         }
-        // A tap steers toward the tapped half of the canvas, whichever axis is nearer to center.
         const rect = canvas.getBoundingClientRect();
-        const x = t.clientX - rect.left - rect.width / 2;
-        const y = t.clientY - rect.top - rect.height / 2;
+        const x = e.changedTouches[0].clientX - rect.left - rect.width / 2;
+        const y = e.changedTouches[0].clientY - rect.top - rect.height / 2;
         if (Math.abs(x) > Math.abs(y)) snakeInput(x > 0 ? 'RIGHT' : 'LEFT');
         else snakeInput(y > 0 ? 'DOWN' : 'UP');
       }, { passive: true });
-      canvas.addEventListener('click', (event) => {
-        if (activeGame !== 'snake' || event.detail === 0 || Date.now() - lastTouchAt < 500) return;
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left - rect.width / 2;
-        const y = event.clientY - rect.top - rect.height / 2;
-        if (Math.abs(x) > Math.abs(y)) snakeInput(x > 0 ? 'RIGHT' : 'LEFT');
-        else snakeInput(y > 0 ? 'DOWN' : 'UP');
-      });
     })();
 
-    // Keyboard listener for Snake & Flappy & Brick
     window.addEventListener('keydown', (e) => {
       if (activeGame === 'snake') {
         if (['ArrowUp', 'KeyW'].includes(e.code)) { e.preventDefault(); snakeInput('UP'); }
@@ -1485,39 +1177,30 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         if (['ArrowLeft', 'KeyA'].includes(e.code)) { e.preventDefault(); snakeInput('LEFT'); }
         if (['ArrowRight', 'KeyD'].includes(e.code)) { e.preventDefault(); snakeInput('RIGHT'); }
       } else if (activeGame === 'flappy') {
-        if (['Space', 'ArrowUp', 'KeyW'].includes(e.code)) {
-          e.preventDefault();
-          flapJump();
-        }
+        if (['Space', 'ArrowUp', 'KeyW'].includes(e.code)) { e.preventDefault(); flapJump(); }
       } else if (activeGame === 'brick') {
         if (['ArrowLeft', 'KeyA'].includes(e.code)) brickPaddleX = Math.max(0, brickPaddleX - 25);
         if (['ArrowRight', 'KeyD'].includes(e.code)) brickPaddleX = Math.min(brickCanvas.width - brickPaddleW, brickPaddleX + 25);
       }
     });
 
-    /* ======================================================
-       4. GAME 2: BRICK BREAKER
-       ====================================================== */
+    /* BRICK BREAKER */
     let brickCanvas, brickCtx, brickAnimationId;
     let brickPaddleW = 85, brickPaddleH = 12, brickPaddleX = 190;
     let brickBallX, brickBallY, brickBallDx, brickBallDy, brickBallR = 7;
     let brickRows = 4, brickCols = 6;
     let brickW, brickH = 18, brickPadding = 8, brickOffsetTop = 40, brickOffsetLeft = 20;
-    let bricks = [];
-    let brickScore = 0, brickLives = 3;
+    let bricks = [], brickScore = 0, brickLives = 3;
 
     function initBrick() {
       brickCanvas = document.getElementById('brickCanvas');
       brickCtx = brickCanvas.getContext('2d');
       brickPaddleX = (brickCanvas.width - brickPaddleW) / 2;
-      brickScore = 0;
-      brickLives = 3;
+      brickScore = 0; brickLives = 3;
       updateScoreboard(0);
-      updateBrickLivesDisplay();
-
+      document.getElementById('brickLivesDisplay').innerText = '❤❤❤';
       brickW = Math.floor((brickCanvas.width - (brickOffsetLeft * 2) - ((brickCols - 1) * brickPadding)) / brickCols);
 
-      // Reset bricks layout
       const colors = ['#ff007f', '#9d4edd', '#00f7ff', '#00ff66'];
       bricks = [];
       for (let r = 0; r < brickRows; r++) {
@@ -1526,18 +1209,14 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           bricks[r][c] = { x: 0, y: 0, status: 1, color: colors[r % colors.length] };
         }
       }
-
       resetBrickBall();
 
-      // Mouse control
       brickCanvas.onmousemove = (e) => {
         const rect = brickCanvas.getBoundingClientRect();
-        const root = document.documentElement;
         const mouseX = e.clientX - rect.left - (brickPaddleW / 2);
         brickPaddleX = Math.max(0, Math.min(brickCanvas.width - brickPaddleW, mouseX));
       };
 
-      // Button controls
       document.getElementById('brickLeftBtn').onmousedown = () => { brickPaddleX = Math.max(0, brickPaddleX - 35); };
       document.getElementById('brickRightBtn').onmousedown = () => { brickPaddleX = Math.min(brickCanvas.width - brickPaddleW, brickPaddleX + 35); };
 
@@ -1552,15 +1231,10 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       brickBallDy = -3.8;
     }
 
-    function updateBrickLivesDisplay() {
-      document.getElementById('brickLivesDisplay').innerText = '❤'.repeat(Math.max(0, brickLives));
-    }
-
     function brickLoop() {
       brickCtx.fillStyle = '#0a0f1d';
       brickCtx.fillRect(0, 0, brickCanvas.width, brickCanvas.height);
 
-      // Draw Bricks
       let remainingBricks = 0;
       for (let r = 0; r < brickRows; r++) {
         for (let c = 0; c < brickCols; c++) {
@@ -1569,23 +1243,14 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
             remainingBricks++;
             const brickX = c * (brickW + brickPadding) + brickOffsetLeft;
             const brickY = r * (brickH + brickPadding) + brickOffsetTop;
-            b.x = brickX;
-            b.y = brickY;
+            b.x = brickX; b.y = brickY;
 
             brickCtx.fillStyle = b.color;
-            brickCtx.shadowColor = b.color;
-            brickCtx.shadowBlur = 8;
-            brickCtx.beginPath();
-            brickCtx.roundRect(brickX, brickY, brickW, brickH, 4);
-            brickCtx.fill();
-            brickCtx.shadowBlur = 0;
+            brickCtx.fillRect(brickX, brickY, brickW, brickH);
 
-            // Ball Collision with Brick
             if (
-              brickBallX + brickBallR > b.x &&
-              brickBallX - brickBallR < b.x + brickW &&
-              brickBallY + brickBallR > b.y &&
-              brickBallY - brickBallR < b.y + brickH
+              brickBallX + brickBallR > b.x && brickBallX - brickBallR < b.x + brickW &&
+              brickBallY + brickBallR > b.y && brickBallY - brickBallR < b.y + brickH
             ) {
               brickBallDy = -brickBallDy;
               b.status = 0;
@@ -1597,31 +1262,19 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         }
       }
 
-      // Check Victory
       if (remainingBricks === 0) {
-        showGameOverModal('VICTORY!', 'You cleared every brick on the grid!', brickScore, { isWin: true });
+        showGameOverModal('VICTORY!', 'You cleared every brick!', brickScore, { isWin: true });
         return;
       }
 
-      // Draw Paddle
       brickCtx.fillStyle = '#00f7ff';
-      brickCtx.shadowColor = '#00f7ff';
-      brickCtx.shadowBlur = 12;
-      brickCtx.beginPath();
-      brickCtx.roundRect(brickPaddleX, brickCanvas.height - brickPaddleH - 8, brickPaddleW, brickPaddleH, 6);
-      brickCtx.fill();
-      brickCtx.shadowBlur = 0;
+      brickCtx.fillRect(brickPaddleX, brickCanvas.height - brickPaddleH - 8, brickPaddleW, brickPaddleH);
 
-      // Draw Ball
       brickCtx.fillStyle = '#ffffff';
-      brickCtx.shadowColor = '#ffea00';
-      brickCtx.shadowBlur = 10;
       brickCtx.beginPath();
       brickCtx.arc(brickBallX, brickBallY, brickBallR, 0, Math.PI * 2);
       brickCtx.fill();
-      brickCtx.shadowBlur = 0;
 
-      // Ball Movement & Wall Collisions
       brickBallX += brickBallDx;
       brickBallY += brickBallDy;
 
@@ -1634,25 +1287,20 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         playSound('bounce');
       }
 
-      // Paddle Collision
       const paddleTop = brickCanvas.height - brickPaddleH - 8;
       if (
-        brickBallY + brickBallR >= paddleTop &&
-        brickBallY - brickBallR <= paddleTop + brickPaddleH &&
-        brickBallX >= brickPaddleX &&
-        brickBallX <= brickPaddleX + brickPaddleW
+        brickBallY + brickBallR >= paddleTop && brickBallY - brickBallR <= paddleTop + brickPaddleH &&
+        brickBallX >= brickPaddleX && brickBallX <= brickPaddleX + brickPaddleW
       ) {
-        // Calculate deflection angle based on where ball hits paddle
         const hitPoint = (brickBallX - (brickPaddleX + brickPaddleW / 2)) / (brickPaddleW / 2);
         brickBallDx = hitPoint * 4.5;
         brickBallDy = -Math.abs(brickBallDy);
         playSound('bounce');
       }
 
-      // Bottom death
       if (brickBallY - brickBallR > brickCanvas.height) {
         brickLives--;
-        updateBrickLivesDisplay();
+        document.getElementById('brickLivesDisplay').innerText = '❤'.repeat(Math.max(0, brickLives));
         playSound('hit');
         if (brickLives <= 0) {
           showGameOverModal('OUT OF LIVES!', 'The ball dropped past your paddle.', brickScore);
@@ -1665,9 +1313,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       brickAnimationId = requestAnimationFrame(brickLoop);
     }
 
-    /* ======================================================
-       5. GAME 3: SPACE FLAPPER (FLAPPY BIRD)
-       ====================================================== */
+    /* SPACE FLAPPER */
     let flappyCanvas, flappyCtx, flappyAnimationId;
     let birdY, birdVelocity, birdGravity = 0.35, birdLift = -6.2;
     let pipes = [], pipeTimer = 0, flappyScore = 0;
@@ -1683,7 +1329,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       updateScoreboard(0);
 
       flappyCanvas.onclick = () => flapJump();
-
       if (flappyAnimationId) cancelAnimationFrame(flappyAnimationId);
       flappyLoop();
     }
@@ -1694,97 +1339,39 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     }
 
     function flappyLoop() {
-      // Clear sky
       flappyCtx.fillStyle = '#080816';
       flappyCtx.fillRect(0, 0, flappyCanvas.width, flappyCanvas.height);
 
-      // Starfield background
-      flappyCtx.fillStyle = 'rgba(255,255,255,0.4)';
-      for (let i = 0; i < 20; i++) {
-        let sx = (i * 37 + pipeTimer) % flappyCanvas.width;
-        let sy = (i * 29) % flappyCanvas.height;
-        flappyCtx.fillRect(sx, sy, 1.5, 1.5);
-      }
-
-      // Physics
       birdVelocity += birdGravity;
       birdY += birdVelocity;
 
-      // Draw Spaceship Player
-      flappyCtx.save();
-      flappyCtx.translate(70, birdY);
-      flappyCtx.rotate(Math.min(Math.PI / 4, Math.max(-Math.PI / 4, birdVelocity * 0.08)));
-      // Body
       flappyCtx.fillStyle = '#00f7ff';
-      flappyCtx.shadowColor = '#00f7ff';
-      flappyCtx.shadowBlur = 12;
       flappyCtx.beginPath();
-      flappyCtx.ellipse(0, 0, 16, 11, 0, 0, Math.PI * 2);
+      flappyCtx.arc(70, birdY, 12, 0, Math.PI * 2);
       flappyCtx.fill();
-      // Cockpit dome
-      flappyCtx.fillStyle = '#ff007f';
-      flappyCtx.beginPath();
-      flappyCtx.arc(4, -3, 6, 0, Math.PI * 2);
-      flappyCtx.fill();
-      // Rocket Thruster flame
-      flappyCtx.fillStyle = '#ffea00';
-      flappyCtx.beginPath();
-      flappyCtx.moveTo(-16, -4);
-      flappyCtx.lineTo(-24 - (Math.random() * 6), 0);
-      flappyCtx.lineTo(-16, 4);
-      flappyCtx.closePath();
-      flappyCtx.fill();
-      flappyCtx.restore();
 
-      // Spawn Obstacle Gates
       pipeTimer++;
       if (pipeTimer % 95 === 0) {
         const gap = 110;
-        const minH = 50;
-        const maxH = flappyCanvas.height - gap - minH;
-        const topH = Math.floor(Math.random() * (maxH - minH)) + minH;
-        pipes.push({
-          x: flappyCanvas.width,
-          top: topH,
-          bottom: flappyCanvas.height - topH - gap,
-          passed: false
-        });
+        const topH = Math.floor(Math.random() * (flappyCanvas.height - gap - 100)) + 50;
+        pipes.push({ x: flappyCanvas.width, top: topH, bottom: flappyCanvas.height - topH - gap, passed: false });
       }
 
-      // Move & Render Gates
       for (let i = pipes.length - 1; i >= 0; i--) {
         const p = pipes[i];
         p.x -= 2.6;
 
-        // Draw laser gate pillars
-        flappyCtx.fillStyle = '#1e1b4b';
-        flappyCtx.strokeStyle = '#9d4edd';
-        flappyCtx.lineWidth = 2;
-        // Top pipe
+        flappyCtx.fillStyle = '#9d4edd';
         flappyCtx.fillRect(p.x, 0, 48, p.top);
-        flappyCtx.strokeRect(p.x, 0, 48, p.top);
-        // Bottom pipe
         flappyCtx.fillRect(p.x, flappyCanvas.height - p.bottom, 48, p.bottom);
-        flappyCtx.strokeRect(p.x, flappyCanvas.height - p.bottom, 48, p.bottom);
 
-        // Glowing Laser Borders
-        flappyCtx.shadowColor = '#ff007f';
-        flappyCtx.shadowBlur = 8;
-        flappyCtx.fillStyle = '#ff007f';
-        flappyCtx.fillRect(p.x - 2, p.top - 6, 52, 6);
-        flappyCtx.fillRect(p.x - 2, flappyCanvas.height - p.bottom, 52, 6);
-        flappyCtx.shadowBlur = 0;
-
-        // Collision Check
-        const shipRadius = 11;
-        if (70 + shipRadius > p.x && 70 - shipRadius < p.x + 48) {
-          if (birdY - shipRadius < p.top || birdY + shipRadius > flappyCanvas.height - p.bottom) {
-            showGameOverModal('SYSTEM COLLISION!', 'Your spacecraft hit an energy barrier.', flappyScore);
+        if (70 + 11 > p.x && 70 - 11 < p.x + 48) {
+          if (birdY - 11 < p.top || birdY + 11 > flappyCanvas.height - p.bottom) {
+            showGameOverModal('SYSTEM COLLISION!', 'Spacecraft hit an energy barrier.', flappyScore);
             return;
           }
         }
 
-        // Score increment
         if (!p.passed && p.x + 48 < 70) {
           p.passed = true;
           flappyScore += 1;
@@ -1792,13 +1379,9 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           playSound('eat');
         }
 
-        // Cleanup offscreen pipes
-        if (p.x < -60) {
-          pipes.splice(i, 1);
-        }
+        if (p.x < -60) pipes.splice(i, 1);
       }
 
-      // Ground or ceiling collision
       if (birdY + 11 > flappyCanvas.height || birdY - 11 < 0) {
         showGameOverModal('CRASH LANDING!', 'You hit the boundary limits.', flappyScore);
         return;
@@ -1807,26 +1390,14 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       flappyAnimationId = requestAnimationFrame(flappyLoop);
     }
 
-    /* ======================================================
-       6. GAME 4: MEMORY MATCH
-       ====================================================== */
+    /* MEMORY MATCH */
     const emojis = ['👾', '🕹️', '⚡', '🚀', '💎', '🔥', '👑', '🔮'];
-    let memoryCards = [];
-    let flippedCards = [];
-    let matchedCount = 0;
-    let memoryMovesCount = 0;
-    let memorySeconds = 0;
-    let memoryTimerInterval = null;
-    let isMemoryBusy = false;
+    let flippedCards = [], matchedCount = 0, memoryMovesCount = 0, memorySeconds = 0, memoryTimerInterval = null, isMemoryBusy = false;
 
     function initMemory() {
       const container = document.getElementById('memoryGrid');
       container.innerHTML = '';
-      flippedCards = [];
-      matchedCount = 0;
-      memoryMovesCount = 0;
-      memorySeconds = 0;
-      isMemoryBusy = false;
+      flippedCards = []; matchedCount = 0; memoryMovesCount = 0; memorySeconds = 0; isMemoryBusy = false;
       document.getElementById('memoryMoves').innerText = '0';
       document.getElementById('memoryMatches').innerText = '0 / 8';
       document.getElementById('memoryTimer').innerText = '0s';
@@ -1838,16 +1409,12 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         document.getElementById('memoryTimer').innerText = `${memorySeconds}s`;
       }, 1000);
 
-      // Create card pairs
       const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
-
-      cardValues.forEach((val, idx) => {
+      cardValues.forEach((val) => {
         const card = document.createElement('div');
-        card.className = 'w-full h-20 sm:h-24 bg-gray-900 border-2 border-gray-700 hover:border-neonYellow rounded-xl flex items-center justify-center text-3xl cursor-pointer select-none transition-all duration-300 transform perspective-1000';
+        card.className = 'w-full h-20 bg-gray-900 border-2 border-gray-700 hover:border-neonYellow rounded-xl flex items-center justify-center text-3xl cursor-pointer select-none';
         card.dataset.value = val;
-        card.dataset.index = idx;
-        card.innerHTML = `<span class="hidden transform transition duration-200">${val}</span><i class="fa-solid fa-microchip text-gray-600 text-xl pointer-events-none"></i>`;
-
+        card.innerHTML = `<span class="hidden">${val}</span><i class="fa-solid fa-microchip text-gray-600 text-xl pointer-events-none"></i>`;
         card.onclick = () => flipMemoryCard(card);
         container.appendChild(card);
       });
@@ -1856,11 +1423,9 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     function flipMemoryCard(card) {
       if (isMemoryBusy || card.classList.contains('matched') || flippedCards.includes(card)) return;
 
-      // Reveal Card
-      card.classList.remove('bg-gray-900', 'border-gray-700');
-      card.classList.add('bg-neonPurple/20', 'border-neonCyan', 'scale-105');
       card.querySelector('span').classList.remove('hidden');
       card.querySelector('i').classList.add('hidden');
+      card.classList.add('bg-neonPurple/20', 'border-neonCyan');
       flippedCards.push(card);
       playSound('beep');
 
@@ -1871,10 +1436,9 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 
         const [card1, card2] = flippedCards;
         if (card1.dataset.value === card2.dataset.value) {
-          // MATCH!
           setTimeout(() => {
-            card1.classList.add('matched', 'border-neonGreen', 'bg-neonGreen/20');
-            card2.classList.add('matched', 'border-neonGreen', 'bg-neonGreen/20');
+            card1.classList.add('matched', 'border-neonGreen');
+            card2.classList.add('matched', 'border-neonGreen');
             matchedCount++;
             document.getElementById('memoryMatches').innerText = `${matchedCount} / 8`;
             playSound('win');
@@ -1883,28 +1447,19 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 
             if (matchedCount === emojis.length) {
               clearInterval(memoryTimerInterval);
-              const calculatedScore = Math.max(100, 1000 - (memoryMovesCount * 25) - (memorySeconds * 10));
-              updateScoreboard(calculatedScore);
-              showGameOverModal('GLORIOUS MEMORY!', `Completed in ${memoryMovesCount} moves and ${memorySeconds}s!`, calculatedScore, {
-                isWin: true,
-                scoreLabel: 'YOUR SCORE',
-                highScoreLabel: 'BEST SCORE'
-              });
+              const score = Math.max(100, 1000 - (memoryMovesCount * 25) - (memorySeconds * 10));
+              updateScoreboard(score);
+              showGameOverModal('GLORIOUS MEMORY!', `Completed in ${memoryMovesCount} moves!`, score, { isWin: true });
             }
           }, 350);
         } else {
-          // NO MATCH: Flip back
           setTimeout(() => {
-            card1.classList.remove('border-neonCyan', 'bg-neonPurple/20', 'scale-105');
-            card1.classList.add('bg-gray-900', 'border-gray-700');
             card1.querySelector('span').classList.add('hidden');
             card1.querySelector('i').classList.remove('hidden');
-
-            card2.classList.remove('border-neonCyan', 'bg-neonPurple/20', 'scale-105');
-            card2.classList.add('bg-gray-900', 'border-gray-700');
+            card1.classList.remove('bg-neonPurple/20', 'border-neonCyan');
             card2.querySelector('span').classList.add('hidden');
             card2.querySelector('i').classList.remove('hidden');
-
+            card2.classList.remove('bg-neonPurple/20', 'border-neonCyan');
             flippedCards = [];
             isMemoryBusy = false;
           }, 800);
@@ -1912,14 +1467,8 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       }
     }
 
-    /* ======================================================
-       7. GAME 5: TIC-TAC-TOE (SMART AI & 2-PLAYER)
-       ====================================================== */
-    let tttBoardState = Array(9).fill(null);
-    let tttTurn = 'X';
-    let tttMode = 'ai'; // 'ai' or '2p'
-    let tttWinsX = 0, tttWinsO = 0, tttDrawsCount = 0;
-    let tttGameOver = false;
+    /* TIC-TAC-TOE */
+    let tttBoardState = Array(9).fill(null), tttTurn = 'X', tttMode = 'ai', tttWinsX = 0, tttWinsO = 0, tttDrawsCount = 0, tttGameOver = false;
 
     function initTicTacToe() {
       tttBoardState = Array(9).fill(null);
@@ -1928,40 +1477,30 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       document.getElementById('tttTurnIndicator').innerText = "Player X's Turn";
       document.querySelectorAll('.ttt-cell').forEach(cell => {
         cell.innerText = '';
-        cell.className = 'ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white';
+        cell.className = 'ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl font-arcade font-black flex items-center justify-center transition text-white';
       });
       updateScoreboard(tttWinsX * 50);
     }
 
     function setTicTacToeMode(mode) {
       tttMode = mode;
-      document.getElementById('tttModeAi').className = mode === 'ai' ? 'px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple transition' : 'px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
-      document.getElementById('tttMode2P').className = mode === '2p' ? 'px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple transition' : 'px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
+      document.getElementById('tttModeAi').className = mode === 'ai' ? 'px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple' : 'px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700';
+      document.getElementById('tttMode2P').className = mode === '2p' ? 'px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple' : 'px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700';
       initTicTacToe();
     }
 
     function handleTttClick(index) {
       if (tttGameOver || tttBoardState[index] !== null) return;
-
       executeTttMove(index, tttTurn);
 
       const winCombo = checkTttWinner(tttBoardState);
-      if (winCombo) {
-        concludeTtt(tttTurn, winCombo);
-        return;
-      } else if (!tttBoardState.includes(null)) {
-        concludeTtt('DRAW', null);
-        return;
-      }
+      if (winCombo) { concludeTtt(tttTurn, winCombo); return; }
+      else if (!tttBoardState.includes(null)) { concludeTtt('DRAW', null); return; }
 
-      // Switch Turn
       tttTurn = (tttTurn === 'X') ? 'O' : 'X';
       document.getElementById('tttTurnIndicator').innerText = `Player ${tttTurn}'s Turn`;
 
-      // If AI mode and it's O's turn
-      if (tttMode === 'ai' && tttTurn === 'O') {
-        setTimeout(executeAiMove, 300);
-      }
+      if (tttMode === 'ai' && tttTurn === 'O') setTimeout(executeAiMove, 300);
     }
 
     function executeTttMove(index, player) {
@@ -1974,55 +1513,22 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 
     function executeAiMove() {
       if (tttGameOver) return;
-      // Smart AI: 1. Win if possible, 2. Block user win, 3. Take Center, 4. Random Corner/Edge
-      let move = getWinningMove('O') ?? getWinningMove('X') ?? (tttBoardState[4] === null ? 4 : null);
-      if (move === null) {
-        const available = tttBoardState.map((val, idx) => val === null ? idx : null).filter(v => v !== null);
-        move = available[Math.floor(Math.random() * available.length)];
-      }
-      if (move !== undefined && move !== null) {
+      const available = tttBoardState.map((val, idx) => val === null ? idx : null).filter(v => v !== null);
+      const move = available[Math.floor(Math.random() * available.length)];
+      if (move !== undefined) {
         executeTttMove(move, 'O');
         const winCombo = checkTttWinner(tttBoardState);
-        if (winCombo) {
-          concludeTtt('O', winCombo);
-          return;
-        } else if (!tttBoardState.includes(null)) {
-          concludeTtt('DRAW', null);
-          return;
-        }
+        if (winCombo) { concludeTtt('O', winCombo); return; }
+        else if (!tttBoardState.includes(null)) { concludeTtt('DRAW', null); return; }
         tttTurn = 'X';
         document.getElementById('tttTurnIndicator').innerText = "Player X's Turn";
       }
     }
 
-    function getWinningMove(player) {
-      const winningCombos = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8],
-        [0, 3, 6], [1, 4, 7], [2, 5, 8],
-        [0, 4, 8], [2, 4, 6]
-      ];
-      for (const [a, b, c] of winningCombos) {
-        const line = [tttBoardState[a], tttBoardState[b], tttBoardState[c]];
-        if (line.filter(x => x === player).length === 2 && line.includes(null)) {
-          if (tttBoardState[a] === null) return a;
-          if (tttBoardState[b] === null) return b;
-          if (tttBoardState[c] === null) return c;
-        }
-      }
-      return null;
-    }
-
     function checkTttWinner(board) {
-      const winningCombos = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8],
-        [0, 3, 6], [1, 4, 7], [2, 5, 8],
-        [0, 4, 8], [2, 4, 6]
-      ];
-      for (const combo of winningCombos) {
-        const [a, b, c] = combo;
-        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-          return combo;
-        }
+      const combos = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+      for (const [a, b, c] of combos) {
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) return [a, b, c];
       }
       return null;
     }
@@ -2030,393 +1536,363 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     function concludeTtt(result, combo) {
       tttGameOver = true;
       if (combo) {
-        const cells = document.querySelectorAll('.ttt-cell');
-        combo.forEach(idx => {
-          cells[idx].classList.add('bg-neonGreen/30', 'border-2', 'border-neonGreen');
-        });
+        combo.forEach(idx => document.querySelectorAll('.ttt-cell')[idx].classList.add('bg-neonGreen/30', 'border-2', 'border-neonGreen'));
       }
-
-      const currentScore = tttWinsX * 50;
       if (result === 'X') {
         tttWinsX++;
-        const newScore = tttWinsX * 50;
-        document.getElementById('tttXWins').innerText = tttWinsX;
-        updateScoreboard(newScore);
-        showGameOverModal('PLAYER X WINS!', 'Victory accomplished on the grid arena.', newScore, {
-          isWin: true,
-          scoreLabel: 'X POINTS',
-          highScoreLabel: 'HIGH SCORE'
-        });
+        updateScoreboard(tttWinsX * 50);
+        showGameOverModal('PLAYER X WINS!', 'Victory accomplished.', tttWinsX * 50, { isWin: true });
       } else if (result === 'O') {
-        tttWinsO++;
-        document.getElementById('tttOWins').innerText = tttWinsO;
-        showGameOverModal(tttMode === 'ai' ? 'AI ROBOT WINS!' : 'PLAYER O WINS!', 'Better tactics next round!', currentScore, {
-          isWin: false,
-          scoreLabel: 'X POINTS',
-          highScoreLabel: 'HIGH SCORE'
-        });
+        showGameOverModal('PLAYER O WINS!', 'Better tactics next round!', tttWinsX * 50);
       } else {
-        tttDrawsCount++;
-        document.getElementById('tttDraws').innerText = tttDrawsCount;
-        showGameOverModal('STALEMATE DRAW!', 'Neither player gave up an inch.', currentScore, {
-          isWin: false,
-          scoreLabel: 'X POINTS',
-          highScoreLabel: 'HIGH SCORE',
-          icon: '<i class="fa-solid fa-handshake text-neonYellow"></i>'
-        });
+        showGameOverModal('STALEMATE DRAW!', 'Neither player gave up an inch.', tttWinsX * 50);
       }
     }
 
-    /* ======================================================
-       8. WINDOW ONLOAD BOOTSTRAP
-       ====================================================== */
     window.onload = function() {
       updateTotalPortalScore();
-      // Do not auto-start a game on the main portal. A game starts only after its card is selected.
       document.getElementById('arenaContainer').style.display = 'none';
       document.querySelectorAll('.game-view').forEach(el => el.classList.add('hidden'));
     };
   </script>
-<script>
-function loadFullFeatureApp(authToken) {
-  const chatScreen = document.getElementById('chat-screen');
-  chatScreen.style.display = 'flex';
-  chatScreen.innerHTML = `
-    <div id="chat-app">
-      <header class="chat-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div class="avatar">🔒</div>
-          <div>
-            <div style="font-size: 14.5px; font-weight: 600; color: #fff;">Private Partner</div>
-            <div style="font-size: 11px; display: flex; align-items: center; margin-top: 2px;">
-              <span id="dot" class="online-indicator"></span>
-              <span id="status-txt" style="color: #94a3b8;">Connecting…</span>
+
+  <!-- CHAT SCRIPT (PRESERVED FULL CALL ENGINE & INSTANT BUTTONS) -->
+  <script>
+  function loadFullFeatureApp(authToken) {
+    const chatScreen = document.getElementById('chat-screen');
+    chatScreen.style.display = 'flex';
+    chatScreen.innerHTML = `
+      <div id="chat-app">
+        <header class="chat-header">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="avatar">🔒</div>
+            <div>
+              <div style="font-size: 14.5px; font-weight: 600; color: #fff;">Private Partner</div>
+              <div style="font-size: 11px; display: flex; align-items: center; margin-top: 2px;">
+                <span id="dot" class="online-indicator"></span>
+                <span id="status-txt" style="color: #94a3b8;">Connecting…</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:14px; padding: 7px 11px;">📞</button>
-          <!-- LOCK BUTTON: Sends directly to Game Page -->
-          <button id="hide-btn" type="button" class="tool-btn" style="background:#334155;">🔒 Lock</button>
-          <!-- EXIT / END BUTTON: Existing behavior preserved -->
-          <button id="end-chat-btn" type="button" class="tool-btn" style="background:#be123c; color:#fff; border:none;">🔴 End</button>
-          <!-- END ALL: close the chat/call connection and return to the main game portal -->
-          <button id="end-all-btn" type="button" class="tool-btn" style="background:linear-gradient(135deg,#dc2626,#9f1239); color:#fff; border:1px solid #fb7185; font-weight:800;">⏹ End All</button>
-        </div>
-      </header>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:14px; padding: 7px 11px;">📞</button>
+            <button id="hide-btn" type="button" class="tool-btn" style="background:#334155;">🔒 Lock</button>
+            <button id="end-chat-btn" type="button" class="tool-btn" style="background:#be123c; color:#fff; border:none;">🔴 End</button>
+            <button id="end-all-btn" type="button" class="tool-btn" style="background:linear-gradient(135deg,#dc2626,#9f1239); color:#fff; border:1px solid #fb7185; font-weight:800;">⏹ End All</button>
+          </div>
+        </header>
 
-      <!-- Fully Functional Call Tray -->
-      <section id="call-tray">
-        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-          <button id="audio-call" type="button" disabled class="tool-btn" style="background:#059669; color:#fff;">📞 Voice Call</button>
-          <button id="video-call" type="button" disabled class="tool-btn" style="background:#2563eb; color:#fff;">🎥 Video Call</button>
-          <button id="answer-call" type="button" class="tool-btn" style="background:#0284c7; color:#fff; display:none;">✅ Answer</button>
-          <button id="call-end-btn" type="button" class="tool-btn" style="background:#dc2626; color:#fff; display:none;">🔴 End Call</button>
-        </div>
-        <div id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 8px;">Call standby</div>
-        <div id="video-wrap" style="display: none; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
-          <video id="local-video" autoplay muted playsinline style="width:100%; max-height:120px; background:#000; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.1);"></video>
-          <video id="remote-video" autoplay playsinline style="width:100%; max-height:120px; background:#000; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.1);"></video>
-        </div>
-        <audio id="remote-audio" autoplay playsinline></audio>
-      </section>
+        <section id="call-tray">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <button id="audio-call" type="button" disabled class="tool-btn" style="background:#059669; color:#fff;">📞 Voice Call</button>
+            <button id="video-call" type="button" disabled class="tool-btn" style="background:#2563eb; color:#fff;">🎥 Video Call</button>
+            <button id="answer-call" type="button" class="tool-btn" style="background:#0284c7; color:#fff; display:none;">✅ Answer</button>
+            <button id="call-end-btn" type="button" class="tool-btn" style="background:#dc2626; color:#fff; display:none;">🔴 End Call</button>
+          </div>
+          <div id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 8px;">Call standby</div>
+          <div id="video-wrap" style="display: none; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+            <video id="local-video" autoplay muted playsinline style="width:100%; max-height:120px; background:#000; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.1);"></video>
+            <video id="remote-video" autoplay playsinline style="width:100%; max-height:120px; background:#000; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.1);"></video>
+          </div>
+          <audio id="remote-audio" autoplay playsinline></audio>
+        </section>
 
-      <main id="chat-box"></main>
+        <main id="chat-box"></main>
 
-      <form id="message-form" class="chat-footer">
-        <input id="msg-input" type="text" maxlength="2000" placeholder="Partner offline. Waiting…" autocomplete="off" disabled class="msg-input-field" required>
-        <button id="send-btn" type="submit" disabled class="send-circle-btn">➤</button>
-      </form>
-    </div>
-  `;
+        <form id="message-form" class="chat-footer">
+          <input id="msg-input" type="text" maxlength="2000" placeholder="Partner offline. Waiting…" autocomplete="off" disabled class="msg-input-field" required>
+          <button id="send-btn" type="submit" disabled class="send-circle-btn">➤</button>
+        </form>
+      </div>
+    `;
 
-  const STUN = [{ urls: 'stun:stun.l.google.com:19302' }];
-  const $ = id => document.getElementById(id);
-  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  
-  const socket = new WebSocket(`${proto}//${location.host}?token=${encodeURIComponent(authToken)}`);
+    const STUN = [{ urls: 'stun:stun.l.google.com:19302' }];
+    const $ = id => document.getElementById(id);
+    const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const socket = new WebSocket(`${proto}//${location.host}?token=${encodeURIComponent(authToken)}`);
 
-  // End All uses a WebSocket close code, not a chat message.
-  socket.addEventListener('close', async (event) => {
-    if (event.code === 4001) {
-      try { await cleanupCall(false); } catch (e) {}
-      const forcedChatScreen = document.getElementById('chat-screen');
-      if (forcedChatScreen) {
-        forcedChatScreen.style.display = 'none';
-        forcedChatScreen.innerHTML = '';
+    let pc = null, localStream = null, remoteStream = null;
+    let pendingOffer = null, callKind = 'audio', partnerPresent = false;
+
+    // Fast exit function bina delay ke
+    function fastExitToPortal() {
+      cleanupCall(false);
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.close();
+      }
+      const cs = document.getElementById('chat-screen');
+      if (cs) {
+        cs.style.display = 'none';
+        cs.innerHTML = '';
       }
       if (typeof goToAllGames === 'function') goToAllGames();
-      else window.location.reload();
+      else window.scrollTo({ top: 0, behavior: 'instant' });
     }
-  });
 
-  let pc = null, localStream = null, remoteStream = null;
-  let pendingOffer = null, callKind = 'audio', partnerPresent = false;
-
-  function setCallState(state) {
-    const audioBtn = $('audio-call');
-    const videoBtn = $('video-call');
-    const answerBtn = $('answer-call');
-    const endBtn = $('call-end-btn');
-
-    if (state === 'idle') {
-      audioBtn.style.display = 'inline-block';
-      videoBtn.style.display = 'inline-block';
-      audioBtn.disabled = !partnerPresent;
-      videoBtn.disabled = !partnerPresent;
-      answerBtn.style.display = 'none';
-      endBtn.style.display = 'none';
-    } else if (state === 'incoming') {
-      audioBtn.style.display = 'none';
-      videoBtn.style.display = 'none';
-      answerBtn.style.display = 'inline-block';
-      endBtn.style.display = 'inline-block';
-      endBtn.textContent = '❌ Decline';
-    } else if (state === 'in-call') {
-      audioBtn.style.display = 'none';
-      videoBtn.style.display = 'none';
-      answerBtn.style.display = 'none';
-      endBtn.style.display = 'inline-block';
-      endBtn.textContent = '🔴 End Call';
-    }
-  }
-
-  $('toggle-calls-btn').onclick = () => {
-    const tray = $('call-tray');
-    tray.style.display = tray.style.display === 'block' ? 'none' : 'block';
-  };
-
-  function setStatus(text, color) {
-    $('status-txt').textContent = text;
-    $('dot').style.background = color;
-  }
-
-  function setControls(enabled) {
-    $('msg-input').disabled = !enabled;
-    $('send-btn').disabled = !enabled;
-    setCallState('idle');
-    $('msg-input').placeholder = enabled ? "Type a message…" : "Partner offline. Waiting…";
-  }
-
-  function appendChatMessage(text, isMe, time, msgId) {
-    const box = $('chat-box');
-    const row = document.createElement('div');
-    row.id = msgId;
-    row.className = `msg-row ${isMe ? 'me' : 'them'}`;
-
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble';
-    bubble.title = "Tap to delete";
-    const sender = document.createElement('span');
-    sender.className = 'sender-label';
-    sender.textContent = isMe ? 'आप' : 'साथी';
-    const messageText = document.createElement('div');
-    messageText.className = 'message-text';
-    messageText.textContent = text;
-    bubble.appendChild(sender);
-    bubble.appendChild(messageText);
-
-    bubble.onclick = () => {
-      row.classList.add('disappearing');
-      setTimeout(() => row.remove(), 300);
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: 'delete-msg', id: msgId }));
-      }
-    };
-
-    const footer = document.createElement('div');
-    footer.style.cssText = "display:flex; justify-content:flex-end; font-size:10px; opacity:0.6; margin-top:3px;";
-    footer.innerHTML = `<span>${time}</span> ${isMe ? '<span style="color:#67e8f9; margin-left:3px;">✓✓</span>' : ''}`;
-
-    bubble.appendChild(footer);
-    row.appendChild(bubble);
-    box.appendChild(row);
-    box.scrollTop = box.scrollHeight;
-  }
-
-  $('msg-input').addEventListener('focus', () => {
-    setTimeout(() => { $('chat-box').scrollTop = $('chat-box').scrollHeight; }, 250);
-  });
-
-  socket.onmessage = async (event) => {
-    try {
-      const data = JSON.parse(event.data);
-      if (data.type === 'presence-ready') {
-        partnerPresent = true;
-        setControls(true);
-        setStatus('ऑनलाइन', '#10b981');
-        $('call-status').textContent = 'Partner connected.';
-      } else if (data.type === 'presence-left') {
-        partnerPresent = false;
-        setControls(false);
-        cleanupCall(false);
-        const exitTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        setStatus(`अंतिम बार ऑनलाइन: ${exitTime}`, '#ef4444');
-        $('call-status').textContent = 'Partner disconnected.';
-      } else if (data.type === 'message') {
-        appendChatMessage(data.text, false, data.time || '', data.id || 'm-' + Date.now());
-      } else if (data.type === 'delete-msg') {
-        const el = document.getElementById(data.id);
-        if (el) el.remove();
-      } else if (data.type === 'call-offer') {
-        pendingOffer = data;
-        callKind = data.kind || 'audio';
-        $('call-tray').style.display = 'block';
-        setCallState('incoming');
-        $('call-status').textContent = `Incoming ${callKind} call…`;
-      } else if (data.type === 'call-answer' && pc) {
-        await pc.setRemoteDescription(data.sdp);
-        setCallState('in-call');
-        $('call-status').textContent = 'Call connected.';
-      } else if (data.type === 'ice' && pc && data.candidate) {
-        try { await pc.addIceCandidate(data.candidate); } catch (_) {}
-      } else if (data.type === 'call-end' && (pc || pendingOffer)) {
-        await cleanupCall(false);
-        $('call-status').textContent = 'Call ended.';
-      }
-    } catch (_) {}
-  };
-
-  async function setupPeer(kind) {
-    pc = new RTCPeerConnection({ iceServers: STUN });
-    remoteStream = new MediaStream();
-    $('remote-video').srcObject = remoteStream;
-    $('remote-audio').srcObject = remoteStream;
-
-    pc.ontrack = event => event.streams[0].getTracks().forEach(t => remoteStream.addTrack(t));
-    pc.onicecandidate = event => {
-      if (event.candidate && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: 'ice', candidate: event.candidate }));
-      }
-    };
-
-    localStream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: true, noiseSuppression: true },
-      video: kind === 'video'
+    // End All connection event
+    socket.addEventListener('close', (event) => {
+      fastExitToPortal();
     });
 
-    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
-    $('local-video').srcObject = localStream;
-    $('video-wrap').style.display = kind === 'video' ? 'grid' : 'none';
+    function setCallState(state) {
+      const audioBtn = $('audio-call');
+      const videoBtn = $('video-call');
+      const answerBtn = $('answer-call');
+      const endBtn = $('call-end-btn');
+
+      if (state === 'idle') {
+        audioBtn.style.display = 'inline-block';
+        videoBtn.style.display = 'inline-block';
+        audioBtn.disabled = !partnerPresent;
+        videoBtn.disabled = !partnerPresent;
+        answerBtn.style.display = 'none';
+        endBtn.style.display = 'none';
+      } else if (state === 'incoming') {
+        audioBtn.style.display = 'none';
+        videoBtn.style.display = 'none';
+        answerBtn.style.display = 'inline-block';
+        endBtn.style.display = 'inline-block';
+        endBtn.textContent = '❌ Decline';
+      } else if (state === 'in-call') {
+        audioBtn.style.display = 'none';
+        videoBtn.style.display = 'none';
+        answerBtn.style.display = 'none';
+        endBtn.style.display = 'inline-block';
+        endBtn.textContent = '🔴 End Call';
+      }
+    }
+
+    $('toggle-calls-btn').onclick = () => {
+      const tray = $('call-tray');
+      tray.style.display = tray.style.display === 'block' ? 'none' : 'block';
+    };
+
+    function setStatus(text, color) {
+      $('status-txt').textContent = text;
+      $('dot').style.background = color;
+    }
+
+    function setControls(enabled) {
+      $('msg-input').disabled = !enabled;
+      $('send-btn').disabled = !enabled;
+      setCallState('idle');
+      $('msg-input').placeholder = enabled ? "Type a message…" : "Partner offline. Waiting…";
+    }
+
+    function appendChatMessage(text, isMe, time, msgId) {
+      const box = $('chat-box');
+      const row = document.createElement('div');
+      row.id = msgId;
+      row.className = `msg-row ${isMe ? 'me' : 'them'}`;
+
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.title = "Tap to delete";
+      const sender = document.createElement('span');
+      sender.className = 'sender-label';
+      sender.textContent = isMe ? 'आप' : 'साथी';
+      const messageText = document.createElement('div');
+      messageText.className = 'message-text';
+      messageText.textContent = text;
+      bubble.appendChild(sender);
+      bubble.appendChild(messageText);
+
+      bubble.onclick = () => {
+        row.classList.add('disappearing');
+        setTimeout(() => row.remove(), 300);
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify({ type: 'delete-msg', id: msgId }));
+        }
+      };
+
+      const footer = document.createElement('div');
+      footer.style.cssText = "display:flex; justify-content:flex-end; font-size:10px; opacity:0.6; margin-top:3px;";
+      footer.innerHTML = `<span>${time}</span> ${isMe ? '<span style="color:#67e8f9; margin-left:3px;">✓✓</span>' : ''}`;
+
+      bubble.appendChild(footer);
+      row.appendChild(bubble);
+      box.appendChild(row);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    $('msg-input').addEventListener('focus', () => {
+      setTimeout(() => { $('chat-box').scrollTop = $('chat-box').scrollHeight; }, 250);
+    });
+
+    socket.onmessage = async (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === 'end-all-now') {
+          fastExitToPortal();
+          return;
+        }
+        if (data.type === 'presence-ready') {
+          partnerPresent = true;
+          setControls(true);
+          setStatus('ऑनलाइन', '#10b981');
+          $('call-status').textContent = 'Partner connected.';
+        } else if (data.type === 'presence-left') {
+          partnerPresent = false;
+          setControls(false);
+          cleanupCall(false);
+          const exitTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          setStatus(`अंतिम बार: ${exitTime}`, '#ef4444');
+          $('call-status').textContent = 'Partner disconnected.';
+        } else if (data.type === 'message') {
+          appendChatMessage(data.text, false, data.time || '', data.id || 'm-' + Date.now());
+        } else if (data.type === 'delete-msg') {
+          const el = document.getElementById(data.id);
+          if (el) el.remove();
+        } else if (data.type === 'call-offer') {
+          pendingOffer = data;
+          callKind = data.kind || 'audio';
+          $('call-tray').style.display = 'block';
+          setCallState('incoming');
+          $('call-status').textContent = `Incoming ${callKind} call…`;
+        } else if (data.type === 'call-answer' && pc) {
+          await pc.setRemoteDescription(data.sdp);
+          setCallState('in-call');
+          $('call-status').textContent = 'Call connected.';
+        } else if (data.type === 'ice' && pc && data.candidate) {
+          try { await pc.addIceCandidate(data.candidate); } catch (_) {}
+        } else if (data.type === 'call-end' && (pc || pendingOffer)) {
+          cleanupCall(false);
+          $('call-status').textContent = 'Call ended.';
+        }
+      } catch (_) {}
+    };
+
+    async function setupPeer(kind) {
+      pc = new RTCPeerConnection({ iceServers: STUN });
+      remoteStream = new MediaStream();
+      $('remote-video').srcObject = remoteStream;
+      $('remote-audio').srcObject = remoteStream;
+
+      pc.ontrack = event => event.streams[0].getTracks().forEach(t => remoteStream.addTrack(t));
+      pc.onicecandidate = event => {
+        if (event.candidate && socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify({ type: 'ice', candidate: event.candidate }));
+        }
+      };
+
+      localStream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true },
+        video: kind === 'video'
+      });
+
+      localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+      $('local-video').srcObject = localStream;
+      $('video-wrap').style.display = kind === 'video' ? 'grid' : 'none';
+    }
+
+    async function startCall(kind) {
+      if (!partnerPresent) return;
+      try {
+        if (pc) cleanupCall(false);
+        callKind = kind;
+        await setupPeer(kind);
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        socket.send(JSON.stringify({ type: 'call-offer', kind, sdp: pc.localDescription }));
+        setCallState('in-call');
+        $('call-status').textContent = `Calling partner (${kind})…`;
+      } catch (e) {
+        $('call-status').textContent = 'Call error: ' + e.message;
+        cleanupCall(false);
+      }
+    }
+
+    async function answerCall() {
+      if (!pendingOffer) return;
+      const offer = pendingOffer;
+      pendingOffer = null;
+      try {
+        callKind = offer.kind || 'audio';
+        await setupPeer(callKind);
+        await pc.setRemoteDescription(offer.sdp);
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        socket.send(JSON.stringify({ type: 'call-answer', sdp: pc.localDescription }));
+        setCallState('in-call');
+        $('call-status').textContent = 'Call connected.';
+      } catch (e) {
+        $('call-status').textContent = 'Answer error: ' + e.message;
+        cleanupCall(false);
+      }
+    }
+
+    function cleanupCall(notifyPeer = true) {
+      if (notifyPeer && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: 'call-end' }));
+      }
+      pendingOffer = null;
+      if (pc) { pc.ontrack = null; pc.onicecandidate = null; pc.close(); pc = null; }
+      if (localStream) {
+        localStream.getTracks().forEach(t => { try { t.stop(); } catch(_) {} });
+        localStream = null;
+      }
+      remoteStream = null;
+      const lv = $('local-video'), rv = $('remote-video'), ra = $('remote-audio');
+      if (lv) lv.srcObject = null;
+      if (rv) rv.srcObject = null;
+      if (ra) ra.srcObject = null;
+      const vw = $('video-wrap');
+      if (vw) vw.style.display = 'none';
+      setCallState('idle');
+    }
+
+    // LOCK: Instant Switch without delay
+    $('hide-btn').onclick = () => fastExitToPortal();
+
+    // END: Instant Reload
+    $('end-chat-btn').onclick = () => {
+      cleanupCall(false);
+      if (socket) socket.close();
+      window.location.reload();
+    };
+
+    // END ALL: Dono taraf instant close
+    $('end-all-btn').onclick = () => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: 'force-logout-all' }));
+      }
+      fastExitToPortal();
+    };
+
+    $('audio-call').onclick = () => startCall('audio');
+    $('video-call').onclick = () => startCall('video');
+    $('answer-call').onclick = answerCall;
+    $('call-end-btn').onclick = () => cleanupCall(true);
+
+    $('message-form').onsubmit = e => {
+      e.preventDefault();
+      if (!partnerPresent) return;
+      const val = $('msg-input').value.trim();
+      if (!val || socket.readyState !== WebSocket.OPEN) return;
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const msgId = 'msg-' + Date.now();
+
+      socket.send(JSON.stringify({ type: 'message', text: val, time, id: msgId }));
+      appendChatMessage(val, true, time, msgId);
+      $('msg-input').value = '';
+    };
   }
+  </script>
 
-  async function startCall(kind) {
-    if (!partnerPresent) return;
-    try {
-      if (pc) await cleanupCall(false);
-      callKind = kind;
-      await setupPeer(kind);
-      const offer = await pc.createOffer();
-      await pc.setLocalDescription(offer);
-      socket.send(JSON.stringify({ type: 'call-offer', kind, sdp: pc.localDescription }));
-      setCallState('in-call');
-      $('call-status').textContent = `Calling partner (${kind})…`;
-    } catch (e) {
-      $('call-status').textContent = 'Call error: ' + e.message;
-      await cleanupCall(false);
-    }
-  }
-
-  async function answerCall() {
-    if (!pendingOffer) return;
-    const offer = pendingOffer;
-    pendingOffer = null;
-    try {
-      callKind = offer.kind || 'audio';
-      await setupPeer(callKind);
-      await pc.setRemoteDescription(offer.sdp);
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
-      socket.send(JSON.stringify({ type: 'call-answer', sdp: pc.localDescription }));
-      setCallState('in-call');
-      $('call-status').textContent = 'Call connected.';
-    } catch (e) {
-      $('call-status').textContent = 'Answer error: ' + e.message;
-      await cleanupCall(false);
-    }
-  }
-
-  async function cleanupCall(notifyPeer = true) {
-    if (notifyPeer && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ type: 'call-end' }));
-    }
-    pendingOffer = null;
-    if (pc) { pc.ontrack = null; pc.onicecandidate = null; pc.close(); pc = null; }
-    if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
-    remoteStream = null;
-    $('local-video').srcObject = null;
-    $('remote-video').srcObject = null;
-    $('remote-audio').srcObject = null;
-    $('video-wrap').style.display = 'none';
-    setCallState('idle');
-  }
-
-  // LOCK दबाने पर सीधे GAME PAGE (बिना कन्फर्मेशन)
-  $('hide-btn').onclick = () => {
-    cleanupCall(false);
-    if (socket) socket.close();
-    document.getElementById('chat-screen').style.display = 'none';
-  };
-
-  // 🔴 END / EXIT दबाने पर सीधे MAIN OTP PAGE (बिना कन्फर्मेशन)
-  $('end-chat-btn').onclick = () => {
-    cleanupCall(false);
-    if (socket) socket.close();
-    window.location.reload();
-  };
-
-  // END ALL closes every connected chat socket without sending a chat message.
-  $('end-all-btn').onclick = async () => {
-    // Send the control command before closing this socket; the server closes all clients with code 4001.
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      try { socket.send(JSON.stringify({ type: 'force-logout-all' })); } catch (e) {}
-    }
-    try { await cleanupCall(false); } catch (e) {}
-    if (socket && socket.readyState !== WebSocket.CLOSED) socket.close();
-    const screen = document.getElementById('chat-screen');
-    if (screen) {
-      screen.style.display = 'none';
-      screen.innerHTML = '';
-    }
-    if (typeof goToAllGames === 'function') goToAllGames();
-    else window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  $('audio-call').onclick = () => startCall('audio');
-  $('video-call').onclick = () => startCall('video');
-  $('answer-call').onclick = answerCall;
-  $('call-end-btn').onclick = () => cleanupCall(true);
-
-  $('message-form').onsubmit = e => {
-    e.preventDefault();
-    if (!partnerPresent) return;
-    const val = $('msg-input').value.trim();
-    if (!val || socket.readyState !== WebSocket.OPEN) return;
-    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const msgId = 'msg-' + Date.now();
-
-    socket.send(JSON.stringify({ type: 'message', text: val, time, id: msgId }));
-    appendChatMessage(val, true, time, msgId);
-    $('msg-input').value = '';
-  };
-}
-
-
-</script>
-
-  <!-- OTP overlays added above the original game portal; game interface itself remains unchanged. -->
+  <!-- OTP OVERLAY HTML -->
   <div id="otp-gate-layer" role="dialog" aria-modal="true" aria-label="Login">
     <div class="gate-card">
       <div class="gate-logo"><i class="fa-solid fa-gamepad"></i></div>
       <div class="gate-title">ऑनलाइन गेम</div>
       <div class="gate-subtitle" style="letter-spacing:.3px">गेम खेलने के लिए अपना गेम टोकन दर्ज करें</div>
       <input id="daily-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="अपना टोकन नंबर दर्ज करें" aria-label="अपना टोकन नंबर दर्ज करें" maxlength="10" />
-      <p class="free-game-hint" style="margin: -2px 0 12px; text-align:center; color:#a7f3d0; font:600 13px Rajdhani,sans-serif; letter-spacing:.3px;">FREE GAME खेलने के लिए <strong style="color:#ffffff;">123456</strong> दर्ज करें</p>
+      <p class="free-game-hint" style="margin: -2px 0 12px; text-align:center; color:#a7f3d0; font:600 13px Rajdhani,sans-serif; letter-spacing:.3px;">FREE GAME खेलने के लिए <strong style="color:#ffffff;">123456</strong> दर्ज करेंp>
       <button class="gate-submit" id="daily-otp-submit" type="button">आगे बढ़ें ➜</button>
       <button type="button" id="open-registration" class="gate-submit" style="margin-top:10px;background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">नया पंजीकरण</button>
     </div>
   </div>
+
   <div id="registration-layer" role="dialog" aria-modal="true" aria-label="New Registration" style="display:none;position:fixed;inset:0;z-index:100001;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.78);backdrop-filter:blur(9px)">
     <form id="registration-form" class="gate-card">
       <div class="gate-logo"><i class="fa-solid fa-user-plus"></i></div>
@@ -2426,18 +1902,19 @@ function loadFullFeatureApp(authToken) {
       <input id="reg-email" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" type="email" placeholder="ईमेल पता" aria-label="ईमेल पता" required maxlength="200" />
       <input id="reg-mobile" class="gate-input" style="font-size:15px;letter-spacing:1px;text-align:left" type="tel" inputmode="numeric" placeholder="मोबाइल नंबर" aria-label="मोबाइल नंबर" required pattern="[0-9]{10}" maxlength="10" />
       <button class="gate-submit" type="submit">पंजीकरण करें ➜</button>
-      <p id="registration-result" style="display:none;color:#a7f3d0;font:600 12px Rajdhani,sans-serif;margin-top:12px"></p>
       <button type="button" id="close-registration" class="gate-submit" style="margin-top:10px;background:#334155;color:#fff">लॉगिन पर वापस जाएँ</button>
     </form>
   </div>
-  <div id="registration-queue-popup" role="dialog" aria-modal="true" aria-labelledby="registration-queue-title" style="display:none;position:fixed;inset:0;z-index:100010;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px)">
+
+  <div id="registration-queue-popup" role="dialog" aria-modal="true" style="display:none;position:fixed;inset:0;z-index:100010;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px)">
     <div style="width:min(100%,390px);padding:25px 22px;border-radius:20px;text-align:center;background:linear-gradient(145deg,#111827,#1e1b4b);border:1px solid #c084fc;box-shadow:0 0 35px #a855f755;color:#fff">
       <div style="font-size:42px;margin-bottom:10px">📩</div>
-      <div id="registration-queue-title" style="font:800 17px Orbitron,sans-serif;letter-spacing:.2px;color:#f0abfc;margin-bottom:14px">पंजीकरण प्रतीक्षा सूची</div>
-      <p style="font:500 14px/1.7 Rajdhani,sans-serif;color:#f1f5f9;margin:0 0 20px">वेबसाइट पर उपयोगकर्ताओं की संख्या पूरी हो चुकी है, इसलिए अभी पंजीकरण नहीं किया जा सकता। आपका पंजीकरण प्रतीक्षा सूची में है। पंजीकरण होने पर आपको ईमेल के माध्यम से सूचना दी जाएगी।</p>
+      <div style="font:800 17px Orbitron,sans-serif;letter-spacing:.2px;color:#f0abfc;margin-bottom:14px">पंजीकरण प्रतीक्षा सूची</div>
+      <p style="font:500 14px/1.7 Rajdhani,sans-serif;color:#f1f5f9;margin:0 0 20px">वेबसाइट पर उपयोगकर्ताओं की संख्या पूरी हो चुकी है, इसलिए अभी पंजीकरण नहीं किया जा सकता। आपका पंजीकरण प्रतीक्षा सूची में है।</p>
       <button type="button" id="close-registration-queue-popup" class="gate-submit" style="background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">OK</button>
     </div>
   </div>
+
   <div id="second-otp-layer" role="dialog" aria-modal="true" aria-label="Secret Code">
     <div class="gate-card" style="border-color:#fb7185;box-shadow:0 0 20px #fb718566,0 0 44px #9d4edd33">
       <div class="gate-logo" style="background:linear-gradient(135deg,#fb7185,#9d4edd)"><i class="fa-solid fa-heart-lock"></i></div>
@@ -2448,6 +1925,7 @@ function loadFullFeatureApp(authToken) {
       <button class="gate-submit" id="second-otp-submit" type="button" style="background:linear-gradient(90deg,#fb7185,#c084fc)">चैट खोलें ➜</button>
     </div>
   </div>
+
   <div id="wrong-otp-layer" class="modal-backdrop" style="display:none" role="alertdialog" aria-modal="true">
     <div class="bg-gray-900 border-2 border-neonPink p-6 rounded-2xl max-w-xs w-full text-center shadow-neon-pink">
       <div class="text-5xl mb-3 text-neonPink animate-bounce"><i class="fa-solid fa-triangle-exclamation"></i></div>
@@ -2456,6 +1934,7 @@ function loadFullFeatureApp(authToken) {
       <button id="retry-otp-button" class="w-full py-2.5 bg-neonPink text-black font-arcade font-bold text-xs rounded-xl shadow-lg">OK</button>
     </div>
   </div>
+
   <div id="love-transition-layer" role="dialog" aria-modal="true" aria-label="Love message">
     <div id="love-transition-card" class="love-card" role="button" tabindex="0" aria-label="Open chat now">
       <div class="love-heart">💖</div>
@@ -2464,98 +1943,111 @@ function loadFullFeatureApp(authToken) {
       <div class="love-hint">TOUCH THE HEART TO OPEN CHAT · 5 SECONDS</div>
     </div>
   </div>
+
   <div id="chat-screen" aria-live="polite"></div>
 
+  <!-- AUTH SCRIPT -->
+  <script>
+  (function(){
+    const dailyLayer = document.getElementById('otp-gate-layer');
+    const secondLayer = document.getElementById('second-otp-layer');
+    const registrationLayer = document.getElementById('registration-layer');
+    const wrongLayer = document.getElementById('wrong-otp-layer');
+    const loveLayer = document.getElementById('love-transition-layer');
+    let otpStage = 1;
+    let transitionStarted = false;
+    let loveTimer = null;
+    let chatAuthToken = '';
 
-<script>
-(function(){
-  const dailyLayer = document.getElementById('otp-gate-layer');
-  const secondLayer = document.getElementById('second-otp-layer');
-  const registrationLayer = document.getElementById('registration-layer');
-  const wrongLayer = document.getElementById('wrong-otp-layer');
-  const loveLayer = document.getElementById('love-transition-layer');
-  let otpStage = 1;
-  let transitionStarted = false;
-  let loveTimer = null;
-  let chatAuthToken = '';
-  function todayOtp(){ const d=new Date(); return String(d.getDate()).padStart(2,'0')+String(d.getMonth()+1).padStart(2,'0')+String(d.getFullYear()).slice(-2); }
-  function showWrong(kind='token'){
-    const title=document.getElementById('wrong-token-title');
-    const message=document.getElementById('wrong-token-message');
-    if(kind==='secret'){title.textContent='गलत गुप्त कोड';message.textContent='आपने गलत गुप्त कोड दर्ज किया है। कृपया सही गुप्त कोड दर्ज करें।';}
-    else {title.textContent='गलत टोकन';message.textContent='आपने गलत टोकन दर्ज किया है। कृपया सही टोकन दर्ज करें।';}
-    wrongLayer.style.display='flex';
-  }
-  function checkDaily(){
-    const value=document.getElementById('daily-otp-input').value.trim();
-    if(value==='123456'){
-      // Free Game password: reveal the original game portal without changing its markup or styling.
-      dailyLayer.style.display='none';
-      return;
+    function showWrong(kind='token'){
+      const title=document.getElementById('wrong-token-title');
+      const message=document.getElementById('wrong-token-message');
+      if(kind==='secret'){title.textContent='गलत गुप्त कोड';message.textContent='आपने गलत गुप्त कोड दर्ज किया है। कृपया सही गुप्त कोड दर्ज करें।';}
+      else {title.textContent='गलत टोकन';message.textContent='आपने गलत टोकन दर्ज किया है। कृपया सही टोकन दर्ज करें।';}
+      wrongLayer.style.display='flex';
     }
-    if(value===todayOtp()){
-      otpStage=2; dailyLayer.style.display='none'; secondLayer.style.display='flex';
-      document.getElementById('second-otp-input').focus();
-    } else showWrong();
-  }
-  async function checkSecond(){
-    const value=document.getElementById('second-otp-input').value.trim();
-    if(!value){showWrong('secret');return;}
-    const btn=document.getElementById('second-otp-submit');
-    btn.disabled=true; btn.textContent='जाँच हो रही है…';
-    try {
-      // Secret Code is checked on the server; it is intentionally not stored in this HTML.
-      const res=await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:value})});
-      const data=await res.json().catch(()=>({}));
-      if(!res.ok || !data.success || !data.token){showWrong('secret');return;}
-      chatAuthToken=data.token;
-      secondLayer.style.display='none'; showLoveMessage();
-    } catch(_) {
-      alert('सर्वर से कनेक्शन नहीं हो पाया। गुप्त कोड की जाँच के लिए सर्वर/API चालू होना चाहिए।');
-    } finally { btn.disabled=false; btn.textContent='चैट खोलें ➜'; }
-  }
-  function retry(){
-    wrongLayer.style.display='none';
-    if(otpStage===1){const input=document.getElementById('daily-otp-input');input.value='';input.focus();}
-    else {const input=document.getElementById('second-otp-input');input.value='';secondLayer.style.display='flex';input.focus();}
-  }
-  function showLoveMessage(){
-    transitionStarted=false; loveLayer.style.display='flex';
-    if(loveTimer)clearTimeout(loveTimer);
-    loveTimer=setTimeout(openChat,5000);
-  }
-  function openChat(){
-    if(transitionStarted)return; transitionStarted=true;
-    if(loveTimer)clearTimeout(loveTimer);
-    loveLayer.style.display='none';
-    if(typeof loadFullFeatureApp==='function') loadFullFeatureApp(chatAuthToken);
-    else alert('Chat module is not available in this HTML file.');
-  }
-  document.getElementById('daily-otp-submit').addEventListener('click',checkDaily);
-  document.getElementById('second-otp-submit').addEventListener('click',checkSecond);
-  document.getElementById('retry-otp-button').addEventListener('click',retry);
-  document.getElementById('daily-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkDaily();});
-  document.getElementById('second-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkSecond();});
-  document.getElementById('love-transition-layer').addEventListener('click',openChat);
-  document.getElementById('love-transition-card').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openChat();}});
-  document.getElementById('open-registration').addEventListener('click',()=>{registrationLayer.style.display='flex';document.getElementById('reg-name').focus();});
-  document.getElementById('close-registration').addEventListener('click',()=>{registrationLayer.style.display='none';});
-  document.getElementById('registration-form').addEventListener('submit',e=>{
-    e.preventDefault();
-    // Requested placeholder token: generated randomly but deliberately not used for auth or saved.
-    const randomToken=(crypto.randomUUID?crypto.randomUUID():('reg-'+Math.random().toString(36).slice(2)+Date.now()));
-    void randomToken;
-    // Show the requested queue notice popup after the registration form is submitted.
-    // This HTML-only notice does not persist a real queue entry or send email without a backend.
-    document.getElementById('registration-queue-popup').style.display='flex';
-  });
-  document.getElementById('close-registration-queue-popup').addEventListener('click',()=>{
-    document.getElementById('registration-queue-popup').style.display='none';
-    registrationLayer.style.display='none';
-  });
-  window.addEventListener('load',()=>document.getElementById('daily-otp-input').focus());
-})();
-</script>
 
+    async function checkDaily(){
+      const value = document.getElementById('daily-otp-input').value.trim();
+      if(!value){ showWrong(); return; }
+
+      try {
+        const res = await fetch('/api/verify-daily', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ token: value })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          if (data.mode === 'free_game') {
+            dailyLayer.style.display = 'none';
+          } else {
+            otpStage = 2;
+            dailyLayer.style.display = 'none';
+            secondLayer.style.display = 'flex';
+            document.getElementById('second-otp-input').focus();
+          }
+        } else {
+          showWrong();
+        }
+      } catch(_) {
+        showWrong();
+      }
+    }
+
+    async function checkSecond(){
+      const value=document.getElementById('second-otp-input').value.trim();
+      if(!value){showWrong('secret');return;}
+      const btn=document.getElementById('second-otp-submit');
+      btn.disabled=true; btn.textContent='जाँच हो रही है…';
+      try {
+        const res=await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:value})});
+        const data=await res.json().catch(()=>({}));
+        if(!res.ok || !data.success || !data.token){showWrong('secret');return;}
+        chatAuthToken=data.token;
+        secondLayer.style.display='none'; showLoveMessage();
+      } catch(_) {
+        alert('सर्वर से कनेक्शन नहीं हो पाया।');
+      } finally { btn.disabled=false; btn.textContent='चैट खोलें ➜'; }
+    }
+
+    function retry(){
+      wrongLayer.style.display='none';
+      if(otpStage===1){const input=document.getElementById('daily-otp-input');input.value='';input.focus();}
+      else {const input=document.getElementById('second-otp-input');input.value='';secondLayer.style.display='flex';input.focus();}
+    }
+
+    function showLoveMessage(){
+      transitionStarted=false; loveLayer.style.display='flex';
+      if(loveTimer)clearTimeout(loveTimer);
+      loveTimer=setTimeout(openChat,5000);
+    }
+
+    function openChat(){
+      if(transitionStarted)return; transitionStarted=true;
+      if(loveTimer)clearTimeout(loveTimer);
+      loveLayer.style.display='none';
+      if(typeof loadFullFeatureApp==='function') loadFullFeatureApp(chatAuthToken);
+    }
+
+    document.getElementById('daily-otp-submit').addEventListener('click',checkDaily);
+    document.getElementById('second-otp-submit').addEventListener('click',checkSecond);
+    document.getElementById('retry-otp-button').addEventListener('click',retry);
+    document.getElementById('daily-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkDaily();});
+    document.getElementById('second-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkSecond();});
+    document.getElementById('love-transition-layer').addEventListener('click',openChat);
+    document.getElementById('open-registration').addEventListener('click',()=>{registrationLayer.style.display='flex';document.getElementById('reg-name').focus();});
+    document.getElementById('close-registration').addEventListener('click',()=>{registrationLayer.style.display='none';});
+    document.getElementById('registration-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      document.getElementById('registration-queue-popup').style.display='flex';
+    });
+    document.getElementById('close-registration-queue-popup').addEventListener('click',()=>{
+      document.getElementById('registration-queue-popup').style.display='none';
+      registrationLayer.style.display='none';
+    });
+    window.addEventListener('load',()=>document.getElementById('daily-otp-input').focus());
+  })();
+  </script>
 </body>
 </html>
