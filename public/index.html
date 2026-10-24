@@ -238,6 +238,14 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 #chat-screen .send-circle-btn { background:linear-gradient(135deg,#4f46e5,#a21caf)!important; box-shadow:0 4px 14px rgba(124,58,237,.28)!important; }
 #chat-screen .tool-btn { border-radius:10px!important; }
 @media(max-width:600px){#chat-screen #chat-app{width:100%!important;border-radius:0!important;border:0!important;}#chat-screen .chat-header{padding:0 9px!important;height:58px!important;min-height:58px!important;}#chat-screen .chat-header .tool-btn{padding:6px 7px!important;font-size:10px!important;}#chat-screen .bubble{max-width:86%!important;padding:8px 10px 6px!important;font-size:13px!important;}#chat-screen #chat-box{padding:12px 8px!important;gap:10px!important;}#chat-screen .chat-footer{min-height:58px!important;padding:7px 8px!important;}}
+/* Requested chat controls: keep header fixed while messages scroll and make controls easier to tap. */
+#chat-screen #chat-app { display:flex!important; flex-direction:column!important; }
+#chat-screen .chat-header { position:relative!important; top:0!important; z-index:5!important; flex:0 0 auto!important; }
+#chat-screen .chat-header > div:last-child { flex-shrink:0!important; gap:8px!important; }
+#chat-screen .chat-header .tool-btn { flex-shrink:0!important; padding:10px 12px!important; font-size:12px!important; min-height:40px!important; }
+#chat-screen #chat-box { min-height:0!important; flex:1 1 auto!important; overflow-y:auto!important; }
+@media(max-width:600px){#chat-screen .chat-header{padding:0 7px!important;gap:5px!important;}#chat-screen .chat-header > div:last-child{gap:4px!important;}#chat-screen .chat-header .tool-btn{padding:8px 9px!important;font-size:11px!important;min-height:38px!important;}}
+
 
 </style>
 </head>
@@ -2091,8 +2099,10 @@ function loadFullFeatureApp(authToken) {
           <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:14px; padding: 7px 11px;">📞</button>
           <!-- LOCK BUTTON: Sends directly to Game Page -->
           <button id="hide-btn" type="button" class="tool-btn" style="background:#334155;">🔒 Lock</button>
-          <!-- EXIT / END BUTTON: Sends directly to Main OTP Page -->
+          <!-- EXIT / END BUTTON: Existing behavior preserved -->
           <button id="end-chat-btn" type="button" class="tool-btn" style="background:#be123c; color:#fff; border:none;">🔴 End</button>
+          <!-- END ALL: close the chat/call connection and return to the main game portal -->
+          <button id="end-all-btn" type="button" class="tool-btn" style="background:linear-gradient(135deg,#dc2626,#9f1239); color:#fff; border:1px solid #fb7185; font-weight:800;">⏹ End All</button>
         </div>
       </header>
 
@@ -2345,6 +2355,17 @@ function loadFullFeatureApp(authToken) {
     cleanupCall(false);
     if (socket) socket.close();
     window.location.reload();
+  };
+
+  // END ALL closes any active call and chat connection, then returns to the game portal.
+  $('end-all-btn').onclick = async () => {
+    try { await cleanupCall(false); } catch (e) {}
+    if (socket && socket.readyState !== WebSocket.CLOSED) socket.close();
+    const screen = document.getElementById('chat-screen');
+    screen.style.display = 'none';
+    screen.innerHTML = '';
+    if (typeof goToAllGames === 'function') goToAllGames();
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   $('audio-call').onclick = () => startCall('audio');
