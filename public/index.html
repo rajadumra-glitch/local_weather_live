@@ -1,669 +1,1920 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>ONLINE GAME • Arcade Hub</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ONLINE GAME - Arcade Hub</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Tailwind CSS & Fonts -->
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: {
-          arcade: ['Orbitron', 'sans-serif'],
-          body: ['Rajdhani', 'sans-serif'],
-        },
-        colors: {
-          neonCyan: '#00f7ff',
-          neonPink: '#ff007f',
-          neonGreen: '#00ff66',
-          neonYellow: '#ffea00',
-          neonPurple: '#9d4edd',
-          darkBg: '#090a10',
-          darkCard: '#121424',
-        },
-        boxShadow: {
-          'neon-cyan': '0 0 15px rgba(0, 247, 255, 0.6), 0 0 30px rgba(0, 247, 255, 0.2)',
-          'neon-pink': '0 0 15px rgba(255, 0, 127, 0.6), 0 0 30px rgba(255, 0, 127, 0.2)',
-          'neon-green': '0 0 15px rgba(0, 255, 102, 0.6), 0 0 30px rgba(0, 255, 102, 0.2)',
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            arcade: ['Orbitron', 'sans-serif'],
+            body: ['Rajdhani', 'sans-serif'],
+          },
+          colors: {
+            neonCyan: '#00f7ff',
+            neonPink: '#ff007f',
+            neonGreen: '#00ff66',
+            neonYellow: '#ffea00',
+            neonPurple: '#9d4edd',
+            darkBg: '#090a10',
+            darkCard: '#121424',
+          },
+          boxShadow: {
+            'neon-cyan': '0 0 15px rgba(0, 247, 255, 0.6), 0 0 30px rgba(0, 247, 255, 0.2)',
+            'neon-pink': '0 0 15px rgba(255, 0, 127, 0.6), 0 0 30px rgba(255, 0, 127, 0.2)',
+            'neon-green': '0 0 15px rgba(0, 255, 102, 0.6), 0 0 30px rgba(0, 255, 102, 0.2)',
+          }
         }
       }
     }
-  }
-</script>
+  </script>
 
+  <style>
+    body {
+      background-color: #070913;
+      background-image: 
+        radial-gradient(ellipse at top, rgba(157, 78, 221, 0.15), transparent 60%),
+        radial-gradient(ellipse at bottom, rgba(0, 247, 255, 0.1), transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    }
+
+    .neon-text-glow {
+      text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff, 0 0 40px #ff007f;
+    }
+    
+    .pixel-border {
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .pixel-border:hover {
+      border-color: #00f7ff;
+      transform: translateY(-4px);
+    }
+
+    /* Flip Card Animation for Memory Game */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    .transform-style-preserve-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+  </style>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  
-  body {
-    background-color: #070913;
-    color: #f8fafc;
-    font-family: 'Rajdhani', sans-serif;
-    min-height: 100vh;
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow-x: hidden;
-    position: relative;
-  }
 
-  /* --- Genuine Arcade Gaming Background with Logo for Login Screen --- */
-  .arcade-bg-scene {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-    background-image: 
-      radial-gradient(ellipse at top, rgba(157, 78, 221, 0.25), transparent 60%),
-      radial-gradient(ellipse at bottom, rgba(0, 247, 255, 0.2), transparent 60%),
-      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
-  }
+/* Added OTP overlay and chat layer only. Original game portal styles/markup/scripts are preserved. */
+.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.85); backdrop-filter:blur(16px); align-items:center; justify-content:center; z-index:100000; padding:16px; }
+#otp-gate-layer, #second-otp-layer, #wrong-otp-layer, #love-transition-layer {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  padding: 16px; z-index: 100000; background: rgba(0,0,0,.72); backdrop-filter: blur(7px);
+}
+#second-otp-layer, #wrong-otp-layer, #love-transition-layer { display: none; }
+.gate-card {
+  width: min(100%, 390px); padding: 28px 24px; border-radius: 24px; text-align: center;
+  color: #fff; background: rgba(13,17,35,.97); border: 2px solid #00f7ff;
+  box-shadow: 0 0 18px rgba(0,247,255,.45), 0 0 44px rgba(255,0,127,.18);
+}
+.gate-logo { width: 68px; height: 68px; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;
+  border-radius:20px; color:#fff; font-size:30px; background:linear-gradient(135deg,#ff007f,#9d4edd); box-shadow:0 0 22px #ff007f66; }
+.gate-title { font:900 22px Orbitron, sans-serif; letter-spacing:1px; margin-bottom:8px; }
+.gate-subtitle { color:#00f7ff; font:600 11px Orbitron, sans-serif; letter-spacing:1.6px; margin-bottom:22px; }
+.gate-input { width:100%; padding:14px 12px; border-radius:12px; margin:0 0 14px; background:#090d1c; color:#fff;
+  border:1px solid #475569; text-align:center; font:700 22px Orbitron,sans-serif; letter-spacing:5px; outline:none; }
+.gate-input:focus { border-color:#00f7ff; box-shadow:0 0 0 2px #00f7ff22; }
+.gate-submit { width:100%; padding:13px; border:0; border-radius:12px; cursor:pointer; color:#07111d;
+  background:linear-gradient(90deg,#00f7ff,#3b82f6); font:900 12px Orbitron,sans-serif; }
+.gate-submit:hover { filter:brightness(1.12); }
+#chat-screen { position:fixed; inset:0; z-index:100010; display:none; align-items:center; justify-content:center; background:#070913; }
+#chat-screen #chat-app { width:100%; max-width:480px; height:100vh; height:100dvh; display:flex; flex-direction:column; background:#0b0f19; position:relative; z-index:20; }
+#chat-screen .chat-header { height:66px; background:rgba(15,23,42,.95); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; justify-content:space-between; padding:0 12px; flex-shrink:0; gap:8px; }
+#chat-screen .avatar { width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#1e293b,#0f172a);display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid #38bdf8; }
+#chat-screen .online-indicator { width:8px;height:8px;border-radius:50%;background:#eab308;display:inline-block;margin-right:6px; }
+#chat-screen #call-tray { display:none;background:rgba(15,23,42,.98);border-bottom:1px solid rgba(255,255,255,.1);padding:12px 14px;flex-shrink:0; }
+#chat-screen #chat-box { flex:1;overflow-y:auto;padding:18px 14px;display:flex;flex-direction:column;gap:12px;background:#070a12;background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:24px 24px; }
+#chat-screen .msg-row { display:flex;width:100%;transition:opacity .3s ease; } #chat-screen .msg-row.me {justify-content:flex-end;} #chat-screen .msg-row.them {justify-content:flex-start;} #chat-screen .msg-row.disappearing {opacity:0;transform:scale(.75);}
+#chat-screen .bubble {max-width:78%;padding:10px 14px 8px;font-size:14.5px;line-height:1.45;word-break:break-word;border-radius:18px;cursor:pointer;user-select:none;}
+#chat-screen .msg-row.me .bubble {background:linear-gradient(135deg,#059669,#047857);color:#fff;border-bottom-right-radius:4px;} #chat-screen .msg-row.them .bubble {background:rgba(30,41,59,.85);color:#f1f5f9;border-bottom-left-radius:4px;border:1px solid rgba(255,255,255,.06);}
+#chat-screen .chat-footer {min-height:64px;background:rgba(15,23,42,.98);border-top:1px solid rgba(255,255,255,.08);padding:10px 12px;display:flex;align-items:center;gap:10px;}
+#chat-screen .msg-input-field {flex:1;min-width:0;background:rgba(30,41,59,.7);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:12px 16px;color:#fff;font-size:14.5px;outline:none;}
+#chat-screen .send-circle-btn {width:44px;height:44px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);border:0;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+#chat-screen .tool-btn {background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#cbd5e1;padding:7px 9px;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.love-card { cursor:pointer; user-select:none; width:min(100%,420px); padding:30px 24px; text-align:center; color:#fff; border-radius:28px; border:2px solid #fb7185;
+  background:radial-gradient(circle at top,#5b174d,#1a1033 62%,#090d1b); box-shadow:0 0 35px #fb718544; animation:lovePop .55s ease-out; }
+.love-heart { font-size:70px; line-height:1.2; filter:drop-shadow(0 0 18px #fb7185); animation:heartBeat .9s infinite; }
+.love-message { margin:14px 0; font:900 clamp(20px,5vw,28px) Orbitron,sans-serif; line-height:1.45; color:#fff; text-shadow:0 0 14px #fb7185; }
+.love-hint { color:#fbcfe8; font:600 10px Orbitron,sans-serif; letter-spacing:1px; }
+@keyframes heartBeat {0%,100%{transform:scale(1)}50%{transform:scale(1.12)}} @keyframes lovePop {from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
+@media(max-width:380px){#chat-screen .chat-header{padding:0 7px;}#chat-screen .tool-btn{padding:6px 7px;font-size:10px;} .gate-card{padding:24px 18px;}}
 
-  .bg-watermark-logo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: clamp(220px, 40vw, 360px);
-    color: rgba(0, 247, 255, 0.05);
-    filter: drop-shadow(0 0 50px rgba(255, 0, 127, 0.15));
-    user-select: none;
-  }
-
-  .floating-glyph {
-    position: absolute;
-    color: rgba(255, 255, 255, 0.1);
-    animation: floatIcon 6s ease-in-out infinite alternate;
-  }
-  @keyframes floatIcon {
-    from { transform: translateY(0px) rotate(0deg); }
-    to { transform: translateY(-20px) rotate(10deg); }
-  }
-
-  .neon-text-glow {
-    text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff, 0 0 40px #ff007f;
-  }
-
-  .pixel-border {
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(8px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .pixel-border:hover {
-    border-color: #00f7ff;
-    transform: translateY(-4px);
-  }
-
-  /* Universal Popups Backdrop */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(16px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100000;
-    padding: 16px;
-  }
-
-  /* Premium weather page polish */
-  #app-root.weather-card {
-    max-width: 500px; padding: 28px 24px;
-    background: linear-gradient(145deg, rgba(15,23,42,.96), rgba(12,28,48,.92));
-    border: 1px solid rgba(56,189,248,.38);
-    box-shadow: 0 25px 70px rgba(2,132,199,.18), 0 0 0 1px rgba(255,255,255,.025) inset;
-    animation: weatherIn .45s ease-out both;
-  }
-  @keyframes weatherIn { from { opacity:0; transform:translateY(14px) scale(.98); } to {opacity:1;transform:translateY(0) scale(1);} }
-  #app-root .weather-input { padding-top:14px; padding-bottom:14px; }
-  #app-root #w-temp { font-weight:300; letter-spacing:-3px; text-shadow:0 0 28px rgba(125,211,252,.22); }
-  #app-root .grid > div { transition:transform .2s,border-color .2s; }
-  #app-root .grid > div:hover { transform:translateY(-2px); border-color:rgba(56,189,248,.35); }
-  /* Weather UI Card */
-  .weather-card {
-    background: rgba(17, 24, 39, 0.85);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 28px;
-    width: 100%;
-    max-width: 440px;
-    padding: 24px 20px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    margin: 16px;
-    position: relative;
-    z-index: 20;
-  }
-
-  .weather-input {
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 14px;
-    padding: 12px 42px 12px 14px;
-    color: #fff;
-    width: 100%;
-    outline: none;
-    font-size: 14.5px;
-    transition: 0.2s;
-  }
-  .weather-input:focus {
-    border-color: #38bdf8;
-    background: rgba(15, 23, 42, 0.98);
-  }
-
-  /* Chat UI */
-  #chat-app {
-    width: 100%;
-    max-width: 480px;
-    height: 100vh;
-    height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    background: #0b0f19;
-    position: relative;
-    z-index: 20;
-  }
-
-  .chat-header {
-    height: 66px;
-    background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    flex-shrink: 0;
-    z-index: 30;
-  }
-
-  .avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    border: 1.5px solid #38bdf8;
-  }
-
-  .online-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #eab308;
-    display: inline-block;
-    margin-right: 6px;
-    flex-shrink: 0;
-  }
-
-  #call-tray {
-    display: none;
-    background: rgba(15, 23, 42, 0.98);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 12px 14px;
-    flex-shrink: 0;
-    z-index: 25;
-  }
-
-  #chat-box {
-    flex: 1;
-    overflow-y: auto;
-    padding: 18px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: #070a12;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
-  .msg-row { display: flex; width: 100%; transition: opacity 0.3s ease; }
-  .msg-row.me { justify-content: flex-end; }
-  .msg-row.them { justify-content: flex-start; }
-  .msg-row.disappearing { opacity: 0; transform: scale(0.75); }
-
-  .bubble {
-    max-width: 78%;
-    padding: 10px 14px 8px 14px;
-    font-size: 14.5px;
-    line-height: 1.45;
-    word-break: break-word;
-    border-radius: 18px;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .msg-row.me .bubble {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    color: #fff;
-    border-bottom-right-radius: 4px;
-  }
-
-  .msg-row.them .bubble {
-    background: rgba(30, 41, 59, 0.85);
-    color: #f1f5f9;
-    border-bottom-left-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  .chat-footer {
-    min-height: 64px;
-    background: rgba(15, 23, 42, 0.9);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .msg-input-field {
-    flex: 1;
-    background: rgba(30, 41, 59, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    padding: 12px 18px;
-    color: #fff;
-    font-size: 14.5px;
-    outline: none;
-  }
-
-  .send-circle-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #059669, #10b981);
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .tool-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #cbd5e1;
-    padding: 7px 12px;
-    border-radius: 10px;
-    font-size: 12.5px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-  }
 </style>
 </head>
-<body id="page-body">
+<body class="text-gray-100 font-body min-h-screen flex flex-col justify-between selection:bg-neonPink selection:text-white">
 
-  <!-- ==================== 1. ARCADE BACKGROUND WATERMARK ==================== -->
-  <div id="arcade-bg" class="arcade-bg-scene">
-    <i class="fa-solid fa-gamepad bg-watermark-logo"></i>
-    <i class="fa-solid fa-ghost floating-glyph text-4xl top-16 left-12" style="animation-delay: 0s;"></i>
-    <i class="fa-solid fa-rocket floating-glyph text-5xl top-24 right-16 text-neonPink/20" style="animation-delay: 1.5s;"></i>
-    <i class="fa-solid fa-dice-d20 floating-glyph text-3xl bottom-24 left-20 text-neonGreen/20" style="animation-delay: 2.5s;"></i>
-    <i class="fa-solid fa-trophy floating-glyph text-4xl top-1/3 right-10 text-neonCyan/20" style="animation-delay: 2s;"></i>
-  </div>
+  <!-- TOP HEADER -->
+  <header class="pt-8 pb-4 px-4 text-center border-b border-gray-800 bg-black/40 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="p-2.5 bg-gradient-to-tr from-neonPink to-neonPurple rounded-xl shadow-neon-pink">
+          <i class="fa-solid fa-gamepad text-2xl text-white"></i>
+        </span>
+        <div class="text-left">
+          <h1 class="text-3xl md:text-5xl font-black font-arcade tracking-wider neon-text-glow text-white uppercase">
+            ONLINE GAME
+          </h1>
+          <p class="text-xs md:text-sm tracking-widest text-neonCyan uppercase font-semibold">
+            Arcade Retro & Mini-Games Hub
+          </p>
+        </div>
+      </div>
 
-  <!-- ==================== 2. MAIN LOGIN GATE ==================== -->
-  <div id="otp-overlay" class="modal-backdrop">
-    <div class="relative bg-darkCard/95 border-2 border-neonCyan p-8 rounded-3xl max-w-sm w-full text-center shadow-neon-cyan z-20">
+      <!-- Quick Audio Toggle & Portal Stats -->
+      <div class="flex items-center gap-4 bg-gray-900/80 px-4 py-2 rounded-2xl border border-gray-800">
+        <button id="soundToggleBtn" onclick="toggleAudio()" class="flex items-center gap-2 text-sm text-gray-300 hover:text-neonGreen transition">
+          <i id="soundIcon" class="fa-solid fa-volume-high text-neonGreen"></i>
+          <span id="soundText" class="text-xs uppercase font-arcade">Sound: ON</span>
+        </button>
+        <span class="w-px h-5 bg-gray-700"></span>
+        <div class="text-xs text-gray-400 font-arcade">
+          <i class="fa-solid fa-trophy text-neonYellow mr-1"></i> <span id="portalTotalHighScores">0</span> PTS
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN ARCADE DASHBOARD -->
+  <main class="max-w-6xl w-full mx-auto px-4 py-8 flex-grow">
+    <div class="mb-8 text-center md:text-left">
+      <h2 class="text-xl md:text-2xl font-bold font-arcade text-gray-200">
+        SELECT YOUR GAME <span class="text-neonPink animate-pulse">&#9658;</span>
+      </h2>
+      <p class="text-gray-400 text-sm">Pick a game to start playing immediately in the interactive arena below.</p>
+    </div>
+
+    <!-- GAMES CARDS GRID -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
       
-      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-neonPink to-neonPurple mx-auto flex items-center justify-center mb-4 shadow-neon-pink">
-        <i class="fa-solid fa-gamepad text-3xl text-white"></i>
-      </div>
-      
-      <h2 class="text-2xl font-black font-arcade text-white tracking-wider uppercase mb-1">ONLINE GAME</h2>
-      <p class="text-xs text-neonCyan font-arcade tracking-widest uppercase mb-4">Arcade Retro Hub</p>
-
-      <div class="bg-gray-900/90 border border-neonYellow/40 rounded-xl p-2.5 mb-5 text-xs font-arcade text-neonYellow">
-        ⚡ फ्री गेम खेलने के लिए कृपया <b>123456</b> दर्ज करें
-      </div>
-
-      <input type="password" id="gate-otp" placeholder="••••••" maxlength="10" autofocus autocomplete="off"
-             class="w-full py-3.5 px-4 mb-4 text-center text-2xl tracking-[8px] bg-gray-900 border-2 border-gray-700 focus:border-neonCyan text-white rounded-xl outline-none font-arcade transition">
-
-      <button type="button" onclick="verifyGateCode()"
-              class="w-full py-3 bg-gradient-to-r from-neonCyan to-blue-600 hover:from-neonGreen hover:to-emerald-600 text-black font-arcade font-black text-sm rounded-xl transition shadow-lg">
-        ENTER ARENA ➔
+      <!-- 1. Snake Game Card -->
+      <button onclick="launchGame('snake')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-green hover:border-neonGreen transition">
+        <div class="w-16 h-16 rounded-2xl bg-emerald-950/60 border border-neonGreen/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+          <i class="fa-solid fa-staff-snake text-3xl text-neonGreen"></i>
+        </div>
+        <h3 class="font-arcade text-lg text-white font-bold tracking-wide">SNAKE RETRO</h3>
+        <p class="text-xs text-gray-400 mt-1 mb-3">Eat pellets, speed up, avoid self-collision.</p>
+        <span class="w-full py-1.5 px-3 bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs rounded-xl font-arcade uppercase group-hover:bg-neonGreen group-hover:text-black font-semibold transition">
+          Play Now
+        </span>
       </button>
-    </div>
-  </div>
 
-  <!-- POPUP: ACCESS DENIED (लाल नीयन पॉप-अप) -->
-  <div id="access-denied-popup" class="modal-backdrop" style="display: none;">
-    <div class="bg-gray-900 border-2 border-neonPink p-6 rounded-2xl max-w-xs w-full text-center shadow-neon-pink">
-      <div class="text-5xl mb-3 text-neonPink animate-bounce">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-      </div>
-      <h3 class="text-xl font-arcade font-black text-white mb-2 tracking-wide">ACCESS DENIED</h3>
-      <p class="text-sm text-gray-300 font-body mb-5">अमान्य पासकोड! कृपया सही कोड दर्ज करें।</p>
-      <button onclick="closeAccessDenied()" class="w-full py-2.5 bg-neonPink text-black font-arcade font-bold text-xs rounded-xl shadow-lg">
-        RETRY / फिर से प्रयास करें
+      <!-- 2. Brick Breaker Card -->
+      <button onclick="launchGame('brick')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-cyan hover:border-neonCyan transition">
+        <div class="w-16 h-16 rounded-2xl bg-cyan-950/60 border border-neonCyan/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+          <i class="fa-solid fa-shapes text-3xl text-neonCyan"></i>
+        </div>
+        <h3 class="font-arcade text-lg text-white font-bold tracking-wide">BRICK BREAKER</h3>
+        <p class="text-xs text-gray-400 mt-1 mb-3">Bouncing paddle ball & multicolored bricks.</p>
+        <span class="w-full py-1.5 px-3 bg-neonCyan/10 border border-neonCyan/30 text-neonCyan text-xs rounded-xl font-arcade uppercase group-hover:bg-neonCyan group-hover:text-black font-semibold transition">
+          Play Now
+        </span>
       </button>
-    </div>
-  </div>
 
-  <!-- POPUP: DORAEMON 5-SECOND LOVE POPUP -->
-  <div id="doraemon-popup" class="modal-backdrop" style="display: none;">
-    <div class="bg-gradient-to-b from-blue-900 to-indigo-950 border-2 border-sky-400 p-6 rounded-3xl max-w-sm w-full text-center shadow-2xl relative overflow-hidden">
-      <div class="w-24 h-24 mx-auto mb-3 rounded-full bg-sky-400 border-4 border-white flex items-center justify-center shadow-lg relative">
-        <span class="text-5xl">🐱</span>
-        <span class="absolute -bottom-1 -right-1 text-2xl animate-bounce">❤️</span>
-      </div>
-      <div class="text-3xl text-rose-500 mb-2 animate-ping">💖</div>
-      <h3 class="text-2xl font-black font-arcade text-white tracking-wider mb-2">
-        Doremon I Love You Hamesha
-      </h3>
-      <p class="text-xs text-sky-200 font-arcade tracking-widest">Opening Secure Chamber in 5s…</p>
-    </div>
-  </div>
-
-  <!-- POPUP: WRONG CITY POPUP -->
-  <div id="wrong-city-popup" class="modal-backdrop" style="display: none;">
-    <div class="bg-gray-900 border-2 border-rose-500 p-6 rounded-2xl max-w-xs w-full text-center shadow-2xl">
-      <div class="text-4xl mb-2 text-rose-500">❌</div>
-      <h3 class="text-lg font-bold text-white mb-2">स्थान नहीं मिला</h3>
-      <p class="text-sm text-gray-300 mb-5">आपने गलत जगह दिया है!</p>
-      <button onclick="document.getElementById('wrong-city-popup').style.display='none'" class="w-full py-2 bg-rose-600 text-white font-bold text-xs rounded-xl">
-        ठीक है
+      <!-- 3. Flappy Flyer Card -->
+      <button onclick="launchGame('flappy')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-pink hover:border-neonPink transition">
+        <div class="w-16 h-16 rounded-2xl bg-pink-950/60 border border-neonPink/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+          <i class="fa-solid fa-rocket text-3xl text-neonPink"></i>
+        </div>
+        <h3 class="font-arcade text-lg text-white font-bold tracking-wide">SPACE FLAPPER</h3>
+        <p class="text-xs text-gray-400 mt-1 mb-3">Flap your thrusters & navigate laser gates.</p>
+        <span class="w-full py-1.5 px-3 bg-neonPink/10 border border-neonPink/30 text-neonPink text-xs rounded-xl font-arcade uppercase group-hover:bg-neonPink group-hover:text-black font-semibold transition">
+          Play Now
+        </span>
       </button>
-    </div>
-  </div>
 
-  <!-- POPUP: AREA NAME PROMPT (मौसम पेज पर सर्च पर क्लिक करते ही खुलने वाला) -->
-  <div id="area-prompt-popup" class="modal-backdrop" style="display: none;">
-    <div class="bg-slate-900 border-2 border-sky-400 p-6 rounded-2xl max-w-sm w-full text-center shadow-2xl">
-      <div class="text-3xl mb-2">🌤️</div>
-      <h3 class="text-lg font-bold text-white mb-2">मौसम खोज</h3>
-      <p class="text-sm text-sky-200 mb-4 font-body">मौसम की जानकारी के लिए अपने जगह का नाम डालें (Enter Your Area Name)</p>
-      <input type="text" id="area-prompt-input" placeholder="शहर / क्षेत्र का नाम या सीक्रेट कोड..." 
-             class="w-full py-2.5 px-3 bg-slate-800 border border-slate-600 focus:border-sky-400 text-white rounded-xl text-sm outline-none mb-4 text-center">
-      <div class="flex gap-2">
-        <button onclick="submitAreaPrompt()" class="flex-1 py-2 bg-sky-500 text-white font-bold text-xs rounded-xl">खोजें</button>
-        <button onclick="document.getElementById('area-prompt-popup').style.display='none'" class="py-2 px-3 bg-slate-700 text-gray-300 text-xs rounded-xl">बंद करें</button>
-      </div>
-    </div>
-  </div>
+      <!-- 4. Memory Match Card -->
+      <button onclick="launchGame('memory')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-cyan hover:border-neonYellow transition">
+        <div class="w-16 h-16 rounded-2xl bg-yellow-950/60 border border-neonYellow/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+          <i class="fa-solid fa-brain text-3xl text-neonYellow"></i>
+        </div>
+        <h3 class="font-arcade text-lg text-white font-bold tracking-wide">MEMORY MATCH</h3>
+        <p class="text-xs text-gray-400 mt-1 mb-3">Flip cards to match emoji pairs quickly.</p>
+        <span class="w-full py-1.5 px-3 bg-neonYellow/10 border border-neonYellow/30 text-neonYellow text-xs rounded-xl font-arcade uppercase group-hover:bg-neonYellow group-hover:text-black font-semibold transition">
+          Play Now
+        </span>
+      </button>
 
-  <!-- ==================== 3. WEATHER CAMOUFLAGE UI ==================== -->
-  <main id="app-root" class="weather-card" style="display: none;">
-    <form id="access-form" class="search-bar relative">
-      <input id="search-code" type="text" autocomplete="off" 
-             placeholder="मौसम की जानकारी के लिए अपने जगह का नाम डाले" 
-             class="weather-input" required readonly onclick="openAreaPrompt()">
-      <button type="button" onclick="openAreaPrompt()" class="absolute right-3 top-2.5 text-sky-400 text-lg">🔍</button>
-    </form>
-    
-    <div class="flex justify-between items-start mb-3">
-      <div>
-        <h2 id="w-city" class="text-2xl font-bold text-white">New Delhi</h2>
-        <p id="w-country" class="text-xs text-slate-400">India • Realtime Radar</p>
-      </div>
-      <span class="bg-sky-500/20 text-sky-400 text-xs px-2.5 py-1 rounded-full font-bold">LIVE</span>
+      <!-- 5. Tic-Tac-Toe Card -->
+      <button onclick="launchGame('tictactoe')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-pink hover:border-neonPurple transition">
+        <div class="w-16 h-16 rounded-2xl bg-purple-950/60 border border-neonPurple/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+          <i class="fa-solid fa-xmarks-lines text-3xl text-neonPurple"></i>
+        </div>
+        <h3 class="font-arcade text-lg text-white font-bold tracking-wide">TIC-TAC-TOE</h3>
+        <p class="text-xs text-gray-400 mt-1 mb-3">Play vs Smart AI or a Friend in 2P mode.</p>
+        <span class="w-full py-1.5 px-3 bg-neonPurple/10 border border-neonPurple/30 text-neonPurple text-xs rounded-xl font-arcade uppercase group-hover:bg-neonPurple group-hover:text-black font-semibold transition">
+          Play Now
+        </span>
+      </button>
+
     </div>
 
-    <div class="flex items-center justify-between my-4">
-      <div>
-        <div id="w-temp" class="text-6xl font-extralight text-white">29°</div>
-        <div id="w-desc" class="text-xs text-slate-300 mt-1">Clear Sky • Good Visibility</div>
-      </div>
-      <div id="w-icon" class="text-6xl">🌤️</div>
-    </div>
+    <!-- MAIN GAME ARENA CONTAINER -->
+    <div class="w-full bg-darkCard/95 border-2 border-gray-800 rounded-3xl p-4 sm:p-6 shadow-2xl relative overflow-hidden" id="arenaContainer">
+      <!-- Glow ambient lights -->
+      <div class="absolute -top-24 -left-24 w-60 h-60 bg-neonCyan/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-neonPink/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <div class="grid grid-cols-2 gap-2 my-4">
-      <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5">
-        <div class="text-[11px] text-gray-400">🌬️ Wind</div>
-        <div id="w-wind" class="text-sm font-bold text-white">12 km/h</div>
+      <!-- Arena Top Bar -->
+      <div class="flex flex-wrap items-center justify-between border-b border-gray-800 pb-4 mb-4 gap-4">
+        <div>
+          <span class="text-xs uppercase font-arcade tracking-widest text-neonCyan" id="gameCategory">ARCADE CLASSIC</span>
+          <h2 class="text-2xl sm:text-3xl font-arcade font-extrabold text-white flex items-center gap-3" id="activeGameTitle">
+            SNAKE RETRO
+          </h2>
+        </div>
+
+        <!-- Scores & Status Bar -->
+        <div class="flex items-center gap-3">
+          <div class="bg-gray-900 px-4 py-2 rounded-xl border border-gray-700 text-center min-w-[90px]">
+            <div class="text-[10px] tracking-widest text-gray-400 font-arcade">SCORE</div>
+            <div class="text-xl font-arcade font-bold text-neonGreen" id="currentScoreDisplay">0</div>
+          </div>
+          <div class="bg-gray-900 px-4 py-2 rounded-xl border border-gray-700 text-center min-w-[90px]">
+            <div class="text-[10px] tracking-widest text-gray-400 font-arcade">HIGH SCORE</div>
+            <div class="text-xl font-arcade font-bold text-neonYellow" id="highScoreDisplay">0</div>
+          </div>
+          <button onclick="restartCurrentGame()" class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-xl text-sm font-arcade tracking-wider transition active:scale-95 flex items-center gap-2" title="Restart Game">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span class="hidden sm:inline">RESET</span>
+          </button>
+        </div>
       </div>
-      <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5">
-        <div class="text-[11px] text-gray-400">💧 Humidity</div>
-        <div id="w-humidity" class="text-sm font-bold text-white">48%</div>
+
+      <!-- GAME CANVAS / PLAYGROUND STAGE -->
+      <div class="relative w-full flex flex-col items-center justify-center min-h-[440px] bg-black/60 rounded-2xl border border-gray-800/80 p-2 sm:p-4 overflow-hidden">
+
+        <!-- ==================== GAME 1: SNAKE ==================== -->
+        <div id="gameView-snake" class="game-view w-full flex flex-col items-center">
+          <!-- Speed / Difficulty Control -->
+          <div class="flex items-center gap-2 mb-3 bg-gray-900/90 px-3 py-1.5 rounded-xl border border-gray-700 text-xs font-arcade">
+            <span class="text-gray-400">SPEED:</span>
+            <button id="snakeSpeedSlow" onclick="setSnakeSpeed('slow')" class="px-2.5 py-1 rounded bg-neonGreen text-black font-bold border border-neonGreen transition">SLOW</button>
+            <button id="snakeSpeedNormal" onclick="setSnakeSpeed('normal')" class="px-2.5 py-1 rounded bg-gray-800 text-gray-300 font-bold border border-gray-700 transition">NORMAL</button>
+            <button id="snakeSpeedFast" onclick="setSnakeSpeed('fast')" class="px-2.5 py-1 rounded bg-gray-800 text-gray-300 font-bold border border-gray-700 transition">FAST</button>
+          </div>
+          <canvas id="snakeCanvas" width="400" height="400" class="max-w-full bg-[#070b14] rounded-2xl border-2 border-neonCyan/40 shadow-neon-cyan"></canvas>
+          <!-- Snake Mobile D-PAD -->
+          <div class="mt-4 grid grid-cols-3 gap-2 w-48 sm:hidden">
+            <div></div>
+            <button onclick="snakeInput('UP')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-up"></i></button>
+            <div></div>
+            <button onclick="snakeInput('LEFT')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-left"></i></button>
+            <button onclick="snakeInput('DOWN')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-down"></i></button>
+            <button onclick="snakeInput('RIGHT')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+          <p class="text-xs text-gray-400 mt-2 hidden sm:block flex items-center gap-1.5">
+            <span class="inline-block w-2 h-2 rounded-full bg-neonGreen animate-ping"></span>
+            Use Arrow Keys or [W, A, S, D] to Steer your Rainbow Snake!
+          </p>
+        </div>
+
+        <!-- ==================== GAME 2: BRICK BREAKER ==================== -->
+        <div id="gameView-brick" class="game-view hidden w-full flex flex-col items-center">
+          <div class="w-full max-w-[480px] flex justify-between items-center px-2 py-1 text-sm font-arcade text-gray-300">
+            <div>LIVES: <span id="brickLivesDisplay" class="text-neonPink">❤❤❤</span></div>
+            <div>LEVEL: <span class="text-neonCyan">1</span></div>
+          </div>
+          <canvas id="brickCanvas" width="480" height="380" class="max-w-full bg-[#0a0f1d] rounded-xl border border-neonCyan/30 shadow-lg cursor-none"></canvas>
+          <!-- Mobile Touch Slide Controls -->
+          <div class="w-full max-w-[480px] flex gap-3 mt-4 sm:hidden">
+            <button id="brickLeftBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> LEFT</button>
+            <button id="brickRightBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold">RIGHT <i class="fa-solid fa-arrow-right ml-2"></i></button>
+          </div>
+          <p class="text-xs text-gray-500 mt-2 hidden sm:block">Move Mouse or Arrow Left / Right to glide the paddle</p>
+        </div>
+
+        <!-- ==================== GAME 3: SPACE FLAPPER ==================== -->
+        <div id="gameView-flappy" class="game-view hidden w-full flex flex-col items-center">
+          <canvas id="flappyCanvas" width="400" height="440" class="max-w-full bg-[#080816] rounded-xl border border-neonPink/30 shadow-lg"></canvas>
+          <div class="mt-4 sm:hidden w-full max-w-[400px]">
+            <button onclick="flapJump()" class="w-full py-4 bg-neonPink text-black font-arcade font-black text-lg rounded-2xl active:scale-95 shadow-neon-pink">
+              TAP / JUMP
+            </button>
+          </div>
+          <p class="text-xs text-gray-500 mt-2 hidden sm:block">Press [SPACEBAR] or Click Inside to Boost Wings</p>
+        </div>
+
+        <!-- ==================== GAME 4: MEMORY MATCH ==================== -->
+        <div id="gameView-memory" class="game-view hidden w-full flex flex-col items-center">
+          <div class="flex gap-6 mb-4 font-arcade text-sm">
+            <div>MOVES: <span id="memoryMoves" class="text-neonYellow font-bold">0</span></div>
+            <div>MATCHES: <span id="memoryMatches" class="text-neonGreen font-bold">0 / 8</span></div>
+            <div>TIME: <span id="memoryTimer" class="text-neonCyan font-bold">0s</span></div>
+          </div>
+          <div id="memoryGrid" class="grid grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-sm sm:max-w-md">
+            <!-- Cards injected via JS -->
+          </div>
+        </div>
+
+        <!-- ==================== GAME 5: TIC-TAC-TOE ==================== -->
+        <div id="gameView-tictactoe" class="game-view hidden w-full flex flex-col items-center">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-xs font-arcade text-gray-400">MODE:</span>
+            <button id="tttModeAi" onclick="setTicTacToeMode('ai')" class="px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple transition">VS SMART AI</button>
+            <button id="tttMode2P" onclick="setTicTacToeMode('2p')" class="px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700 transition">2 PLAYERS (P1 vs P2)</button>
+          </div>
+          
+          <div class="text-sm font-arcade tracking-wide mb-3 text-neonCyan" id="tttTurnIndicator">
+            Player X's Turn
+          </div>
+
+          <div id="tttBoard" class="grid grid-cols-3 gap-2.5 bg-gray-900/90 p-3 rounded-2xl border-2 border-neonPurple/50 shadow-neon-cyan">
+            <!-- 9 Interactive tiles -->
+            <button onclick="handleTttClick(0)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+            <button onclick="handleTttClick(1)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+            <button onclick="handleTttClick(2)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+            <button onclick="handleTttClick(3)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+            <button onclick="handleTttClick(4)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+            <button onclick="handleTttClick(5)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+            <button onclick="handleTttClick(6)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+            <button onclick="handleTttClick(7)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+            <button onclick="handleTttClick(8)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+          </div>
+
+          <div class="flex gap-6 mt-4 text-xs font-arcade text-gray-400">
+            <div>X WINS: <span id="tttXWins" class="text-neonCyan font-bold">0</span></div>
+            <div>DRAWS: <span id="tttDraws" class="text-gray-300 font-bold">0</span></div>
+            <div>O WINS: <span id="tttOWins" class="text-neonPink font-bold">0</span></div>
+          </div>
+        </div>
+
+        <!-- OVERLAY: GAME OVER / WIN MODAL WITH YOUR SCORE & HIGH SCORE -->
+        <div id="gameModal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center z-30 p-4 sm:p-6 text-center animate-fadeIn">
+          <div id="modalNewHighScoreBadge" class="hidden mb-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-neonYellow via-neonPink to-neonCyan text-black font-arcade font-extrabold text-xs tracking-widest shadow-neon-pink animate-bounce">
+            ★ NEW HIGH SCORE! ★
+          </div>
+          <div id="modalIcon" class="text-4xl sm:text-5xl mb-2 text-neonYellow"><i class="fa-solid fa-trophy"></i></div>
+          <h3 id="modalTitle" class="text-2xl sm:text-3xl font-arcade font-black text-white mb-1 tracking-wider">GAME OVER</h3>
+          <p id="modalMsg" class="text-gray-300 text-xs sm:text-sm max-w-sm mb-5">Game finished.</p>
+
+          <!-- Score Comparison Cards -->
+          <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-xs mb-6">
+            <div class="bg-gray-900/90 border border-neonCyan/50 rounded-2xl p-3 shadow-neon-cyan">
+              <div class="text-[10px] sm:text-xs font-arcade text-neonCyan font-bold tracking-wider uppercase" id="modalScoreLabel">YOUR SCORE</div>
+              <div id="modalYourScore" class="text-2xl sm:text-3xl font-arcade font-black text-white mt-1">0</div>
+            </div>
+            <div class="bg-gray-900/90 border border-neonYellow/50 rounded-2xl p-3 shadow-lg">
+              <div class="text-[10px] sm:text-xs font-arcade text-neonYellow font-bold tracking-wider uppercase" id="modalHighScoreLabel">HIGH SCORE</div>
+              <div id="modalHighScore" class="text-2xl sm:text-3xl font-arcade font-black text-neonYellow mt-1">0</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap justify-center gap-3 w-full max-w-xs">
+            <button onclick="hideModalAndRestart()" class="flex-1 py-3 px-4 bg-gradient-to-r from-neonCyan to-blue-600 hover:from-neonGreen hover:to-emerald-600 text-black font-arcade font-bold text-xs sm:text-sm rounded-xl shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-rotate-right"></i> PLAY AGAIN
+            </button>
+            <button onclick="goToAllGames()" class="flex-1 py-3 px-4 bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-200 font-arcade font-bold text-xs sm:text-sm rounded-xl transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-border-all"></i> ALL GAMES
+            </button>
+          </div>
+        </div>
+
       </div>
-      <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5">
-        <div class="text-[11px] text-gray-400">🌡️ Feels Like</div>
-        <div id="w-feels" class="text-sm font-bold text-white">31°C</div>
-      </div>
-      <div class="bg-slate-800/60 p-2.5 rounded-xl border border-white/5">
-        <div class="text-[11px] text-gray-400">🍃 Air Quality</div>
-        <div id="w-aqi" class="text-sm font-bold text-emerald-400">42 • Good</div>
+
+      <!-- Instructions & Details footer for active game -->
+      <div class="mt-4 pt-4 border-t border-gray-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400 gap-2">
+        <div id="instructionsBar">
+          <i class="fa-solid fa-circle-info text-neonCyan mr-1"></i> Control snake with arrow keys or swipe. Food gives +10 pts.
+        </div>
+        <div class="flex items-center gap-2">
+          <span>Powered by HTML5 Canvas & Web Audio API</span>
+        </div>
       </div>
     </div>
   </main>
 
-  <!-- ==================== 4. DECOY GAME HUB ==================== -->
-  <div id="game-portal-root" style="display: none; width: 100%; min-height: 100vh; flex-direction: column; justify-content: space-between; position: relative; z-index: 20;" class="text-gray-100 font-body">
-    <header class="pt-6 pb-4 px-4 text-center border-b border-gray-800 bg-black/40 backdrop-blur-md sticky top-0 z-40">
-      <div class="max-w-6xl mx-auto flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <span class="p-2 bg-gradient-to-tr from-neonPink to-neonPurple rounded-xl">
-            <i class="fa-solid fa-gamepad text-2xl text-white"></i>
-          </span>
-          <div class="text-left">
-            <h1 class="text-2xl sm:text-4xl font-black font-arcade text-white uppercase">ONLINE GAME</h1>
-            <p class="text-xs text-neonCyan uppercase font-semibold">Arcade Retro Hub</p>
-          </div>
-        </div>
-        <button onclick="window.location.reload()" class="px-4 py-2 bg-rose-900/60 hover:bg-rose-800 border border-rose-500 rounded-xl text-xs font-arcade font-bold">
-          🚪 EXIT
-        </button>
-      </div>
-    </header>
+  <!-- FOOTER -->
+  <footer class="border-t border-gray-900 bg-black/60 py-4 px-4 text-center text-xs text-gray-500 font-arcade">
+    &copy; 2026 ONLINE GAME PORTAL &bull; ALL RIGHTS RESERVED &bull; PURE JAVASCRIPT GAME ENGINE
+  </footer>
 
-    <main class="max-w-6xl w-full mx-auto px-4 py-8 flex-grow">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-        <button onclick="launchFullScreenGame('snake')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-emerald-500/30 hover:border-emerald-400">
-          <i class="fa-solid fa-staff-snake text-3xl text-neonGreen mb-3"></i>
-          <h3 class="font-arcade text-base font-bold">SNAKE RETRO</h3>
-          <span class="mt-4 py-1 px-3 bg-neonGreen/10 text-neonGreen text-xs rounded-xl font-arcade">Play Now</span>
-        </button>
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT: ENGINE, SOUNDS, AND GAME LOGIC -->
+  <!-- ========================================== -->
+  <script>
+    /* ======================================================
+       1. SYNTHESIZED SOUND EFFECTS VIA WEB AUDIO API (NO URLS)
+       ====================================================== */
+    let audioCtx = null;
+    let soundEnabled = true;
 
-        <button onclick="launchFullScreenGame('brick')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-cyan-500/30 hover:border-cyan-400">
-          <i class="fa-solid fa-shapes text-3xl text-neonCyan mb-3"></i>
-          <h3 class="font-arcade text-base font-bold">BRICK BREAKER</h3>
-          <span class="mt-4 py-1 px-3 bg-neonCyan/10 text-neonCyan text-xs rounded-xl font-arcade">Play Now</span>
-        </button>
-
-        <button onclick="launchFullScreenGame('flappy')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-pink-500/30 hover:border-pink-400">
-          <i class="fa-solid fa-rocket text-3xl text-neonPink mb-3"></i>
-          <h3 class="font-arcade text-base font-bold">SPACE FLAPPER</h3>
-          <span class="mt-4 py-1 px-3 bg-neonPink/10 text-neonPink text-xs rounded-xl font-arcade">Play Now</span>
-        </button>
-
-        <button onclick="launchFullScreenGame('memory')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-yellow-500/30 hover:border-yellow-400">
-          <i class="fa-solid fa-brain text-3xl text-neonYellow mb-3"></i>
-          <h3 class="font-arcade text-base font-bold">MEMORY MATCH</h3>
-          <span class="mt-4 py-1 px-3 bg-neonYellow/10 text-neonYellow text-xs rounded-xl font-arcade">Play Now</span>
-        </button>
-
-        <button onclick="launchFullScreenGame('tictactoe')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-purple-500/30 hover:border-purple-400">
-          <i class="fa-solid fa-xmarks-lines text-3xl text-neonPurple mb-3"></i>
-          <h3 class="font-arcade text-base font-bold">TIC-TAC-TOE</h3>
-          <span class="mt-4 py-1 px-3 bg-neonPurple/10 text-neonPurple text-xs rounded-xl font-arcade">Play Now</span>
-        </button>
-      </div>
-    </main>
-  </div>
-
-  <!-- 5. FULLSCREEN RETRO GAME ARENA -->
-  <div id="fullscreen-game-arena" style="display: none; position: fixed; inset: 0; z-index: 10000; background: #070913; flex-direction: column;">
-    <div class="w-full bg-black/80 border-b border-gray-800 px-4 py-3 flex items-center justify-between">
-      <button onclick="document.getElementById('fullscreen-game-arena').style.display='none'" class="px-3 py-1.5 bg-gray-800 text-neonCyan rounded-xl text-xs font-arcade">
-        ← BACK TO GAMES
-      </button>
-      <h2 class="text-lg font-arcade font-bold text-white" id="fsActiveGameTitle">ARCADE ARENA</h2>
-      <div class="text-neonGreen font-arcade text-sm" id="fsCurrentScoreDisplay">0 PTS</div>
-    </div>
-
-    <div class="flex-1 w-full flex flex-col items-center justify-center p-4">
-      <div id="gameView-snake" class="game-view w-full flex flex-col items-center">
-        <canvas id="snakeCanvas" width="380" height="380" class="bg-[#070b14] rounded-2xl border-2 border-neonCyan"></canvas>
-      </div>
-      <div id="gameView-brick" class="game-view hidden w-full flex flex-col items-center">
-        <canvas id="brickCanvas" width="460" height="360" class="bg-[#0a0f1d] rounded-xl border border-neonCyan"></canvas>
-      </div>
-      <div id="gameView-flappy" class="game-view hidden w-full flex flex-col items-center">
-        <canvas id="flappyCanvas" width="380" height="420" class="bg-[#080816] rounded-xl border border-neonPink"></canvas>
-      </div>
-      <div id="gameView-memory" class="game-view hidden w-full flex flex-col items-center">
-        <div id="memoryGrid" class="grid grid-cols-4 gap-2.5 w-full max-w-sm"></div>
-      </div>
-      <div id="gameView-tictactoe" class="game-view hidden w-full flex flex-col items-center">
-        <div id="tttBoard" class="grid grid-cols-3 gap-2 bg-gray-900 p-3 rounded-2xl">
-          <button onclick="handleTttClick(0)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade text-white"></button>
-          <button onclick="handleTttClick(1)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade text-white"></button>
-          <button onclick="handleTttClick(2)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade text-white"></button>
-          <button onclick="handleTttClick(3)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade text-white"></button>
-          <button onclick="handleTttClick(4)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade text-white"></button>
-          <button onclick="handleTttClick(5)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade text-white"></button>
-          <button onclick="handleTttClick(6)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade text-white"></button>
-          <button onclick="handleTttClick(7)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade text-white"></button>
-          <button onclick="handleTttClick(8)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade text-white"></button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-<script>
-/* ============================================================
-   1. GATE PASSCODE LOGIC (CURRENT DATE DDMMYY)
-   ============================================================ */
-function getTodayOtp() {
-  const now = new Date();
-  const dd = String(now.getDate()).padStart(2, '0');
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const yy = String(now.getFullYear()).slice(-2);
-  return dd + mm + yy; 
-}
-
-function verifyGateCode() {
-  const entered = document.getElementById('gate-otp').value.trim();
-  const todayOtp = getTodayOtp();
-
-  if (entered === '123456') {
-    // 123456 -> Game Page
-    document.getElementById('otp-overlay').style.display = 'none';
-    document.getElementById('arcade-bg').style.display = 'none';
-    showGamePortal();
-  } else if (entered === todayOtp) {
-    // DDMMYY -> Weather Page
-    document.getElementById('otp-overlay').style.display = 'none';
-    document.getElementById('arcade-bg').style.display = 'none';
-    document.getElementById('app-root').style.display = 'block';
-  } else {
-    // Wrong Code -> Access Denied Popup
-    document.getElementById('access-denied-popup').style.display = 'flex';
-  }
-}
-
-function closeAccessDenied() {
-  document.getElementById('access-denied-popup').style.display = 'none';
-  document.getElementById('gate-otp').value = '';
-  document.getElementById('gate-otp').focus();
-}
-
-document.getElementById('gate-otp').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') verifyGateCode();
-});
-
-/* ============================================================
-   2. WEATHER RADAR ENGINE & AREA POPUP LOGIC
-   ============================================================ */
-function openAreaPrompt() {
-  document.getElementById('area-prompt-popup').style.display = 'flex';
-  const inp = document.getElementById('area-prompt-input');
-  inp.value = '';
-  inp.type = 'text';
-  inp.focus();
-}
-
-// Keep place names readable; numeric/symbol codes are accepted in the same field.
-document.getElementById('area-prompt-input').type = 'text';
-
-document.getElementById('area-prompt-input').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') submitAreaPrompt();
-});
-
-async function submitAreaPrompt() {
-  const val = document.getElementById('area-prompt-input').value.trim();
-  if (!val) return;
-  document.getElementById('area-prompt-popup').style.display = 'none';
-
-  // 1. Check Secret Code with Server for Chat
-  try {
-    const res = await fetch('/api/verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: val })
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success && data.token) {
-        triggerDoraemonTransition(data.token);
-        return;
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
       }
     }
-  } catch (_) {}
 
-  // 2. Allow Daily OTP or Hardcoded Secret Code to trigger Chat
-  if (val === getTodayOtp()) {
-    triggerDoraemonTransition('token-' + val);
-    return;
-  }
-
-  // 3. Otherwise Search Weather or show "आपने गलत जगह दिया है"
-  await searchWeather(val);
-}
-
-async function searchWeather(place) {
-  try {
-    const geo = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(place) + '&count=1').then(r => r.json());
-    if (!geo.results || !geo.results.length) {
-      document.getElementById('wrong-city-popup').style.display = 'flex';
-      return;
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('soundIcon');
+      const text = document.getElementById('soundText');
+      if (soundEnabled) {
+        icon.className = 'fa-solid fa-volume-high text-neonGreen';
+        text.innerText = 'Sound: ON';
+        playSound('beep');
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark text-gray-500';
+        text.innerText = 'Sound: OFF';
+      }
     }
-    const loc = geo.results[0];
-    const w = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m`).then(r => r.json());
-    
-    document.getElementById('w-city').textContent = loc.name;
-    document.getElementById('w-country').textContent = (loc.country || 'Region') + ' • Realtime Radar';
-    document.getElementById('w-temp').textContent = Math.round(w.current.temperature_2m) + '°';
-    document.getElementById('w-feels').textContent = Math.round(w.current.apparent_temperature) + '°C';
-    document.getElementById('w-wind').textContent = Math.round(w.current.wind_speed_10m) + ' km/h';
-    document.getElementById('w-humidity').textContent = Math.round(w.current.relative_humidity_2m) + '%';
-  } catch (_) {
-    document.getElementById('wrong-city-popup').style.display = 'flex';
-  }
-}
 
-// 5-Second Doraemon Transition Popup
-function triggerDoraemonTransition(authToken) {
-  document.getElementById('doraemon-popup').style.display = 'flex';
-  setTimeout(() => {
-    document.getElementById('doraemon-popup').style.display = 'none';
-    document.getElementById('app-root').style.display = 'none';
-    loadFullFeatureApp(authToken);
-  }, 5000);
-}
+    function playSound(type) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
 
-/* ============================================================
-   3. FULL CHAT & COMPLETE WEBRTC CALLING SYSTEM
-   ============================================================ */
+        if (type === 'beep') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        } else if (type === 'eat' || type === 'point') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } else if (type === 'hit') {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(110, now + 0.08);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'bounce') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(500, now);
+          osc.frequency.exponentialRampToValueAtTime(260, now + 0.08);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'over') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.exponentialRampToValueAtTime(80, now + 0.35);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'win') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(350, now);
+          osc.frequency.setValueAtTime(520, now + 0.1);
+          osc.frequency.setValueAtTime(700, now + 0.2);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        }
+      } catch (e) {
+        // AudioContext initialization fallback
+      }
+    }
+
+    /* ======================================================
+       2. GLOBAL HUB CONTROLLER & HIGHSCORES
+       ====================================================== */
+    let activeGame = 'snake';
+
+    const gameMetadata = {
+      snake: {
+        title: 'SNAKE RETRO',
+        category: 'ARCADE SURVIVAL',
+        instructions: '<i class="fa-solid fa-arrows-up-down-left-right text-neonCyan mr-1"></i> Use Arrow keys or WASD to navigate. Eat glowing energy spheres to expand.',
+        scoreKey: 'og_highscore_snake'
+      },
+      brick: {
+        title: 'BRICK BREAKER',
+        category: 'ACTION BREAKOUT',
+        instructions: '<i class="fa-solid fa-gamepad text-neonCyan mr-1"></i> Slide mouse or use Left/Right keys to bounce ball and smash all neon bricks.',
+        scoreKey: 'og_highscore_brick'
+      },
+      flappy: {
+        title: 'SPACE FLAPPER',
+        category: 'PRECISION TAPPER',
+        instructions: '<i class="fa-solid fa-hand-pointer text-neonCyan mr-1"></i> Click canvas or press Spacebar to fire boosters through energy gates.',
+        scoreKey: 'og_highscore_flappy'
+      },
+      memory: {
+        title: 'MEMORY MATCH',
+        category: 'PUZZLE & RECALL',
+        instructions: '<i class="fa-solid fa-eye text-neonCyan mr-1"></i> Uncover matching pairs of gaming glyphs in minimum moves and quickest time.',
+        scoreKey: 'og_highscore_memory'
+      },
+      tictactoe: {
+        title: 'TIC-TAC-TOE',
+        category: 'STRATEGY ARENA',
+        instructions: '<i class="fa-solid fa-trophy text-neonCyan mr-1"></i> Place 3 consecutive markers horizontally, vertically, or diagonally.',
+        scoreKey: 'og_highscore_ttt'
+      }
+    };
+
+    function updateScoreboard(currentScore) {
+      document.getElementById('currentScoreDisplay').innerText = currentScore;
+      const key = gameMetadata[activeGame].scoreKey;
+      let hs = parseInt(localStorage.getItem(key) || '0', 10);
+      if (currentScore > hs) {
+        hs = currentScore;
+        localStorage.setItem(key, hs);
+      }
+      document.getElementById('highScoreDisplay').innerText = hs;
+      updateTotalPortalScore();
+    }
+
+    function updateTotalPortalScore() {
+      let total = 0;
+      Object.keys(gameMetadata).forEach(k => {
+        total += parseInt(localStorage.getItem(gameMetadata[k].scoreKey) || '0', 10);
+      });
+      document.getElementById('portalTotalHighScores').innerText = total;
+    }
+
+    function launchGame(gameKey) {
+      // Stop ongoing loops of previous game
+      stopActiveGameLoops();
+      activeGame = gameKey;
+
+      // Update titles and headers
+      document.getElementById('activeGameTitle').innerText = gameMetadata[gameKey].title;
+      document.getElementById('gameCategory').innerText = gameMetadata[gameKey].category;
+      document.getElementById('instructionsBar').innerHTML = gameMetadata[gameKey].instructions;
+
+      // Show/hide game panels
+      document.querySelectorAll('.game-view').forEach(el => el.classList.add('hidden'));
+      const activeEl = document.getElementById(`gameView-${gameKey}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      // Hide modal
+      document.getElementById('gameModal').classList.add('hidden');
+
+      // Update high scores display
+      const hs = parseInt(localStorage.getItem(gameMetadata[gameKey].scoreKey) || '0', 10);
+      document.getElementById('highScoreDisplay').innerText = hs;
+      document.getElementById('currentScoreDisplay').innerText = '0';
+
+      // Initialize selected game
+      if (gameKey === 'snake') initSnake();
+      else if (gameKey === 'brick') initBrick();
+      else if (gameKey === 'flappy') initFlappy();
+      else if (gameKey === 'memory') initMemory();
+      else if (gameKey === 'tictactoe') initTicTacToe();
+
+      // Smooth scroll to arena
+      document.getElementById('arenaContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      playSound('beep');
+    }
+
+    function restartCurrentGame() {
+      launchGame(activeGame);
+    }
+
+    function showGameOverModal(title, message, score, options = {}) {
+      const key = gameMetadata[activeGame].scoreKey;
+      const prevHighScore = parseInt(localStorage.getItem(key) || '0', 10);
+      const isNewHighScore = typeof score === 'number' && score > prevHighScore && score > 0;
+
+      // Update High Score if beaten
+      if (typeof score === 'number' && score > prevHighScore) {
+        localStorage.setItem(key, score);
+        document.getElementById('highScoreDisplay').innerText = score;
+        updateTotalPortalScore();
+      }
+
+      const currentHighScore = parseInt(localStorage.getItem(key) || '0', 10);
+
+      // Play Sound
+      if (isNewHighScore || options.isWin) {
+        playSound('win');
+      } else {
+        playSound('over');
+      }
+
+      const modal = document.getElementById('gameModal');
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalMsg').innerText = message;
+
+      // Labels & Values customization
+      document.getElementById('modalScoreLabel').innerText = options.scoreLabel || 'YOUR SCORE';
+      document.getElementById('modalHighScoreLabel').innerText = options.highScoreLabel || 'HIGH SCORE';
+      document.getElementById('modalYourScore').innerText = options.yourScoreDisplay !== undefined ? options.yourScoreDisplay : score;
+      document.getElementById('modalHighScore').innerText = options.highScoreDisplay !== undefined ? options.highScoreDisplay : currentHighScore;
+
+      // Icon customization
+      const iconContainer = document.getElementById('modalIcon');
+      if (options.icon) {
+        iconContainer.innerHTML = options.icon;
+      } else if (isNewHighScore) {
+        iconContainer.innerHTML = '<i class="fa-solid fa-crown text-neonYellow"></i>';
+      } else if (options.isWin) {
+        iconContainer.innerHTML = '<i class="fa-solid fa-trophy text-neonGreen"></i>';
+      } else {
+        iconContainer.innerHTML = '<i class="fa-solid fa-skull text-neonPink"></i>';
+      }
+
+      // New High Score Badge
+      const badge = document.getElementById('modalNewHighScoreBadge');
+      if (isNewHighScore) {
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function hideModalAndRestart() {
+      document.getElementById('gameModal').classList.add('hidden');
+      restartCurrentGame();
+    }
+
+    function goToAllGames() {
+      document.getElementById('gameModal').classList.add('hidden');
+      stopActiveGameLoops();
+      const selectors = document.querySelector('.grid');
+      if (selectors) {
+        selectors.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      playSound('beep');
+    }
+
+    function stopActiveGameLoops() {
+      if (snakeInterval) clearInterval(snakeInterval);
+      if (brickAnimationId) cancelAnimationFrame(brickAnimationId);
+      if (flappyAnimationId) cancelAnimationFrame(flappyAnimationId);
+      if (memoryTimerInterval) clearInterval(memoryTimerInterval);
+    }
+
+    /* ======================================================
+       3. GAME 1: SNAKE RETRO (ENHANCED COLORFUL & DETAILED)
+       ====================================================== */
+    let snakeCanvas, snakeCtx;
+    let snake = [];
+    let snakeFood = { x: 0, y: 0, type: 'apple', pulse: 0, angle: 0 };
+    let snakeDx = 20, snakeDy = 0;
+    let snakeScore = 0;
+    let snakeInterval = null;
+    let snakeAnimFrameId = null;
+    let snakeChangingDirection = false;
+    const snakeGridSize = 20;
+    let snakeSpeedMode = 'slow'; // default to relaxed, slow pace
+    const snakeSpeedIntervals = {
+      slow: 190,    // Relaxed, easy and smooth
+      normal: 130,  // Medium arcade speed
+      fast: 85      // High-speed challenge
+    };
+
+    // Colorful particles and floating text system
+    let snakeParticles = [];
+    let snakePopups = [];
+    let snakeTongueState = 0;
+    let snakeChompTimer = 0;
+    let snakePulseWave = -1;
+    let snakeFrameTick = 0;
+
+    // Rich Rainbow Neon Hue progression palette
+    const snakeRainbowHues = [
+      { fill: '#00f7ff', glow: '#00f7ff', border: '#ffffff' }, // Neon Cyan Head
+      { fill: '#00e5ff', glow: '#00e5ff', border: '#99ffff' },
+      { fill: '#00ffb7', glow: '#00ffb7', border: '#ccffea' },
+      { fill: '#00ff66', glow: '#00ff66', border: '#b3ffcc' }, // Electric Lime
+      { fill: '#76ff03', glow: '#76ff03', border: '#dcedc8' },
+      { fill: '#ffea00', glow: '#ffea00', border: '#fff9c4' }, // Sun Gold
+      { fill: '#ff9100', glow: '#ff9100', border: '#ffe0b2' }, // Neon Orange
+      { fill: '#ff007f', glow: '#ff007f', border: '#ffc1e3' }, // Hot Pink
+      { fill: '#d500f9', glow: '#d500f9', border: '#f3e5f5' }, // Neon Purple
+      { fill: '#7c4dff', glow: '#7c4dff', border: '#d1c4e9' }, // Indigo Violet
+    ];
+
+    function setSnakeSpeed(mode) {
+      snakeSpeedMode = mode;
+      ['slow', 'normal', 'fast'].forEach(m => {
+        const btn = document.getElementById(`snakeSpeed${m.charAt(0).toUpperCase() + m.slice(1)}`);
+        if (btn) {
+          if (m === mode) {
+            btn.className = 'px-2.5 py-1 rounded bg-neonGreen text-black font-bold border border-neonGreen transition';
+          } else {
+            btn.className = 'px-2.5 py-1 rounded bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
+          }
+        }
+      });
+      if (activeGame === 'snake' && snakeInterval) {
+        clearInterval(snakeInterval);
+        snakeInterval = setInterval(snakeLogicStep, snakeSpeedIntervals[snakeSpeedMode]);
+      }
+    }
+
+    function initSnake() {
+      snakeCanvas = document.getElementById('snakeCanvas');
+      snakeCtx = snakeCanvas.getContext('2d');
+      snake = [
+        { x: 160, y: 200 },
+        { x: 140, y: 200 },
+        { x: 120, y: 200 },
+        { x: 100, y: 200 }
+      ];
+      snakeDx = 20;
+      snakeDy = 0;
+      snakeScore = 0;
+      snakeChangingDirection = false;
+      snakeParticles = [];
+      snakePopups = [];
+      snakeChompTimer = 0;
+      snakePulseWave = -1;
+      snakeTongueState = 0;
+      snakeFrameTick = 0;
+
+      updateScoreboard(0);
+      spawnSnakeFood();
+
+      if (snakeInterval) clearInterval(snakeInterval);
+      if (snakeAnimFrameId) cancelAnimationFrame(snakeAnimFrameId);
+
+      snakeInterval = setInterval(snakeLogicStep, snakeSpeedIntervals[snakeSpeedMode]);
+      snakeRenderLoop();
+    }
+
+    function spawnSnakeFood() {
+      const maxX = (snakeCanvas.width / snakeGridSize) - 1;
+      const maxY = (snakeCanvas.height / snakeGridSize) - 1;
+      let valid = false;
+      const treats = ['apple', 'gem', 'star', 'berry'];
+      const chosenType = treats[Math.floor(Math.random() * treats.length)];
+
+      while (!valid) {
+        snakeFood.x = Math.floor(Math.random() * maxX) * snakeGridSize;
+        snakeFood.y = Math.floor(Math.random() * maxY) * snakeGridSize;
+        valid = !snake.some(part => part.x === snakeFood.x && part.y === snakeFood.y);
+      }
+      snakeFood.type = chosenType;
+      snakeFood.pulse = 0;
+      snakeFood.angle = 0;
+    }
+
+    // Fixed logic step for movement & grid collision
+    function snakeLogicStep() {
+      if (checkSnakeCollision()) {
+        clearInterval(snakeInterval);
+        if (snakeAnimFrameId) cancelAnimationFrame(snakeAnimFrameId);
+        showGameOverModal('SNAKE CRASHED!', 'You ran into a barrier or your own body.', snakeScore);
+        return;
+      }
+
+      snakeChangingDirection = false;
+
+      // Calculate head target
+      const head = { x: snake[0].x + snakeDx, y: snake[0].y + snakeDy };
+      snake.unshift(head);
+
+      // Eat Food Event
+      if (head.x === snakeFood.x && head.y === snakeFood.y) {
+        snakeScore += 10;
+        updateScoreboard(snakeScore);
+        
+        // Trigger sweet melody notification sound
+        playSound('eat');
+
+        // Trigger animations: chomp, body light-wave, explosion particles & popup
+        snakeChompTimer = 10;
+        snakePulseWave = 0;
+        createFoodExplosion(snakeFood.x + snakeGridSize / 2, snakeFood.y + snakeGridSize / 2);
+        createFloatingScore(snakeFood.x + snakeGridSize / 2, snakeFood.y, '+10');
+
+        spawnSnakeFood();
+      } else {
+        snake.pop();
+      }
+
+      // Propagate body glow wave
+      if (snakePulseWave >= 0) {
+        snakePulseWave++;
+        if (snakePulseWave > snake.length + 3) snakePulseWave = -1;
+      }
+    }
+
+    // Continuous 60fps render loop for smooth wiggles, eyes, tongue flick, sparkles & particles
+    function snakeRenderLoop() {
+      if (activeGame !== 'snake') return;
+
+      snakeFrameTick++;
+      snakeTongueState = Math.sin(snakeFrameTick * 0.15); // gentle oscillating tongue
+
+      // 1. Clear background
+      snakeCtx.fillStyle = '#070b14';
+      snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+      // Subtle Cyber Grid
+      snakeCtx.strokeStyle = 'rgba(0, 247, 255, 0.05)';
+      snakeCtx.lineWidth = 1;
+      for (let x = 0; x < snakeCanvas.width; x += snakeGridSize) {
+        snakeCtx.beginPath();
+        snakeCtx.moveTo(x, 0);
+        snakeCtx.lineTo(x, snakeCanvas.height);
+        snakeCtx.stroke();
+      }
+      for (let y = 0; y < snakeCanvas.height; y += snakeGridSize) {
+        snakeCtx.beginPath();
+        snakeCtx.moveTo(0, y);
+        snakeCtx.lineTo(snakeCanvas.width, y);
+        snakeCtx.stroke();
+      }
+
+      // 2. Draw Food with glowing aura and floating particles
+      drawColorfulFood();
+
+      // 3. Draw Snake Body (From tail to neck)
+      drawSnakeBody();
+
+      // 4. Draw Detailed Animated Snake Head (Muh, Eyes, Crown, Tongue)
+      drawSnakeHead();
+
+      // 5. Update and Draw Particles & Popups
+      renderParticlesAndPopups();
+
+      if (snakeChompTimer > 0) snakeChompTimer--;
+
+      snakeAnimFrameId = requestAnimationFrame(snakeRenderLoop);
+    }
+
+    function drawColorfulFood() {
+      const cx = snakeFood.x + snakeGridSize / 2;
+      const cy = snakeFood.y + snakeGridSize / 2;
+      const pulse = Math.sin(snakeFrameTick * 0.1) * 2;
+      const r = 8 + pulse;
+
+      // Ambient radial halo
+      const halo = snakeCtx.createRadialGradient(cx, cy, 2, cx, cy, 22);
+      if (snakeFood.type === 'apple') {
+        halo.addColorStop(0, 'rgba(255, 0, 127, 0.45)');
+        halo.addColorStop(1, 'rgba(255, 0, 127, 0)');
+      } else if (snakeFood.type === 'gem') {
+        halo.addColorStop(0, 'rgba(0, 247, 255, 0.5)');
+        halo.addColorStop(1, 'rgba(0, 247, 255, 0)');
+      } else if (snakeFood.type === 'star') {
+        halo.addColorStop(0, 'rgba(255, 234, 0, 0.5)');
+        halo.addColorStop(1, 'rgba(255, 234, 0, 0)');
+      } else {
+        halo.addColorStop(0, 'rgba(0, 255, 102, 0.45)');
+        halo.addColorStop(1, 'rgba(0, 255, 102, 0)');
+      }
+      snakeCtx.fillStyle = halo;
+      snakeCtx.beginPath();
+      snakeCtx.arc(cx, cy, 24, 0, Math.PI * 2);
+      snakeCtx.fill();
+
+      // Sparkling mini stars around food
+      if (snakeFrameTick % 12 === 0 && Math.random() > 0.5) {
+        snakeParticles.push({
+          x: cx + (Math.random() - 0.5) * 26,
+          y: cy + (Math.random() - 0.5) * 26,
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: -Math.random() * 0.8 - 0.3,
+          color: ['#00f7ff', '#ffea00', '#ff007f', '#00ff66'][Math.floor(Math.random() * 4)],
+          size: Math.random() * 2.5 + 1,
+          alpha: 1,
+          life: 25
+        });
+      }
+
+      snakeCtx.save();
+      snakeCtx.translate(cx, cy);
+
+      if (snakeFood.type === 'apple') {
+        // Glowing Ruby Apple
+        snakeCtx.shadowColor = '#ff007f';
+        snakeCtx.shadowBlur = 14;
+        snakeCtx.fillStyle = '#ff0055';
+        snakeCtx.beginPath();
+        snakeCtx.arc(0, 1, r, 0, Math.PI * 2);
+        snakeCtx.fill();
+
+        // Shiny Highlight
+        snakeCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        snakeCtx.beginPath();
+        snakeCtx.arc(-2.5, -2.5, r * 0.35, 0, Math.PI * 2);
+        snakeCtx.fill();
+
+        // Cute green leaf
+        snakeCtx.shadowBlur = 0;
+        snakeCtx.fillStyle = '#00ff66';
+        snakeCtx.beginPath();
+        snakeCtx.ellipse(3, -r - 1, 4, 2, Math.PI / 4, 0, Math.PI * 2);
+        snakeCtx.fill();
+      } else if (snakeFood.type === 'star') {
+        // Glowing Star Gem
+        snakeCtx.shadowColor = '#ffea00';
+        snakeCtx.shadowBlur = 14;
+        snakeCtx.fillStyle = '#ffe600';
+        snakeCtx.rotate(snakeFrameTick * 0.03);
+        snakeCtx.beginPath();
+        for (let i = 0; i < 5; i++) {
+          snakeCtx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * (r + 1), -Math.sin((18 + i * 72) * Math.PI / 180) * (r + 1));
+          snakeCtx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * (r * 0.48), -Math.sin((54 + i * 72) * Math.PI / 180) * (r * 0.48));
+        }
+        snakeCtx.closePath();
+        snakeCtx.fill();
+      } else if (snakeFood.type === 'gem') {
+        // Glowing Diamond
+        snakeCtx.shadowColor = '#00f7ff';
+        snakeCtx.shadowBlur = 14;
+        snakeCtx.fillStyle = '#00f7ff';
+        snakeCtx.rotate(Math.PI / 4 + Math.sin(snakeFrameTick * 0.05) * 0.2);
+        snakeCtx.fillRect(-r * 0.7, -r * 0.7, r * 1.4, r * 1.4);
+
+        snakeCtx.fillStyle = '#ffffff';
+        snakeCtx.fillRect(-r * 0.3, -r * 0.3, r * 0.6, r * 0.6);
+      } else {
+        // Electric Emerald Berry
+        snakeCtx.shadowColor = '#00ff66';
+        snakeCtx.shadowBlur = 14;
+        snakeCtx.fillStyle = '#00ff66';
+        snakeCtx.beginPath();
+        snakeCtx.arc(0, 0, r, 0, Math.PI * 2);
+        snakeCtx.fill();
+
+        snakeCtx.fillStyle = '#ffffff';
+        snakeCtx.beginPath();
+        snakeCtx.arc(-2, -2, r * 0.3, 0, Math.PI * 2);
+        snakeCtx.fill();
+      }
+      snakeCtx.restore();
+    }
+
+    function drawSnakeBody() {
+      const len = snake.length;
+
+      // Draw from tail forward so head stays cleanly on top
+      for (let i = len - 1; i >= 1; i--) {
+        const seg = snake[i];
+        const cx = seg.x + snakeGridSize / 2;
+        const cy = seg.y + snakeGridSize / 2;
+
+        // Size taper toward tail
+        const progress = i / len;
+        const taperRadius = Math.max(5.5, (snakeGridSize / 2) - (progress * 3.5));
+
+        // Color Palette index
+        const colorObj = snakeRainbowHues[i % snakeRainbowHues.length];
+
+        // Wave effect when eating food
+        const isPulseActive = (snakePulseWave === i || snakePulseWave === i + 1);
+
+        snakeCtx.save();
+        snakeCtx.translate(cx, cy);
+
+        // Body segment outer neon glow
+        snakeCtx.shadowColor = isPulseActive ? '#ffffff' : colorObj.glow;
+        snakeCtx.shadowBlur = isPulseActive ? 18 : 8;
+
+        // Body segment circle
+        snakeCtx.fillStyle = isPulseActive ? '#ffffff' : colorObj.fill;
+        snakeCtx.beginPath();
+        snakeCtx.arc(0, 0, taperRadius, 0, Math.PI * 2);
+        snakeCtx.fill();
+
+        // Glossy Inner Highlight
+        snakeCtx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+        snakeCtx.beginPath();
+        snakeCtx.arc(-taperRadius * 0.28, -taperRadius * 0.28, taperRadius * 0.38, 0, Math.PI * 2);
+        snakeCtx.fill();
+
+        // Cute scale ridge pattern / border
+        snakeCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+        snakeCtx.lineWidth = 1;
+        snakeCtx.beginPath();
+        snakeCtx.arc(0, 0, taperRadius - 1.5, 0, Math.PI * 2);
+        snakeCtx.stroke();
+
+        // Cute Rattle rings on the final tail tip
+        if (i === len - 1) {
+          snakeCtx.fillStyle = '#ffea00';
+          snakeCtx.beginPath();
+          snakeCtx.arc(0, 0, 3, 0, Math.PI * 2);
+          snakeCtx.fill();
+        }
+
+        snakeCtx.restore();
+      }
+    }
+
+    function drawSnakeHead() {
+      if (snake.length === 0) return;
+      const head = snake[0];
+      const cx = head.x + snakeGridSize / 2;
+      const cy = head.y + snakeGridSize / 2;
+      const headRadius = 11.5;
+
+      // Determine rotation angle based on moving direction
+      let angle = 0;
+      if (snakeDx > 0) angle = 0;                  // Right
+      else if (snakeDx < 0) angle = Math.PI;       // Left
+      else if (snakeDy > 0) angle = Math.PI / 2;   // Down
+      else if (snakeDy < 0) angle = -Math.PI / 2;  // Up
+
+      snakeCtx.save();
+      snakeCtx.translate(cx, cy);
+      snakeCtx.rotate(angle);
+
+      // --- 1. ANIMATED FLICKING FORKED TONGUE ---
+      if (snakeTongueState > 0.1) {
+        const tongueExtension = 7 + (snakeTongueState * 6);
+        snakeCtx.strokeStyle = '#ff0055';
+        snakeCtx.fillStyle = '#ff0055';
+        snakeCtx.lineWidth = 1.8;
+        snakeCtx.beginPath();
+        snakeCtx.moveTo(headRadius, 0);
+        snakeCtx.lineTo(headRadius + tongueExtension, 0);
+        // Fork tips
+        snakeCtx.lineTo(headRadius + tongueExtension + 3, -3);
+        snakeCtx.moveTo(headRadius + tongueExtension, 0);
+        snakeCtx.lineTo(headRadius + tongueExtension + 3, 3);
+        snakeCtx.stroke();
+      }
+
+      // --- 2. SNAKE HEAD BASE SHAPE ---
+      snakeCtx.shadowColor = '#00f7ff';
+      snakeCtx.shadowBlur = 14;
+
+      // Main head bulb
+      snakeCtx.fillStyle = '#00f7ff';
+      snakeCtx.beginPath();
+      snakeCtx.ellipse(1, 0, headRadius + 1, headRadius - 0.5, 0, 0, Math.PI * 2);
+      snakeCtx.fill();
+
+      // Cute Snout / Nose
+      snakeCtx.fillStyle = '#00e5ff';
+      snakeCtx.beginPath();
+      snakeCtx.arc(headRadius - 2, 0, 4, 0, Math.PI * 2);
+      snakeCtx.fill();
+
+      // Nostrils
+      snakeCtx.fillStyle = '#034159';
+      snakeCtx.beginPath();
+      snakeCtx.arc(headRadius - 1, -2, 0.9, 0, Math.PI * 2);
+      snakeCtx.arc(headRadius - 1, 2, 0.9, 0, Math.PI * 2);
+      snakeCtx.fill();
+
+      // --- 3. CROWN / NEON CREST ON HEAD ---
+      snakeCtx.shadowBlur = 0;
+      snakeCtx.fillStyle = '#ffea00';
+      snakeCtx.beginPath();
+      snakeCtx.moveTo(-6, -4);
+      snakeCtx.lineTo(-9, -7);
+      snakeCtx.lineTo(-4, -5);
+      snakeCtx.lineTo(-2, -8);
+      snakeCtx.lineTo(0, -5);
+      snakeCtx.lineTo(3, -7);
+      snakeCtx.lineTo(1, -4);
+      snakeCtx.closePath();
+      snakeCtx.fill();
+
+      // Crown central glowing ruby
+      snakeCtx.fillStyle = '#ff007f';
+      snakeCtx.beginPath();
+      snakeCtx.arc(-2, -4.5, 1.2, 0, Math.PI * 2);
+      snakeCtx.fill();
+
+      // --- 4. BLUSHING PINK CHEEKS ---
+      snakeCtx.fillStyle = 'rgba(255, 0, 127, 0.5)';
+      snakeCtx.beginPath();
+      snakeCtx.arc(-1, -7.5, 2.5, 0, Math.PI * 2);
+      snakeCtx.arc(-1, 7.5, 2.5, 0, Math.PI * 2);
+      snakeCtx.fill();
+
+      // --- 5. BIG CARTOON EXPRESSIVE EYES ---
+      const eyeX = 3;
+      const eyeSpacing = 5.2;
+      const eyeR = 4.2;
+
+      // Eye Whites (Sclera)
+      snakeCtx.fillStyle = '#ffffff';
+      snakeCtx.shadowColor = '#ffffff';
+      snakeCtx.shadowBlur = 4;
+      snakeCtx.beginPath();
+      snakeCtx.arc(eyeX, -eyeSpacing, eyeR, 0, Math.PI * 2);
+      snakeCtx.arc(eyeX, eyeSpacing, eyeR, 0, Math.PI * 2);
+      snakeCtx.fill();
+      snakeCtx.shadowBlur = 0;
+
+      // Dark Pupils (Looking forward)
+      snakeCtx.fillStyle = '#090a15';
+      snakeCtx.beginPath();
+      snakeCtx.arc(eyeX + 1.2, -eyeSpacing, eyeR * 0.58, 0, Math.PI * 2);
+      snakeCtx.arc(eyeX + 1.2, eyeSpacing, eyeR * 0.58, 0, Math.PI * 2);
+      snakeCtx.fill();
+
+      // Cute Eye Shine Glints
+      snakeCtx.fillStyle = '#ffffff';
+      snakeCtx.beginPath();
+      snakeCtx.arc(eyeX + 1.8, -eyeSpacing - 1.2, 1.4, 0, Math.PI * 2);
+      snakeCtx.arc(eyeX + 1.8, eyeSpacing - 1.2, 1.4, 0, Math.PI * 2);
+      snakeCtx.fill();
+
+      // Secondary mini glint
+      snakeCtx.beginPath();
+      snakeCtx.arc(eyeX + 0.6, -eyeSpacing + 1.2, 0.7, 0, Math.PI * 2);
+      snakeCtx.arc(eyeX + 0.6, eyeSpacing + 1.2, 0.7, 0, Math.PI * 2);
+      snakeCtx.fill();
+
+      // --- 6. CUTE SMILING / CHOMPING MOUTH ---
+      if (snakeChompTimer > 0) {
+        // Open wide happy chomp when eating point
+        snakeCtx.fillStyle = '#b70038';
+        snakeCtx.beginPath();
+        snakeCtx.arc(headRadius - 1, 0, 4.5, -Math.PI / 2, Math.PI / 2);
+        snakeCtx.fill();
+
+        // Cute white baby fang
+        snakeCtx.fillStyle = '#ffffff';
+        snakeCtx.beginPath();
+        snakeCtx.moveTo(headRadius - 1, -2.5);
+        snakeCtx.lineTo(headRadius + 2, -2.5);
+        snakeCtx.lineTo(headRadius - 1, -0.5);
+        snakeCtx.closePath();
+        snakeCtx.fill();
+      } else {
+        // Gentle happy smile curve
+        snakeCtx.strokeStyle = '#023047';
+        snakeCtx.lineWidth = 1.4;
+        snakeCtx.beginPath();
+        snakeCtx.arc(headRadius - 3.5, 0, 3, -Math.PI / 3, Math.PI / 3);
+        snakeCtx.stroke();
+      }
+
+      snakeCtx.restore();
+    }
+
+    // Spawn Multi-color Star Burst Confetti when picking up points
+    function createFoodExplosion(x, y) {
+      const colors = ['#00f7ff', '#ff007f', '#00ff66', '#ffea00', '#d500f9', '#ffffff', '#ff9100'];
+      const count = 24;
+
+      for (let i = 0; i < count; i++) {
+        const speed = Math.random() * 4 + 1.5;
+        const angle = Math.random() * Math.PI * 2;
+        snakeParticles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: Math.random() * 4.5 + 2,
+          alpha: 1,
+          life: 30 + Math.floor(Math.random() * 15),
+          isStar: Math.random() > 0.4
+        });
+      }
+    }
+
+    // Floating glowing "+10" score text
+    function createFloatingScore(x, y, text) {
+      snakePopups.push({
+        x: x,
+        y: y,
+        text: text,
+        alpha: 1,
+        scale: 1.4,
+        vy: -1.2,
+        life: 35
+      });
+    }
+
+    function renderParticlesAndPopups() {
+      // 1. Render Confetti & Star Sparkles
+      for (let i = snakeParticles.length - 1; i >= 0; i--) {
+        const p = snakeParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05; // slight gravity
+        p.vx *= 0.96;
+        p.alpha -= 1 / p.life;
+
+        if (p.alpha <= 0) {
+          snakeParticles.splice(i, 1);
+          continue;
+        }
+
+        snakeCtx.save();
+        snakeCtx.globalAlpha = Math.max(0, p.alpha);
+        snakeCtx.fillStyle = p.color;
+        snakeCtx.shadowColor = p.color;
+        snakeCtx.shadowBlur = 10;
+
+        if (p.isStar) {
+          // Draw diamond star particle
+          snakeCtx.translate(p.x, p.y);
+          snakeCtx.beginPath();
+          snakeCtx.moveTo(0, -p.size);
+          snakeCtx.lineTo(p.size * 0.4, 0);
+          snakeCtx.lineTo(0, p.size);
+          snakeCtx.lineTo(-p.size * 0.4, 0);
+          snakeCtx.closePath();
+          snakeCtx.fill();
+        } else {
+          // Circle sparkle
+          snakeCtx.beginPath();
+          snakeCtx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          snakeCtx.fill();
+        }
+        snakeCtx.restore();
+      }
+
+      // 2. Render Floating Text Popups (+10)
+      for (let i = snakePopups.length - 1; i >= 0; i--) {
+        const pop = snakePopups[i];
+        pop.y += pop.vy;
+        pop.alpha -= 1 / pop.life;
+        if (pop.scale > 1) pop.scale -= 0.02;
+
+        if (pop.alpha <= 0) {
+          snakePopups.splice(i, 1);
+          continue;
+        }
+
+        snakeCtx.save();
+        snakeCtx.globalAlpha = Math.max(0, pop.alpha);
+        snakeCtx.font = `900 ${Math.round(14 * pop.scale)}px Orbitron, sans-serif`;
+        snakeCtx.fillStyle = '#ffea00';
+        snakeCtx.shadowColor = '#ffea00';
+        snakeCtx.shadowBlur = 12;
+        snakeCtx.textAlign = 'center';
+        snakeCtx.fillText(pop.text, pop.x, pop.y);
+        snakeCtx.restore();
+      }
+    }
+
+    function checkSnakeCollision() {
+      const head = { x: snake[0].x + snakeDx, y: snake[0].y + snakeDy };
+      // Wall collision
+      if (head.x < 0 || head.x >= snakeCanvas.width || head.y < 0 || head.y >= snakeCanvas.height) {
+        return true;
+      }
+      // Self collision
+      for (let i = 1; i < snake.length; i++) {
+        if (head.x === snake[i].x && head.y === snake[i].y) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function snakeInput(direction) {
+      if (snakeChangingDirection) return;
+      if (direction === 'UP' && snakeDy === 0) {
+        snakeDx = 0; snakeDy = -snakeGridSize; snakeChangingDirection = true;
+      } else if (direction === 'DOWN' && snakeDy === 0) {
+        snakeDx = 0; snakeDy = snakeGridSize; snakeChangingDirection = true;
+      } else if (direction === 'LEFT' && snakeDx === 0) {
+        snakeDx = -snakeGridSize; snakeDy = 0; snakeChangingDirection = true;
+      } else if (direction === 'RIGHT' && snakeDx === 0) {
+        snakeDx = snakeGridSize; snakeDy = 0; snakeChangingDirection = true;
+      }
+    }
+
+    // Keyboard listener for Snake & Flappy & Brick
+    window.addEventListener('keydown', (e) => {
+      if (activeGame === 'snake') {
+        if (['ArrowUp', 'KeyW'].includes(e.code)) { e.preventDefault(); snakeInput('UP'); }
+        if (['ArrowDown', 'KeyS'].includes(e.code)) { e.preventDefault(); snakeInput('DOWN'); }
+        if (['ArrowLeft', 'KeyA'].includes(e.code)) { e.preventDefault(); snakeInput('LEFT'); }
+        if (['ArrowRight', 'KeyD'].includes(e.code)) { e.preventDefault(); snakeInput('RIGHT'); }
+      } else if (activeGame === 'flappy') {
+        if (['Space', 'ArrowUp', 'KeyW'].includes(e.code)) {
+          e.preventDefault();
+          flapJump();
+        }
+      } else if (activeGame === 'brick') {
+        if (['ArrowLeft', 'KeyA'].includes(e.code)) brickPaddleX = Math.max(0, brickPaddleX - 25);
+        if (['ArrowRight', 'KeyD'].includes(e.code)) brickPaddleX = Math.min(brickCanvas.width - brickPaddleW, brickPaddleX + 25);
+      }
+    });
+
+    /* ======================================================
+       4. GAME 2: BRICK BREAKER
+       ====================================================== */
+    let brickCanvas, brickCtx, brickAnimationId;
+    let brickPaddleW = 85, brickPaddleH = 12, brickPaddleX = 190;
+    let brickBallX, brickBallY, brickBallDx, brickBallDy, brickBallR = 7;
+    let brickRows = 4, brickCols = 6;
+    let brickW, brickH = 18, brickPadding = 8, brickOffsetTop = 40, brickOffsetLeft = 20;
+    let bricks = [];
+    let brickScore = 0, brickLives = 3;
+
+    function initBrick() {
+      brickCanvas = document.getElementById('brickCanvas');
+      brickCtx = brickCanvas.getContext('2d');
+      brickPaddleX = (brickCanvas.width - brickPaddleW) / 2;
+      brickScore = 0;
+      brickLives = 3;
+      updateScoreboard(0);
+      updateBrickLivesDisplay();
+
+      brickW = Math.floor((brickCanvas.width - (brickOffsetLeft * 2) - ((brickCols - 1) * brickPadding)) / brickCols);
+
+      // Reset bricks layout
+      const colors = ['#ff007f', '#9d4edd', '#00f7ff', '#00ff66'];
+      bricks = [];
+      for (let r = 0; r < brickRows; r++) {
+        bricks[r] = [];
+        for (let c = 0; c < brickCols; c++) {
+          bricks[r][c] = { x: 0, y: 0, status: 1, color: colors[r % colors.length] };
+        }
+      }
+
+      resetBrickBall();
+
+      // Mouse control
+      brickCanvas.onmousemove = (e) => {
+        const rect = brickCanvas.getBoundingClientRect();
+        const root = document.documentElement;
+        const mouseX = e.clientX - rect.left - (brickPaddleW / 2);
+        brickPaddleX = Math.max(0, Math.min(brickCanvas.width - brickPaddleW, mouseX));
+      };
+
+      // Button controls
+      document.getElementById('brickLeftBtn').onmousedown = () => { brickPaddleX = Math.max(0, brickPaddleX - 35); };
+      document.getElementById('brickRightBtn').onmousedown = () => { brickPaddleX = Math.min(brickCanvas.width - brickPaddleW, brickPaddleX + 35); };
+
+      if (brickAnimationId) cancelAnimationFrame(brickAnimationId);
+      brickLoop();
+    }
+
+    function resetBrickBall() {
+      brickBallX = brickCanvas.width / 2;
+      brickBallY = brickCanvas.height - 40;
+      brickBallDx = (Math.random() > 0.5 ? 3.5 : -3.5);
+      brickBallDy = -3.8;
+    }
+
+    function updateBrickLivesDisplay() {
+      document.getElementById('brickLivesDisplay').innerText = '❤'.repeat(Math.max(0, brickLives));
+    }
+
+    function brickLoop() {
+      brickCtx.fillStyle = '#0a0f1d';
+      brickCtx.fillRect(0, 0, brickCanvas.width, brickCanvas.height);
+
+      // Draw Bricks
+      let remainingBricks = 0;
+      for (let r = 0; r < brickRows; r++) {
+        for (let c = 0; c < brickCols; c++) {
+          const b = bricks[r][c];
+          if (b.status === 1) {
+            remainingBricks++;
+            const brickX = c * (brickW + brickPadding) + brickOffsetLeft;
+            const brickY = r * (brickH + brickPadding) + brickOffsetTop;
+            b.x = brickX;
+            b.y = brickY;
+
+            brickCtx.fillStyle = b.color;
+            brickCtx.shadowColor = b.color;
+            brickCtx.shadowBlur = 8;
+            brickCtx.beginPath();
+            brickCtx.roundRect(brickX, brickY, brickW, brickH, 4);
+            brickCtx.fill();
+            brickCtx.shadowBlur = 0;
+
+            // Ball Collision with Brick
+            if (
+              brickBallX + brickBallR > b.x &&
+              brickBallX - brickBallR < b.x + brickW &&
+              brickBallY + brickBallR > b.y &&
+              brickBallY - brickBallR < b.y + brickH
+            ) {
+              brickBallDy = -brickBallDy;
+              b.status = 0;
+              brickScore += 20;
+              updateScoreboard(brickScore);
+              playSound('point');
+            }
+          }
+        }
+      }
+
+      // Check Victory
+      if (remainingBricks === 0) {
+        showGameOverModal('VICTORY!', 'You cleared every brick on the grid!', brickScore, { isWin: true });
+        return;
+      }
+
+      // Draw Paddle
+      brickCtx.fillStyle = '#00f7ff';
+      brickCtx.shadowColor = '#00f7ff';
+      brickCtx.shadowBlur = 12;
+      brickCtx.beginPath();
+      brickCtx.roundRect(brickPaddleX, brickCanvas.height - brickPaddleH - 8, brickPaddleW, brickPaddleH, 6);
+      brickCtx.fill();
+      brickCtx.shadowBlur = 0;
+
+      // Draw Ball
+      brickCtx.fillStyle = '#ffffff';
+      brickCtx.shadowColor = '#ffea00';
+      brickCtx.shadowBlur = 10;
+      brickCtx.beginPath();
+      brickCtx.arc(brickBallX, brickBallY, brickBallR, 0, Math.PI * 2);
+      brickCtx.fill();
+      brickCtx.shadowBlur = 0;
+
+      // Ball Movement & Wall Collisions
+      brickBallX += brickBallDx;
+      brickBallY += brickBallDy;
+
+      if (brickBallX + brickBallR > brickCanvas.width || brickBallX - brickBallR < 0) {
+        brickBallDx = -brickBallDx;
+        playSound('bounce');
+      }
+      if (brickBallY - brickBallR < 0) {
+        brickBallDy = -brickBallDy;
+        playSound('bounce');
+      }
+
+      // Paddle Collision
+      const paddleTop = brickCanvas.height - brickPaddleH - 8;
+      if (
+        brickBallY + brickBallR >= paddleTop &&
+        brickBallY - brickBallR <= paddleTop + brickPaddleH &&
+        brickBallX >= brickPaddleX &&
+        brickBallX <= brickPaddleX + brickPaddleW
+      ) {
+        // Calculate deflection angle based on where ball hits paddle
+        const hitPoint = (brickBallX - (brickPaddleX + brickPaddleW / 2)) / (brickPaddleW / 2);
+        brickBallDx = hitPoint * 4.5;
+        brickBallDy = -Math.abs(brickBallDy);
+        playSound('bounce');
+      }
+
+      // Bottom death
+      if (brickBallY - brickBallR > brickCanvas.height) {
+        brickLives--;
+        updateBrickLivesDisplay();
+        playSound('hit');
+        if (brickLives <= 0) {
+          showGameOverModal('OUT OF LIVES!', 'The ball dropped past your paddle.', brickScore);
+          return;
+        } else {
+          resetBrickBall();
+        }
+      }
+
+      brickAnimationId = requestAnimationFrame(brickLoop);
+    }
+
+    /* ======================================================
+       5. GAME 3: SPACE FLAPPER (FLAPPY BIRD)
+       ====================================================== */
+    let flappyCanvas, flappyCtx, flappyAnimationId;
+    let birdY, birdVelocity, birdGravity = 0.35, birdLift = -6.2;
+    let pipes = [], pipeTimer = 0, flappyScore = 0;
+
+    function initFlappy() {
+      flappyCanvas = document.getElementById('flappyCanvas');
+      flappyCtx = flappyCanvas.getContext('2d');
+      birdY = flappyCanvas.height / 2;
+      birdVelocity = 0;
+      pipes = [];
+      pipeTimer = 0;
+      flappyScore = 0;
+      updateScoreboard(0);
+
+      flappyCanvas.onclick = () => flapJump();
+
+      if (flappyAnimationId) cancelAnimationFrame(flappyAnimationId);
+      flappyLoop();
+    }
+
+    function flapJump() {
+      birdVelocity = birdLift;
+      playSound('point');
+    }
+
+    function flappyLoop() {
+      // Clear sky
+      flappyCtx.fillStyle = '#080816';
+      flappyCtx.fillRect(0, 0, flappyCanvas.width, flappyCanvas.height);
+
+      // Starfield background
+      flappyCtx.fillStyle = 'rgba(255,255,255,0.4)';
+      for (let i = 0; i < 20; i++) {
+        let sx = (i * 37 + pipeTimer) % flappyCanvas.width;
+        let sy = (i * 29) % flappyCanvas.height;
+        flappyCtx.fillRect(sx, sy, 1.5, 1.5);
+      }
+
+      // Physics
+      birdVelocity += birdGravity;
+      birdY += birdVelocity;
+
+      // Draw Spaceship Player
+      flappyCtx.save();
+      flappyCtx.translate(70, birdY);
+      flappyCtx.rotate(Math.min(Math.PI / 4, Math.max(-Math.PI / 4, birdVelocity * 0.08)));
+      // Body
+      flappyCtx.fillStyle = '#00f7ff';
+      flappyCtx.shadowColor = '#00f7ff';
+      flappyCtx.shadowBlur = 12;
+      flappyCtx.beginPath();
+      flappyCtx.ellipse(0, 0, 16, 11, 0, 0, Math.PI * 2);
+      flappyCtx.fill();
+      // Cockpit dome
+      flappyCtx.fillStyle = '#ff007f';
+      flappyCtx.beginPath();
+      flappyCtx.arc(4, -3, 6, 0, Math.PI * 2);
+      flappyCtx.fill();
+      // Rocket Thruster flame
+      flappyCtx.fillStyle = '#ffea00';
+      flappyCtx.beginPath();
+      flappyCtx.moveTo(-16, -4);
+      flappyCtx.lineTo(-24 - (Math.random() * 6), 0);
+      flappyCtx.lineTo(-16, 4);
+      flappyCtx.closePath();
+      flappyCtx.fill();
+      flappyCtx.restore();
+
+      // Spawn Obstacle Gates
+      pipeTimer++;
+      if (pipeTimer % 95 === 0) {
+        const gap = 110;
+        const minH = 50;
+        const maxH = flappyCanvas.height - gap - minH;
+        const topH = Math.floor(Math.random() * (maxH - minH)) + minH;
+        pipes.push({
+          x: flappyCanvas.width,
+          top: topH,
+          bottom: flappyCanvas.height - topH - gap,
+          passed: false
+        });
+      }
+
+      // Move & Render Gates
+      for (let i = pipes.length - 1; i >= 0; i--) {
+        const p = pipes[i];
+        p.x -= 2.6;
+
+        // Draw laser gate pillars
+        flappyCtx.fillStyle = '#1e1b4b';
+        flappyCtx.strokeStyle = '#9d4edd';
+        flappyCtx.lineWidth = 2;
+        // Top pipe
+        flappyCtx.fillRect(p.x, 0, 48, p.top);
+        flappyCtx.strokeRect(p.x, 0, 48, p.top);
+        // Bottom pipe
+        flappyCtx.fillRect(p.x, flappyCanvas.height - p.bottom, 48, p.bottom);
+        flappyCtx.strokeRect(p.x, flappyCanvas.height - p.bottom, 48, p.bottom);
+
+        // Glowing Laser Borders
+        flappyCtx.shadowColor = '#ff007f';
+        flappyCtx.shadowBlur = 8;
+        flappyCtx.fillStyle = '#ff007f';
+        flappyCtx.fillRect(p.x - 2, p.top - 6, 52, 6);
+        flappyCtx.fillRect(p.x - 2, flappyCanvas.height - p.bottom, 52, 6);
+        flappyCtx.shadowBlur = 0;
+
+        // Collision Check
+        const shipRadius = 11;
+        if (70 + shipRadius > p.x && 70 - shipRadius < p.x + 48) {
+          if (birdY - shipRadius < p.top || birdY + shipRadius > flappyCanvas.height - p.bottom) {
+            showGameOverModal('SYSTEM COLLISION!', 'Your spacecraft hit an energy barrier.', flappyScore);
+            return;
+          }
+        }
+
+        // Score increment
+        if (!p.passed && p.x + 48 < 70) {
+          p.passed = true;
+          flappyScore += 1;
+          updateScoreboard(flappyScore);
+          playSound('eat');
+        }
+
+        // Cleanup offscreen pipes
+        if (p.x < -60) {
+          pipes.splice(i, 1);
+        }
+      }
+
+      // Ground or ceiling collision
+      if (birdY + 11 > flappyCanvas.height || birdY - 11 < 0) {
+        showGameOverModal('CRASH LANDING!', 'You hit the boundary limits.', flappyScore);
+        return;
+      }
+
+      flappyAnimationId = requestAnimationFrame(flappyLoop);
+    }
+
+    /* ======================================================
+       6. GAME 4: MEMORY MATCH
+       ====================================================== */
+    const emojis = ['👾', '🕹️', '⚡', '🚀', '💎', '🔥', '👑', '🔮'];
+    let memoryCards = [];
+    let flippedCards = [];
+    let matchedCount = 0;
+    let memoryMovesCount = 0;
+    let memorySeconds = 0;
+    let memoryTimerInterval = null;
+    let isMemoryBusy = false;
+
+    function initMemory() {
+      const container = document.getElementById('memoryGrid');
+      container.innerHTML = '';
+      flippedCards = [];
+      matchedCount = 0;
+      memoryMovesCount = 0;
+      memorySeconds = 0;
+      isMemoryBusy = false;
+      document.getElementById('memoryMoves').innerText = '0';
+      document.getElementById('memoryMatches').innerText = '0 / 8';
+      document.getElementById('memoryTimer').innerText = '0s';
+      updateScoreboard(0);
+
+      if (memoryTimerInterval) clearInterval(memoryTimerInterval);
+      memoryTimerInterval = setInterval(() => {
+        memorySeconds++;
+        document.getElementById('memoryTimer').innerText = `${memorySeconds}s`;
+      }, 1000);
+
+      // Create card pairs
+      const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+
+      cardValues.forEach((val, idx) => {
+        const card = document.createElement('div');
+        card.className = 'w-full h-20 sm:h-24 bg-gray-900 border-2 border-gray-700 hover:border-neonYellow rounded-xl flex items-center justify-center text-3xl cursor-pointer select-none transition-all duration-300 transform perspective-1000';
+        card.dataset.value = val;
+        card.dataset.index = idx;
+        card.innerHTML = `<span class="hidden transform transition duration-200">${val}</span><i class="fa-solid fa-microchip text-gray-600 text-xl pointer-events-none"></i>`;
+
+        card.onclick = () => flipMemoryCard(card);
+        container.appendChild(card);
+      });
+    }
+
+    function flipMemoryCard(card) {
+      if (isMemoryBusy || card.classList.contains('matched') || flippedCards.includes(card)) return;
+
+      // Reveal Card
+      card.classList.remove('bg-gray-900', 'border-gray-700');
+      card.classList.add('bg-neonPurple/20', 'border-neonCyan', 'scale-105');
+      card.querySelector('span').classList.remove('hidden');
+      card.querySelector('i').classList.add('hidden');
+      flippedCards.push(card);
+      playSound('beep');
+
+      if (flippedCards.length === 2) {
+        memoryMovesCount++;
+        document.getElementById('memoryMoves').innerText = memoryMovesCount;
+        isMemoryBusy = true;
+
+        const [card1, card2] = flippedCards;
+        if (card1.dataset.value === card2.dataset.value) {
+          // MATCH!
+          setTimeout(() => {
+            card1.classList.add('matched', 'border-neonGreen', 'bg-neonGreen/20');
+            card2.classList.add('matched', 'border-neonGreen', 'bg-neonGreen/20');
+            matchedCount++;
+            document.getElementById('memoryMatches').innerText = `${matchedCount} / 8`;
+            playSound('win');
+            flippedCards = [];
+            isMemoryBusy = false;
+
+            if (matchedCount === emojis.length) {
+              clearInterval(memoryTimerInterval);
+              const calculatedScore = Math.max(100, 1000 - (memoryMovesCount * 25) - (memorySeconds * 10));
+              updateScoreboard(calculatedScore);
+              showGameOverModal('GLORIOUS MEMORY!', `Completed in ${memoryMovesCount} moves and ${memorySeconds}s!`, calculatedScore, {
+                isWin: true,
+                scoreLabel: 'YOUR SCORE',
+                highScoreLabel: 'BEST SCORE'
+              });
+            }
+          }, 350);
+        } else {
+          // NO MATCH: Flip back
+          setTimeout(() => {
+            card1.classList.remove('border-neonCyan', 'bg-neonPurple/20', 'scale-105');
+            card1.classList.add('bg-gray-900', 'border-gray-700');
+            card1.querySelector('span').classList.add('hidden');
+            card1.querySelector('i').classList.remove('hidden');
+
+            card2.classList.remove('border-neonCyan', 'bg-neonPurple/20', 'scale-105');
+            card2.classList.add('bg-gray-900', 'border-gray-700');
+            card2.querySelector('span').classList.add('hidden');
+            card2.querySelector('i').classList.remove('hidden');
+
+            flippedCards = [];
+            isMemoryBusy = false;
+          }, 800);
+        }
+      }
+    }
+
+    /* ======================================================
+       7. GAME 5: TIC-TAC-TOE (SMART AI & 2-PLAYER)
+       ====================================================== */
+    let tttBoardState = Array(9).fill(null);
+    let tttTurn = 'X';
+    let tttMode = 'ai'; // 'ai' or '2p'
+    let tttWinsX = 0, tttWinsO = 0, tttDrawsCount = 0;
+    let tttGameOver = false;
+
+    function initTicTacToe() {
+      tttBoardState = Array(9).fill(null);
+      tttTurn = 'X';
+      tttGameOver = false;
+      document.getElementById('tttTurnIndicator').innerText = "Player X's Turn";
+      document.querySelectorAll('.ttt-cell').forEach(cell => {
+        cell.innerText = '';
+        cell.className = 'ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white';
+      });
+      updateScoreboard(tttWinsX * 50);
+    }
+
+    function setTicTacToeMode(mode) {
+      tttMode = mode;
+      document.getElementById('tttModeAi').className = mode === 'ai' ? 'px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple transition' : 'px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
+      document.getElementById('tttMode2P').className = mode === '2p' ? 'px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple transition' : 'px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
+      initTicTacToe();
+    }
+
+    function handleTttClick(index) {
+      if (tttGameOver || tttBoardState[index] !== null) return;
+
+      executeTttMove(index, tttTurn);
+
+      const winCombo = checkTttWinner(tttBoardState);
+      if (winCombo) {
+        concludeTtt(tttTurn, winCombo);
+        return;
+      } else if (!tttBoardState.includes(null)) {
+        concludeTtt('DRAW', null);
+        return;
+      }
+
+      // Switch Turn
+      tttTurn = (tttTurn === 'X') ? 'O' : 'X';
+      document.getElementById('tttTurnIndicator').innerText = `Player ${tttTurn}'s Turn`;
+
+      // If AI mode and it's O's turn
+      if (tttMode === 'ai' && tttTurn === 'O') {
+        setTimeout(executeAiMove, 300);
+      }
+    }
+
+    function executeTttMove(index, player) {
+      tttBoardState[index] = player;
+      const cell = document.querySelectorAll('.ttt-cell')[index];
+      cell.innerText = player;
+      cell.classList.add(player === 'X' ? 'text-neonCyan' : 'text-neonPink');
+      playSound(player === 'X' ? 'beep' : 'bounce');
+    }
+
+    function executeAiMove() {
+      if (tttGameOver) return;
+      // Smart AI: 1. Win if possible, 2. Block user win, 3. Take Center, 4. Random Corner/Edge
+      let move = getWinningMove('O') ?? getWinningMove('X') ?? (tttBoardState[4] === null ? 4 : null);
+      if (move === null) {
+        const available = tttBoardState.map((val, idx) => val === null ? idx : null).filter(v => v !== null);
+        move = available[Math.floor(Math.random() * available.length)];
+      }
+      if (move !== undefined && move !== null) {
+        executeTttMove(move, 'O');
+        const winCombo = checkTttWinner(tttBoardState);
+        if (winCombo) {
+          concludeTtt('O', winCombo);
+          return;
+        } else if (!tttBoardState.includes(null)) {
+          concludeTtt('DRAW', null);
+          return;
+        }
+        tttTurn = 'X';
+        document.getElementById('tttTurnIndicator').innerText = "Player X's Turn";
+      }
+    }
+
+    function getWinningMove(player) {
+      const winningCombos = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+      ];
+      for (const [a, b, c] of winningCombos) {
+        const line = [tttBoardState[a], tttBoardState[b], tttBoardState[c]];
+        if (line.filter(x => x === player).length === 2 && line.includes(null)) {
+          if (tttBoardState[a] === null) return a;
+          if (tttBoardState[b] === null) return b;
+          if (tttBoardState[c] === null) return c;
+        }
+      }
+      return null;
+    }
+
+    function checkTttWinner(board) {
+      const winningCombos = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+      ];
+      for (const combo of winningCombos) {
+        const [a, b, c] = combo;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          return combo;
+        }
+      }
+      return null;
+    }
+
+    function concludeTtt(result, combo) {
+      tttGameOver = true;
+      if (combo) {
+        const cells = document.querySelectorAll('.ttt-cell');
+        combo.forEach(idx => {
+          cells[idx].classList.add('bg-neonGreen/30', 'border-2', 'border-neonGreen');
+        });
+      }
+
+      const currentScore = tttWinsX * 50;
+      if (result === 'X') {
+        tttWinsX++;
+        const newScore = tttWinsX * 50;
+        document.getElementById('tttXWins').innerText = tttWinsX;
+        updateScoreboard(newScore);
+        showGameOverModal('PLAYER X WINS!', 'Victory accomplished on the grid arena.', newScore, {
+          isWin: true,
+          scoreLabel: 'X POINTS',
+          highScoreLabel: 'HIGH SCORE'
+        });
+      } else if (result === 'O') {
+        tttWinsO++;
+        document.getElementById('tttOWins').innerText = tttWinsO;
+        showGameOverModal(tttMode === 'ai' ? 'AI ROBOT WINS!' : 'PLAYER O WINS!', 'Better tactics next round!', currentScore, {
+          isWin: false,
+          scoreLabel: 'X POINTS',
+          highScoreLabel: 'HIGH SCORE'
+        });
+      } else {
+        tttDrawsCount++;
+        document.getElementById('tttDraws').innerText = tttDrawsCount;
+        showGameOverModal('STALEMATE DRAW!', 'Neither player gave up an inch.', currentScore, {
+          isWin: false,
+          scoreLabel: 'X POINTS',
+          highScoreLabel: 'HIGH SCORE',
+          icon: '<i class="fa-solid fa-handshake text-neonYellow"></i>'
+        });
+      }
+    }
+
+    /* ======================================================
+       8. WINDOW ONLOAD BOOTSTRAP
+       ====================================================== */
+    window.onload = function() {
+      updateTotalPortalScore();
+      launchGame('snake');
+    };
+  </script>
+<script>
 function loadFullFeatureApp(authToken) {
-  document.body.innerHTML = `
+  const chatScreen = document.getElementById('chat-screen');
+  chatScreen.style.display = 'flex';
+  chatScreen.innerHTML = `
     <div id="chat-app">
       <header class="chat-header">
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -920,7 +2171,7 @@ function loadFullFeatureApp(authToken) {
   $('hide-btn').onclick = () => {
     cleanupCall(false);
     if (socket) socket.close();
-    showGamePortal();
+    document.getElementById('chat-screen').style.display = 'none';
   };
 
   // 🔴 END / EXIT दबाने पर सीधे MAIN OTP PAGE (बिना कन्फर्मेशन)
@@ -949,64 +2200,100 @@ function loadFullFeatureApp(authToken) {
   };
 }
 
-/* ============================================================
-   4. DECOY GAME HUB ENGINE & CONTROLS
-   ============================================================ */
-// Keep references before chat replaces the document body; this lets Lock return reliably.
-const savedGamePortalRoot = document.getElementById('game-portal-root');
-const savedFullscreenArena = document.getElementById('fullscreen-game-arena');
-function showGamePortal() {
-  document.body.innerHTML = '';
-  if (savedGamePortalRoot) document.body.appendChild(savedGamePortalRoot);
-  if (savedFullscreenArena) document.body.appendChild(savedFullscreenArena);
-  if (savedGamePortalRoot) savedGamePortalRoot.style.display = 'flex';
-}
 
-function launchFullScreenGame(gameKey) {
-  document.querySelectorAll('#fullscreen-game-arena .game-view').forEach(el => el.classList.add('hidden'));
-  document.getElementById(`gameView-${gameKey}`).classList.remove('hidden');
-  document.getElementById('fullscreen-game-arena').style.display = 'flex';
-
-  if (gameKey === 'snake') initSnake();
-}
-
-/* Snake Logic (Easy & Slow) */
-let snakeCanvas, snakeCtx, snake = [], snakeFood = { x: 0, y: 0 }, snakeDx = 20, snakeDy = 0, snakeInterval = null;
-function initSnake() {
-  snakeCanvas = document.getElementById('snakeCanvas');
-  snakeCtx = snakeCanvas.getContext('2d');
-  snake = [{ x: 160, y: 200 }, { x: 140, y: 200 }];
-  snakeDx = 20; snakeDy = 0;
-  snakeFood = { x: 80, y: 80 };
-  if (snakeInterval) clearInterval(snakeInterval);
-  snakeInterval = setInterval(snakeStep, 260);
-}
-
-function snakeStep() {
-  const head = { x: snake[0].x + snakeDx, y: snake[0].y + snakeDy };
-  if (head.x < 0 || head.x >= 380 || head.y < 0 || head.y >= 380) {
-    initSnake(); return;
-  }
-  snake.unshift(head);
-  if (head.x === snakeFood.x && head.y === snakeFood.y) {
-    snakeFood = { x: Math.floor(Math.random() * 18) * 20, y: Math.floor(Math.random() * 18) * 20 };
-  } else {
-    snake.pop();
-  }
-  snakeCtx.fillStyle = '#070b14';
-  snakeCtx.fillRect(0, 0, 380, 380);
-  snakeCtx.fillStyle = '#ff007f';
-  snakeCtx.fillRect(snakeFood.x, snakeFood.y, 18, 18);
-  snakeCtx.fillStyle = '#00f7ff';
-  snake.forEach(p => snakeCtx.fillRect(p.x, p.y, 18, 18));
-}
-
-window.addEventListener('keydown', e => {
-  if (e.key === 'ArrowUp' && snakeDy === 0) { snakeDx = 0; snakeDy = -20; }
-  if (e.key === 'ArrowDown' && snakeDy === 0) { snakeDx = 0; snakeDy = 20; }
-  if (e.key === 'ArrowLeft' && snakeDx === 0) { snakeDx = -20; snakeDy = 0; }
-  if (e.key === 'ArrowRight' && snakeDx === 0) { snakeDx = 20; snakeDy = 0; }
-});
 </script>
+
+  <!-- OTP overlays added above the original game portal; game interface itself remains unchanged. -->
+  <div id="otp-gate-layer" role="dialog" aria-modal="true" aria-label="Daily OTP">
+    <div class="gate-card">
+      <div class="gate-logo"><i class="fa-solid fa-gamepad"></i></div>
+      <div class="gate-title">ONLINE GAME</div>
+      <div class="gate-subtitle">ARCADE RETRO HUB</div>
+      <p style="font:600 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:16px">कृपया आज का OTP दर्ज करें</p>
+      <input id="daily-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••" maxlength="10" />
+      <button class="gate-submit" id="daily-otp-submit" type="button">VERIFY OTP ➜</button>
+    </div>
+  </div>
+  <div id="second-otp-layer" role="dialog" aria-modal="true" aria-label="Second OTP">
+    <div class="gate-card">
+      <div class="gate-logo"><i class="fa-solid fa-lock"></i></div>
+      <div class="gate-title">SECOND OTP</div>
+      <div class="gate-subtitle">SECURE CHAT ACCESS</div>
+      <p style="font:600 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:16px">अब अपना दूसरा OTP दर्ज करें</p>
+      <input id="second-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••" maxlength="10" />
+      <button class="gate-submit" id="second-otp-submit" type="button">CONTINUE ➜</button>
+    </div>
+  </div>
+  <div id="wrong-otp-layer" class="modal-backdrop" style="display:none" role="alertdialog" aria-modal="true">
+    <div class="bg-gray-900 border-2 border-neonPink p-6 rounded-2xl max-w-xs w-full text-center shadow-neon-pink">
+      <div class="text-5xl mb-3 text-neonPink animate-bounce"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <h3 class="text-xl font-arcade font-black text-white mb-2 tracking-wide">ACCESS DENIED</h3>
+      <p class="text-sm text-gray-300 font-body mb-5">अमान्य पासकोड! कृपया सही कोड दर्ज करें।</p>
+      <button id="retry-otp-button" class="w-full py-2.5 bg-neonPink text-black font-arcade font-bold text-xs rounded-xl shadow-lg">RETRY / फिर से प्रयास करें</button>
+    </div>
+  </div>
+  <div id="love-transition-layer" role="dialog" aria-modal="true" aria-label="Love message">
+    <div id="love-transition-card" class="love-card" role="button" tabindex="0" aria-label="Open chat now">
+      <div class="love-heart">💖</div>
+      <div style="font:700 11px Orbitron,sans-serif;letter-spacing:2px;color:#f9a8d4">A LITTLE MESSAGE FOR YOU</div>
+      <div class="love-message">BAKLELHI<br>LOVE YOU<br>BAHUT ZYADA ❤️</div>
+      <div class="love-hint">TOUCH THE HEART TO OPEN CHAT · 5 SECONDS</div>
+    </div>
+  </div>
+  <div id="chat-screen" aria-live="polite"></div>
+
+
+<script>
+(function(){
+  const dailyLayer = document.getElementById('otp-gate-layer');
+  const secondLayer = document.getElementById('second-otp-layer');
+  const wrongLayer = document.getElementById('wrong-otp-layer');
+  const loveLayer = document.getElementById('love-transition-layer');
+  let otpStage = 1;
+  let transitionStarted = false;
+  let loveTimer = null;
+  let chatAuthToken = 'token-' + todayOtpFallback();
+  function todayOtpFallback(){ const d=new Date(); return String(d.getDate()).padStart(2,'0')+String(d.getMonth()+1).padStart(2,'0')+String(d.getFullYear()).slice(-2); }
+  function todayOtp(){ const d=new Date(); return String(d.getDate()).padStart(2,'0')+String(d.getMonth()+1).padStart(2,'0')+String(d.getFullYear()).slice(-2); }
+  function showWrong(){ wrongLayer.style.display='flex'; }
+  function checkDaily(){
+    const value=document.getElementById('daily-otp-input').value.trim();
+    if(value===todayOtp()) { otpStage=2; dailyLayer.style.display='none'; secondLayer.style.display='flex'; document.getElementById('second-otp-input').focus(); }
+    else showWrong();
+  }
+  async function checkSecond(){
+    const value=document.getElementById('second-otp-input').value.trim();
+    // The fixed second OTP supplied in the original page was 123456.
+    if(value!=='123456'){showWrong();return;}
+    chatAuthToken='token-123456';
+    try { const res=await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:value})}); if(res.ok){const data=await res.json();if(data.success&&data.token)chatAuthToken=data.token;} } catch(_) {}
+    secondLayer.style.display='none'; showLoveMessage();
+  }
+  function retry(){
+    wrongLayer.style.display='none';
+    if(otpStage===1){const input=document.getElementById('daily-otp-input');input.value='';input.focus();}
+    else {const input=document.getElementById('second-otp-input');input.value='';secondLayer.style.display='flex';input.focus();}
+  }
+  function showLoveMessage(){
+    transitionStarted=false; loveLayer.style.display='flex';
+    loveTimer=setTimeout(openChat,5000);
+  }
+  function openChat(){
+    if(transitionStarted)return; transitionStarted=true;
+    if(loveTimer)clearTimeout(loveTimer);
+    loveLayer.style.display='none';
+    if(typeof loadFullFeatureApp==='function') loadFullFeatureApp(chatAuthToken);
+  }
+  document.getElementById('daily-otp-submit').addEventListener('click',checkDaily);
+  document.getElementById('second-otp-submit').addEventListener('click',checkSecond);
+  document.getElementById('retry-otp-button').addEventListener('click',retry);
+  document.getElementById('daily-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkDaily();});
+  document.getElementById('second-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkSecond();});
+  document.getElementById('love-transition-layer').addEventListener('click',openChat);
+  document.getElementById('love-transition-card').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openChat();}});
+  window.addEventListener('load',()=>document.getElementById('daily-otp-input').focus());
+})();
+</script>
+
 </body>
 </html>
