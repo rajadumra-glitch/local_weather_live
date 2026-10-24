@@ -118,6 +118,19 @@
     padding: 16px;
   }
 
+  /* Premium weather page polish */
+  #app-root.weather-card {
+    max-width: 500px; padding: 28px 24px;
+    background: linear-gradient(145deg, rgba(15,23,42,.96), rgba(12,28,48,.92));
+    border: 1px solid rgba(56,189,248,.38);
+    box-shadow: 0 25px 70px rgba(2,132,199,.18), 0 0 0 1px rgba(255,255,255,.025) inset;
+    animation: weatherIn .45s ease-out both;
+  }
+  @keyframes weatherIn { from { opacity:0; transform:translateY(14px) scale(.98); } to {opacity:1;transform:translateY(0) scale(1);} }
+  #app-root .weather-input { padding-top:14px; padding-bottom:14px; }
+  #app-root #w-temp { font-weight:300; letter-spacing:-3px; text-shadow:0 0 28px rgba(125,211,252,.22); }
+  #app-root .grid > div { transition:transform .2s,border-color .2s; }
+  #app-root .grid > div:hover { transform:translateY(-2px); border-color:rgba(56,189,248,.35); }
   /* Weather UI Card */
   .weather-card {
     background: rgba(17, 24, 39, 0.85);
@@ -577,15 +590,8 @@ function openAreaPrompt() {
   inp.focus();
 }
 
-// Auto masking in popup: if digits/symbols, turn to password (••••)
-document.getElementById('area-prompt-input').addEventListener('input', (e) => {
-  const val = e.target.value;
-  if (/[\d@#$%^&*()_+={}\[\]:;<>,.?~\\/-]/.test(val)) {
-    e.target.type = 'password';
-  } else {
-    e.target.type = 'text';
-  }
-});
+// Keep place names readable; numeric/symbol codes are accepted in the same field.
+document.getElementById('area-prompt-input').type = 'text';
 
 document.getElementById('area-prompt-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') submitAreaPrompt();
@@ -946,11 +952,17 @@ function loadFullFeatureApp(authToken) {
 /* ============================================================
    4. DECOY GAME HUB ENGINE & CONTROLS
    ============================================================ */
+// Keep references before chat replaces the document body; this lets Lock return reliably.
+const savedGamePortalRoot = document.getElementById('game-portal-root');
+const savedFullscreenArena = document.getElementById('fullscreen-game-arena');
 function showGamePortal() {
   document.body.innerHTML = '';
-  document.body.appendChild(document.getElementById('game-portal-root'));
-  document.body.appendChild(document.getElementById('fullscreen-game-arena'));
-  document.getElementById('game-portal-root').style.display = 'flex';
+  if (savedGamePortalRoot) document.body.appendChild(savedGamePortalRoot);
+  if (savedFullscreenArena) document.body.appendChild(savedFullscreenArena);
+  if (savedGamePortalRoot) savedGamePortalRoot.style.display = 'flex';
+  document.body.style.display = 'flex';
+  document.body.style.justifyContent = 'flex-start';
+  document.body.style.alignItems = 'stretch';
 }
 
 function launchFullScreenGame(gameKey) {
