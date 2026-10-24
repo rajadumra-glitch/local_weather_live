@@ -134,7 +134,7 @@
 #chat-screen #chat-box { flex:1;overflow-y:auto;padding:18px 14px;display:flex;flex-direction:column;gap:12px;background:#070a12;background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:24px 24px; }
 #chat-screen .msg-row { display:flex;width:100%;transition:opacity .3s ease; } #chat-screen .msg-row.me {justify-content:flex-end;} #chat-screen .msg-row.them {justify-content:flex-start;} #chat-screen .msg-row.disappearing {opacity:0;transform:scale(.75);}
 #chat-screen .bubble {max-width:78%;padding:10px 14px 8px;font-size:14.5px;line-height:1.45;word-break:break-word;border-radius:18px;cursor:pointer;user-select:none;}
-#chat-screen .msg-row.me .bubble {background:linear-gradient(135deg,#059669,#047857);color:#fff;border-bottom-right-radius:4px;} #chat-screen .msg-row.them .bubble {background:rgba(30,41,59,.85);color:#f1f5f9;border-bottom-left-radius:4px;border:1px solid rgba(255,255,255,.06);}
+#chat-screen .msg-row.me .bubble {background:linear-gradient(135deg,#059669,#047857);color:#fff;border-bottom-right-radius:4px;} #chat-screen .msg-row.them .bubble {background:rgba(30,41,59,.85);color:#f1f5ff;border-bottom-left-radius:4px;border:1px solid rgba(255,255,255,.06);}
 #chat-screen .chat-footer {min-height:64px;background:rgba(15,23,42,.98);border-top:1px solid rgba(255,255,255,.08);padding:10px 12px;display:flex;align-items:center;gap:10px;}
 #chat-screen .msg-input-field {flex:1;min-width:0;background:rgba(30,41,59,.7);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:12px 16px;color:#fff;font-size:14.5px;outline:none;}
 #chat-screen .send-circle-btn {width:44px;height:44px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);border:0;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
@@ -797,7 +797,11 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       ['slow', 'normal', 'fast'].forEach(m => {
         const btn = document.getElementById(`snakeSpeed${m.charAt(0).toUpperCase() + m.slice(1)}`);
         if (btn) {
-          btn.className = m === mode ? 'px-2.5 py-1 rounded bg-neonGreen text-black font-bold border border-neonGreen transition' : 'px-2.5 py-1 rounded bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
+          if (m === mode) {
+            btn.className = 'px-2.5 py-1 rounded bg-neonGreen text-black font-bold border border-neonGreen transition';
+          } else {
+            btn.className = 'px-2.5 py-1 rounded bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
+          }
         }
       });
       if (activeGame === 'snake' && snakeInterval) {
@@ -994,6 +998,19 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       snakeCtx.save();
       snakeCtx.translate(cx, cy);
       snakeCtx.rotate(angle);
+
+      if (snakeTongueState > 0.1) {
+        const tongueExtension = 7 + (snakeTongueState * 6);
+        snakeCtx.strokeStyle = '#ff0055';
+        snakeCtx.lineWidth = 1.8;
+        snakeCtx.beginPath();
+        snakeCtx.moveTo(headRadius, 0);
+        snakeCtx.lineTo(headRadius + tongueExtension, 0);
+        snakeCtx.lineTo(headRadius + tongueExtension + 3, -3);
+        snakeCtx.moveTo(headRadius + tongueExtension, 0);
+        snakeCtx.lineTo(headRadius + tongueExtension + 3, 3);
+        snakeCtx.stroke();
+      }
 
       snakeCtx.shadowColor = '#00f7ff';
       snakeCtx.shadowBlur = 14;
@@ -1497,7 +1514,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     };
   </script>
 
-  <!-- SCRIPT 2: AUDIO/VIDEO CALL & REAL-TIME WEBRTC FIX -->
+  <!-- SCRIPT 2: LOW-LATENCY REAL-TIME AUDIO & VIDEO ENGINE -->
   <script>
   function loadFullFeatureApp(authToken) {
     const chatScreen = document.getElementById('chat-screen');
@@ -1548,13 +1565,16 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       </div>
     `;
 
-    // High performance STUN servers
-    const STUN = [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'stun:stun2.l.google.com:19302' },
-      { urls: 'stun:global.stun.twilio.com:3478' }
-    ];
+    // Fast-routing Google STUN servers with direct bundle policy to kill transport latency
+    const RTC_CONFIG = {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' },
+        { urls: 'stun:stun2.l.google.com:19302' }
+      ],
+      bundlePolicy: 'max-bundle',
+      rtcpMuxPolicy: 'require'
+    };
 
     const $ = id => document.getElementById(id);
     const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -1578,9 +1598,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       else window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
-    socket.addEventListener('close', () => {
-      fastExitToPortal();
-    });
+    socket.addEventListener('close', () => fastExitToPortal());
 
     function setCallState(state) {
       const audioBtn = $('audio-call');
@@ -1702,7 +1720,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           setCallState('in-call');
           $('call-status').textContent = 'Call connected.';
 
-          // Flush queued candidates
           while (iceQueue.length > 0) {
             const cand = iceQueue.shift();
             try { await pc.addIceCandidate(new RTCIceCandidate(cand)); } catch (_) {}
@@ -1722,16 +1739,15 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       } catch (_) {}
     };
 
-    // Full audio and video streaming setup
+    // Low-Latency Media Setup (Lightweight Resolution + Zero Delay Buffers)
     async function setupPeer(kind) {
-      pc = new RTCPeerConnection({ iceServers: STUN });
+      pc = new RTCPeerConnection(RTC_CONFIG);
       remoteStream = new MediaStream();
       iceQueue = [];
 
       const rVideo = $('remote-video');
       const rAudio = $('remote-audio');
 
-      // Streams to DOM elements
       rVideo.srcObject = remoteStream;
       rAudio.srcObject = remoteStream;
 
@@ -1744,7 +1760,6 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
           remoteStream.addTrack(event.track);
         }
 
-        // Force browser playback for both sound and video
         rAudio.play().catch(() => {});
         if (kind === 'video') {
           rVideo.play().catch(() => {});
@@ -1757,21 +1772,37 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         }
       };
 
-      // Request User Media permissions
-      localStream = await navigator.mediaDevices.getUserMedia({
+      // Lightweight stream constraints to ensure zero lag & minimal latency
+      const constraints = {
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          autoGainControl: true
+          autoGainControl: true,
+          latency: 0,
+          channelCount: 1,
+          sampleRate: 48000
         },
         video: kind === 'video' ? {
           facingMode: 'user',
-          width: { ideal: 640 },
-          height: { ideal: 480 }
+          width: { ideal: 480, max: 640 },
+          height: { ideal: 360, max: 480 },
+          frameRate: { ideal: 24, max: 30 }
         } : false
+      };
+
+      localStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+      // Low delay track delivery
+      localStream.getTracks().forEach((track) => {
+        const sender = pc.addTrack(track, localStream);
+        if (kind === 'video' && track.kind === 'video' && sender && sender.setParameters) {
+          const params = sender.getParameters();
+          if (!params.encodings) params.encodings = [{}];
+          params.encodings[0].maxBitrate = 350000; // Cap video bitrate to ensure smooth, immediate streaming
+          sender.setParameters(params).catch(() => {});
+        }
       });
 
-      localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
       $('local-video').srcObject = localStream;
       $('video-wrap').style.display = kind === 'video' ? 'grid' : 'none';
     }
@@ -1782,7 +1813,13 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         if (pc) cleanupCall(false);
         callKind = kind;
         await setupPeer(kind);
-        const offer = await pc.createOffer();
+        
+        const offer = await pc.createOffer({
+          offerToReceiveAudio: true,
+          offerToReceiveVideo: (kind === 'video'),
+          voiceActivityDetection: true
+        });
+        
         await pc.setLocalDescription(offer);
         socket.send(JSON.stringify({ type: 'call-offer', kind, sdp: pc.localDescription }));
         setCallState('in-call');
@@ -1801,13 +1838,16 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         callKind = offer.kind || 'audio';
         await setupPeer(callKind);
         await pc.setRemoteDescription(new RTCSessionDescription(offer.sdp));
-        const answer = await pc.createAnswer();
+        
+        const answer = await pc.createAnswer({
+          voiceActivityDetection: true
+        });
+        
         await pc.setLocalDescription(answer);
         socket.send(JSON.stringify({ type: 'call-answer', sdp: pc.localDescription }));
         setCallState('in-call');
         $('call-status').textContent = 'Call connected.';
 
-        // Process stored ICE candidates
         while (iceQueue.length > 0) {
           const cand = iceQueue.shift();
           try { await pc.addIceCandidate(new RTCIceCandidate(cand)); } catch (_) {}
@@ -1950,7 +1990,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 
   <div id="chat-screen" aria-live="polite"></div>
 
-  <!-- AUTH LOGIC -->
+  <!-- AUTH VERIFICATION SCRIPT (SERVER CHECKED) -->
   <script>
   (function(){
     const dailyLayer = document.getElementById('otp-gate-layer');
@@ -2011,7 +2051,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
         chatAuthToken=data.token;
         secondLayer.style.display='none'; showLoveMessage();
       } catch(_) {
-        alert('सर्वर से कनेक्शन नहीं हो पाया।');
+        alert('सर्वर से कनेक्शन नहीं हो पाया। गुप्त कोड की जाँच के लिए सर्वर चालू होना चाहिए।');
       } finally { btn.disabled=false; btn.textContent='चैट खोलें ➜'; }
     }
 
@@ -2040,6 +2080,7 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     document.getElementById('daily-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkDaily();});
     document.getElementById('second-otp-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkSecond();});
     document.getElementById('love-transition-layer').addEventListener('click',openChat);
+    document.getElementById('love-transition-card').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openChat();}});
     document.getElementById('open-registration').addEventListener('click',()=>{registrationLayer.style.display='flex';document.getElementById('reg-name').focus();});
     document.getElementById('close-registration').addEventListener('click',()=>{registrationLayer.style.display='none';});
     document.getElementById('registration-form').addEventListener('submit',e=>{
