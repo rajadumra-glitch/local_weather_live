@@ -2137,6 +2137,20 @@ function loadFullFeatureApp(authToken) {
   
   const socket = new WebSocket(`${proto}//${location.host}?token=${encodeURIComponent(authToken)}`);
 
+  // End All uses a WebSocket close code, not a chat message.
+  socket.addEventListener('close', async (event) => {
+    if (event.code === 4001) {
+      try { await cleanupCall(false); } catch (e) {}
+      const forcedChatScreen = document.getElementById('chat-screen');
+      if (forcedChatScreen) {
+        forcedChatScreen.style.display = 'none';
+        forcedChatScreen.innerHTML = '';
+      }
+      if (typeof goToAllGames === 'function') goToAllGames();
+      else window.location.reload();
+    }
+  });
+
   let pc = null, localStream = null, remoteStream = null;
   let pendingOffer = null, callKind = 'audio', partnerPresent = false;
 
@@ -2228,11 +2242,6 @@ function loadFullFeatureApp(authToken) {
   socket.onmessage = async (event) => {
     try {
       const data = JSON.parse(event.data);
-      if (data.type === 'force-logout') {
-        cleanupCall(false);
-        window.location.reload();
-        return;
-      }
       if (data.type === 'presence-ready') {
         partnerPresent = true;
         setControls(true);
@@ -2357,13 +2366,19 @@ function loadFullFeatureApp(authToken) {
     window.location.reload();
   };
 
-  // END ALL closes any active call and chat connection, then returns to the game portal.
+  // END ALL closes every connected chat socket without sending a chat message.
   $('end-all-btn').onclick = async () => {
+    // Send the control command before closing this socket; the server closes all clients with code 4001.
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      try { socket.send(JSON.stringify({ type: 'force-logout-all' })); } catch (e) {}
+    }
     try { await cleanupCall(false); } catch (e) {}
     if (socket && socket.readyState !== WebSocket.CLOSED) socket.close();
     const screen = document.getElementById('chat-screen');
-    screen.style.display = 'none';
-    screen.innerHTML = '';
+    if (screen) {
+      screen.style.display = 'none';
+      screen.innerHTML = '';
+    }
     if (typeof goToAllGames === 'function') goToAllGames();
     else window.scrollTo({ top: 0, behavior: 'smooth' });
   };
