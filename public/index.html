@@ -1549,9 +1549,9 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
             <button id="call-end-btn" type="button" class="tool-btn" style="background:#dc2626; color:#fff; display:none;">🔴 End Call</button>
           </div>
           <div id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 8px;">Call standby</div>
-          <div id="video-wrap" style="display: none; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
-            <video id="local-video" autoplay muted playsinline style="width:100%; max-height:120px; background:#000; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.1);"></video>
-            <video id="remote-video" autoplay playsinline style="width:100%; max-height:120px; background:#000; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.1);"></video>
+          <div id="video-wrap" style="display: none; position: relative; width: 100%; height: min(58vh, 520px); min-height: 240px; margin-top: 8px; background:#000; border-radius:12px; overflow:hidden;">
+            <video id="remote-video" autoplay playsinline style="display:block; width:100%; height:100%; background:#000; border-radius:12px; object-fit:contain; border:1px solid rgba(255,255,255,0.1);" muted></video>
+            <video id="local-video" autoplay muted playsinline style="position:absolute; right:10px; top:10px; width:clamp(88px, 25%, 150px); height:clamp(112px, 23vh, 180px); background:#111; border-radius:10px; object-fit:cover; border:2px solid rgba(255,255,255,0.8); box-shadow:0 4px 14px rgba(0,0,0,0.45);"></video>
           </div>
           <audio id="remote-audio" autoplay playsinline></audio>
         </section>
@@ -1725,11 +1725,15 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
             try { await pc.addIceCandidate(new RTCIceCandidate(cand)); } catch (_) {}
           }
         } else if (data.type === 'ice') {
+          if (!data.candidate) return;
           if (pc && pc.remoteDescription && pc.remoteDescription.type) {
             try {
               await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-            } catch (_) {}
+            } catch (_) {
+              // Ignore candidates that arrive too late or are rejected by the browser.
+            }
           } else {
+            // Candidates can arrive before the offer is accepted / remote SDP is set.
             iceQueue.push(data.candidate);
           }
         } else if (data.type === 'call-end') {
@@ -1743,26 +1747,38 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
     async function setupPeer(kind) {
       pc = new RTCPeerConnection(RTC_CONFIG);
       remoteStream = new MediaStream();
-      iceQueue = [];
 
       const rVideo = $('remote-video');
       const rAudio = $('remote-audio');
 
+      // Keep audio on the dedicated audio element to avoid duplicate sound in video calls.
+      rVideo.muted = true;
       rVideo.srcObject = remoteStream;
       rAudio.srcObject = remoteStream;
 
       pc.ontrack = (event) => {
-        if (event.streams && event.streams[0]) {
-          event.streams[0].getTracks().forEach((track) => {
-            remoteStream.addTrack(track);
-          });
-        } else if (event.track) {
+        // Add only the track that fired this event; avoid repeatedly adding all stream tracks.
+        if (event.track && !remoteStream.getTracks().some((track) => track.id === event.track.id)) {
           remoteStream.addTrack(event.track);
         }
 
-        rAudio.play().catch(() => {});
+        rAudio.play().catch(() => {
+          $('call-status').textContent = 'कॉल जुड़ गया है। आवाज़ के लिए पेज पर एक बार क्लिक करें।';
+        });
         if (kind === 'video') {
           rVideo.play().catch(() => {});
+        }
+      };
+
+      pc.onconnectionstatechange = () => {
+        if (!pc) return;
+        if (pc.connectionState === 'connected') {
+          setCallState('in-call');
+          $('call-status').textContent = 'Call connected.';
+        } else if (pc.connectionState === 'failed') {
+          $('call-status').textContent = 'कॉल कनेक्ट नहीं हुआ। नेटवर्क बदलकर दोबारा कोशिश करें।';
+        } else if (pc.connectionState === 'disconnected') {
+          $('call-status').textContent = 'कनेक्शन कमजोर है; दोबारा जुड़ने की कोशिश हो रही है…';
         }
       };
 
@@ -1804,7 +1820,10 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
       });
 
       $('local-video').srcObject = localStream;
-      $('video-wrap').style.display = kind === 'video' ? 'grid' : 'none';
+      $('local-video').play().catch(() => {});
+      $('remote-video').muted = true;
+      $('remote-audio').muted = false;
+      $('video-wrap').style.display = kind === 'video' ? 'block' : 'none';
     }
 
     async function startCall(kind) {
