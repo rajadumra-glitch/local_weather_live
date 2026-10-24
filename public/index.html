@@ -130,6 +130,7 @@
 #chat-screen .chat-header { height:66px; background:rgba(15,23,42,.95); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; justify-content:space-between; padding:0 12px; flex-shrink:0; gap:8px; }
 #chat-screen .avatar { width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#1e293b,#0f172a);display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid #38bdf8; }
 #chat-screen .online-indicator { width:8px;height:8px;border-radius:50%;background:#eab308;display:inline-block;margin-right:6px; }
+#chat-screen #status-txt { display:inline-block; min-height:14px; }
 #chat-screen #call-tray { display:none;background:rgba(15,23,42,.98);border-bottom:1px solid rgba(255,255,255,.1);padding:12px 14px;flex-shrink:0; }
 #chat-screen #chat-box { flex:1;overflow-y:auto;padding:18px 14px;display:flex;flex-direction:column;gap:12px;background:#070a12;background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:24px 24px; }
 #chat-screen .msg-row { display:flex;width:100%;transition:opacity .3s ease; } #chat-screen .msg-row.me {justify-content:flex-end;} #chat-screen .msg-row.them {justify-content:flex-start;} #chat-screen .msg-row.disappearing {opacity:0;transform:scale(.75);}
@@ -2128,14 +2129,14 @@ function loadFullFeatureApp(authToken) {
       if (data.type === 'presence-ready') {
         partnerPresent = true;
         setControls(true);
-        setStatus('Online', '#10b981');
+        setStatus('ऑनलाइन', '#10b981');
         $('call-status').textContent = 'Partner connected.';
       } else if (data.type === 'presence-left') {
         partnerPresent = false;
         setControls(false);
         cleanupCall(false);
         const exitTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        setStatus(`Last seen at ${exitTime}`, '#ef4444');
+        setStatus(`अंतिम बार ऑनलाइन: ${exitTime}`, '#ef4444');
         $('call-status').textContent = 'Partner disconnected.';
       } else if (data.type === 'message') {
         appendChatMessage(data.text, false, data.time || '', data.id || 'm-' + Date.now());
@@ -2275,51 +2276,51 @@ function loadFullFeatureApp(authToken) {
   <div id="otp-gate-layer" role="dialog" aria-modal="true" aria-label="Login">
     <div class="gate-card">
       <div class="gate-logo"><i class="fa-solid fa-gamepad"></i></div>
-      <div class="gate-title">ONLINE GAME</div>
-      <div class="gate-subtitle">ARCADE RETRO HUB</div>
-      <input id="daily-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="Enter OTP / Password" maxlength="10" />
+      <div class="gate-title">ऑनलाइन गेम</div>
+      <div class="gate-subtitle" style="letter-spacing:.3px">गेम खेलने के लिए अपना गेम टोकन दर्ज करें</div>
+      <input id="daily-otp-input" class="gate-input" type="password" inputmode="numeric" autocomplete="off" placeholder="अपना टोकन नंबर दर्ज करें" aria-label="अपना टोकन नंबर दर्ज करें" maxlength="10" />
       <p class="free-game-hint" style="margin: -2px 0 12px; text-align:center; color:#a7f3d0; font:600 13px Rajdhani,sans-serif; letter-spacing:.3px;">FREE GAME खेलने के लिए <strong style="color:#ffffff;">123456</strong> दर्ज करें</p>
-      <button class="gate-submit" id="daily-otp-submit" type="button">VERIFY / CONTINUE ➜</button>
-      <button type="button" id="open-registration" class="gate-submit" style="margin-top:10px;background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">NEW REGISTRATION</button>
+      <button class="gate-submit" id="daily-otp-submit" type="button">आगे बढ़ें ➜</button>
+      <button type="button" id="open-registration" class="gate-submit" style="margin-top:10px;background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">नया पंजीकरण</button>
     </div>
   </div>
   <div id="registration-layer" role="dialog" aria-modal="true" aria-label="New Registration" style="display:none;position:fixed;inset:0;z-index:100001;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.78);backdrop-filter:blur(9px)">
     <form id="registration-form" class="gate-card">
       <div class="gate-logo"><i class="fa-solid fa-user-plus"></i></div>
-      <div class="gate-title">NEW REGISTRATION</div>
-      <div class="gate-subtitle">CREATE YOUR PROFILE</div>
-      <input id="reg-name" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" placeholder="Name" required maxlength="100" />
-      <input id="reg-email" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" type="email" placeholder="Email" required maxlength="200" />
-      <input id="reg-mobile" class="gate-input" style="font-size:15px;letter-spacing:1px;text-align:left" type="tel" inputmode="numeric" placeholder="Mobile Number" required pattern="[0-9]{10}" maxlength="10" />
-      <button class="gate-submit" type="submit">REGISTER ➜</button>
+      <div class="gate-title">नया पंजीकरण</div>
+      <div class="gate-subtitle" style="letter-spacing:.3px">अपनी जानकारी भरें</div>
+      <input id="reg-name" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" placeholder="आपका नाम" aria-label="आपका नाम" required maxlength="100" />
+      <input id="reg-email" class="gate-input" style="font-size:15px;letter-spacing:0;text-align:left" type="email" placeholder="ईमेल पता" aria-label="ईमेल पता" required maxlength="200" />
+      <input id="reg-mobile" class="gate-input" style="font-size:15px;letter-spacing:1px;text-align:left" type="tel" inputmode="numeric" placeholder="मोबाइल नंबर" aria-label="मोबाइल नंबर" required pattern="[0-9]{10}" maxlength="10" />
+      <button class="gate-submit" type="submit">पंजीकरण करें ➜</button>
       <p id="registration-result" style="display:none;color:#a7f3d0;font:600 12px Rajdhani,sans-serif;margin-top:12px"></p>
-      <button type="button" id="close-registration" class="gate-submit" style="margin-top:10px;background:#334155;color:#fff">BACK TO LOGIN</button>
+      <button type="button" id="close-registration" class="gate-submit" style="margin-top:10px;background:#334155;color:#fff">लॉगिन पर वापस जाएँ</button>
     </form>
   </div>
   <div id="registration-queue-popup" role="dialog" aria-modal="true" aria-labelledby="registration-queue-title" style="display:none;position:fixed;inset:0;z-index:100010;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px)">
     <div style="width:min(100%,390px);padding:25px 22px;border-radius:20px;text-align:center;background:linear-gradient(145deg,#111827,#1e1b4b);border:1px solid #c084fc;box-shadow:0 0 35px #a855f755;color:#fff">
       <div style="font-size:42px;margin-bottom:10px">📩</div>
-      <div id="registration-queue-title" style="font:800 17px Orbitron,sans-serif;letter-spacing:.5px;color:#f0abfc;margin-bottom:14px">REGISTRATION QUEUE</div>
-      <p style="font:500 14px/1.7 Rajdhani,sans-serif;color:#f1f5f9;margin:0 0 20px">Website ke users ki sankhya abhi poori hai, isliye filhaal registration nahi kiya ja sakta. Aapka registration queue mein hai. Register hone par aapko email ke madhyam se suchna di jayegi.</p>
-      <button type="button" id="close-registration-queue-popup" class="gate-submit" style="background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">OK, SAMJH GAYA</button>
+      <div id="registration-queue-title" style="font:800 17px Orbitron,sans-serif;letter-spacing:.2px;color:#f0abfc;margin-bottom:14px">पंजीकरण प्रतीक्षा सूची</div>
+      <p style="font:500 14px/1.7 Rajdhani,sans-serif;color:#f1f5f9;margin:0 0 20px">वेबसाइट पर उपयोगकर्ताओं की संख्या पूरी हो चुकी है, इसलिए अभी पंजीकरण नहीं किया जा सकता। आपका पंजीकरण प्रतीक्षा सूची में है। पंजीकरण होने पर आपको ईमेल के माध्यम से सूचना दी जाएगी।</p>
+      <button type="button" id="close-registration-queue-popup" class="gate-submit" style="background:linear-gradient(90deg,#fb7185,#c084fc);color:#16091c">OK</button>
     </div>
   </div>
   <div id="second-otp-layer" role="dialog" aria-modal="true" aria-label="Secret Code">
     <div class="gate-card" style="border-color:#fb7185;box-shadow:0 0 20px #fb718566,0 0 44px #9d4edd33">
       <div class="gate-logo" style="background:linear-gradient(135deg,#fb7185,#9d4edd)"><i class="fa-solid fa-heart-lock"></i></div>
-      <div class="gate-title">ENTER YOUR SECRET CODE</div>
-      <div class="gate-subtitle" style="color:#f9a8d4">PRIVATE CHAT ACCESS</div>
+      <div class="gate-title">गुप्त कोड दर्ज करें</div>
+      <div class="gate-subtitle" style="color:#f9a8d4;letter-spacing:.3px">निजी चैट में प्रवेश</div>
       <p style="font:600 12px Rajdhani,sans-serif;color:#e2e8f0;margin-bottom:16px">कृपया अपना Secret Code दर्ज करें</p>
-      <input id="second-otp-input" class="gate-input" type="password" autocomplete="off" placeholder="Enter Secret Code" maxlength="100" />
-      <button class="gate-submit" id="second-otp-submit" type="button" style="background:linear-gradient(90deg,#fb7185,#c084fc)">OPEN CHAT ➜</button>
+      <input id="second-otp-input" class="gate-input" type="password" autocomplete="off" placeholder="अपना गुप्त कोड दर्ज करें" aria-label="अपना गुप्त कोड दर्ज करें" maxlength="100" />
+      <button class="gate-submit" id="second-otp-submit" type="button" style="background:linear-gradient(90deg,#fb7185,#c084fc)">चैट खोलें ➜</button>
     </div>
   </div>
   <div id="wrong-otp-layer" class="modal-backdrop" style="display:none" role="alertdialog" aria-modal="true">
     <div class="bg-gray-900 border-2 border-neonPink p-6 rounded-2xl max-w-xs w-full text-center shadow-neon-pink">
       <div class="text-5xl mb-3 text-neonPink animate-bounce"><i class="fa-solid fa-triangle-exclamation"></i></div>
-      <h3 class="text-xl font-arcade font-black text-white mb-2 tracking-wide">ACCESS DENIED</h3>
-      <p class="text-sm text-gray-300 font-body mb-5">अमान्य पासकोड! कृपया सही कोड दर्ज करें।</p>
-      <button id="retry-otp-button" class="w-full py-2.5 bg-neonPink text-black font-arcade font-bold text-xs rounded-xl shadow-lg">RETRY / फिर से प्रयास करें</button>
+      <h3 id="wrong-token-title" class="text-xl font-arcade font-black text-white mb-2 tracking-wide">गलत टोकन</h3>
+      <p id="wrong-token-message" class="text-sm text-gray-300 font-body mb-5">आपने गलत टोकन दर्ज किया है। कृपया सही टोकन दर्ज करें।</p>
+      <button id="retry-otp-button" class="w-full py-2.5 bg-neonPink text-black font-arcade font-bold text-xs rounded-xl shadow-lg">OK</button>
     </div>
   </div>
   <div id="love-transition-layer" role="dialog" aria-modal="true" aria-label="Love message">
@@ -2345,7 +2346,13 @@ function loadFullFeatureApp(authToken) {
   let loveTimer = null;
   let chatAuthToken = '';
   function todayOtp(){ const d=new Date(); return String(d.getDate()).padStart(2,'0')+String(d.getMonth()+1).padStart(2,'0')+String(d.getFullYear()).slice(-2); }
-  function showWrong(){ wrongLayer.style.display='flex'; }
+  function showWrong(kind='token'){
+    const title=document.getElementById('wrong-token-title');
+    const message=document.getElementById('wrong-token-message');
+    if(kind==='secret'){title.textContent='गलत गुप्त कोड';message.textContent='आपने गलत गुप्त कोड दर्ज किया है। कृपया सही गुप्त कोड दर्ज करें।';}
+    else {title.textContent='गलत टोकन';message.textContent='आपने गलत टोकन दर्ज किया है। कृपया सही टोकन दर्ज करें।';}
+    wrongLayer.style.display='flex';
+  }
   function checkDaily(){
     const value=document.getElementById('daily-otp-input').value.trim();
     if(value==='123456'){
@@ -2360,24 +2367,24 @@ function loadFullFeatureApp(authToken) {
   }
   async function checkSecond(){
     const value=document.getElementById('second-otp-input').value.trim();
-    if(!value){showWrong();return;}
+    if(!value){showWrong('secret');return;}
     const btn=document.getElementById('second-otp-submit');
-    btn.disabled=true; btn.textContent='VERIFYING...';
+    btn.disabled=true; btn.textContent='जाँच हो रही है…';
     try {
       // Secret Code is checked on the server; it is intentionally not stored in this HTML.
       const res=await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:value})});
       const data=await res.json().catch(()=>({}));
-      if(!res.ok || !data.success || !data.token){showWrong();return;}
+      if(!res.ok || !data.success || !data.token){showWrong('secret');return;}
       chatAuthToken=data.token;
       secondLayer.style.display='none'; showLoveMessage();
     } catch(_) {
-      alert('Server se connection nahi ho paya. Secret Code verify karne ke liye server/API chalu hona chahiye.');
-    } finally { btn.disabled=false; btn.textContent='OPEN CHAT ➜'; }
+      alert('सर्वर से कनेक्शन नहीं हो पाया। गुप्त कोड की जाँच के लिए सर्वर/API चालू होना चाहिए।');
+    } finally { btn.disabled=false; btn.textContent='चैट खोलें ➜'; }
   }
   function retry(){
     wrongLayer.style.display='none';
     if(otpStage===1){const input=document.getElementById('daily-otp-input');input.value='';input.focus();}
-    else {const input=document.getElementById('second-otp-input');input.value='';secondLayer.style.display='flex';input.value='';input.focus();}
+    else {const input=document.getElementById('second-otp-input');input.value='';secondLayer.style.display='flex';input.focus();}
   }
   function showLoveMessage(){
     transitionStarted=false; loveLayer.style.display='flex';
