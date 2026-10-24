@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>AtmoLive • Weather Forecast & Air Quality</title>
 
-<!-- Tailwind CSS & Arcade Fonts (गेम हब के लिए) -->
+<!-- Tailwind CSS & Fonts -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,7 +82,6 @@
     text-align: center;
     max-width: 360px;
     width: 100%;
-    transition: transform 0.2s ease;
   }
 
   .otp-card h3 {
@@ -131,7 +130,7 @@
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
   }
 
-  /* --- Original Weather Card Styles --- */
+  /* --- Weather Card Styles --- */
   .weather-card {
     background: rgba(17, 24, 39, 0.75);
     backdrop-filter: blur(16px);
@@ -425,12 +424,11 @@
     border-color: #00f7ff;
     transform: translateY(-4px);
   }
-  .perspective-1000 { perspective: 1000px; }
 </style>
 </head>
 <body id="page-body">
 
-  <!-- 1. OTP Lock Overlay (शुरुआत में सिर्फ यह दिखेगा) -->
+  <!-- 1. OTP Lock Overlay -->
   <div id="otp-overlay">
     <div class="otp-card" id="otp-box-card">
       <h3>🔐 सुरक्षा सत्यापन</h3>
@@ -441,7 +439,7 @@
     </div>
   </div>
 
-  <!-- 2. Camouflage Weather UI (सही OTP पर यह खुलेगा) -->
+  <!-- 2. Camouflage Weather UI -->
   <main id="app-root" class="weather-card" style="display: none;">
     <form id="access-form" class="search-bar">
       <input id="search-code" type="text" autocomplete="off" placeholder="Search city or location…" class="weather-input" required>
@@ -504,9 +502,8 @@
     </div>
   </main>
 
-  <!-- 3. ARCADE GAME HUB (गलत OTP डालने पर यह तुरंत चालू हो जाएगा) -->
+  <!-- 3. ARCADE GAME HUB (MAIN MENU) -->
   <div id="game-portal-root" style="display: none; width: 100%; min-height: 100vh; flex-direction: column; justify-content: space-between;" class="text-gray-100 font-body selection:bg-neonPink selection:text-white">
-    <!-- Header -->
     <header class="pt-8 pb-4 px-4 text-center border-b border-gray-800 bg-black/40 backdrop-blur-md sticky top-0 z-40">
       <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-3">
@@ -536,194 +533,60 @@
       </div>
     </header>
 
-    <!-- Main Game Area -->
+    <!-- Game Cards Selection View -->
     <main class="max-w-6xl w-full mx-auto px-4 py-8 flex-grow">
       <div class="mb-8 text-center md:text-left">
         <h2 class="text-xl md:text-2xl font-bold font-arcade text-gray-200">
           SELECT YOUR GAME <span class="text-neonPink animate-pulse">&#9658;</span>
         </h2>
-        <p class="text-gray-400 text-sm">Pick a game to start playing immediately in the interactive arena below.</p>
+        <p class="text-gray-400 text-sm">Click any game below to launch it directly in full screen mode.</p>
       </div>
 
-      <!-- Games Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
-        <button onclick="launchGame('snake')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-green hover:border-neonGreen transition">
+        <button onclick="launchFullScreenGame('snake')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-green hover:border-neonGreen transition">
           <div class="w-16 h-16 rounded-2xl bg-emerald-950/60 border border-neonGreen/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
             <i class="fa-solid fa-staff-snake text-3xl text-neonGreen"></i>
           </div>
           <h3 class="font-arcade text-lg text-white font-bold tracking-wide">SNAKE RETRO</h3>
-          <p class="text-xs text-gray-400 mt-1 mb-3">Eat pellets, speed up, avoid self-collision.</p>
-          <span class="w-full py-1.5 px-3 bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs rounded-xl font-arcade uppercase group-hover:bg-neonGreen group-hover:text-black font-semibold transition">Play Now</span>
+          <p class="text-xs text-gray-400 mt-1 mb-3">Slow, relaxed speed. Eat pellets & grow.</p>
+          <span class="w-full py-1.5 px-3 bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs rounded-xl font-arcade uppercase group-hover:bg-neonGreen group-hover:text-black font-semibold transition">Play Fullscreen</span>
         </button>
 
-        <button onclick="launchGame('brick')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-cyan hover:border-neonCyan transition">
+        <button onclick="launchFullScreenGame('brick')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-cyan hover:border-neonCyan transition">
           <div class="w-16 h-16 rounded-2xl bg-cyan-950/60 border border-neonCyan/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
             <i class="fa-solid fa-shapes text-3xl text-neonCyan"></i>
           </div>
           <h3 class="font-arcade text-lg text-white font-bold tracking-wide">BRICK BREAKER</h3>
-          <p class="text-xs text-gray-400 mt-1 mb-3">Bouncing paddle ball & multicolored bricks.</p>
-          <span class="w-full py-1.5 px-3 bg-neonCyan/10 border border-neonCyan/30 text-neonCyan text-xs rounded-xl font-arcade uppercase group-hover:bg-neonCyan group-hover:text-black font-semibold transition">Play Now</span>
+          <p class="text-xs text-gray-400 mt-1 mb-3">Gentle slow ball bounce & neon bricks.</p>
+          <span class="w-full py-1.5 px-3 bg-neonCyan/10 border border-neonCyan/30 text-neonCyan text-xs rounded-xl font-arcade uppercase group-hover:bg-neonCyan group-hover:text-black font-semibold transition">Play Fullscreen</span>
         </button>
 
-        <button onclick="launchGame('flappy')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-pink hover:border-neonPink transition">
+        <button onclick="launchFullScreenGame('flappy')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-pink hover:border-neonPink transition">
           <div class="w-16 h-16 rounded-2xl bg-pink-950/60 border border-neonPink/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
             <i class="fa-solid fa-rocket text-3xl text-neonPink"></i>
           </div>
           <h3 class="font-arcade text-lg text-white font-bold tracking-wide">SPACE FLAPPER</h3>
-          <p class="text-xs text-gray-400 mt-1 mb-3">Flap your thrusters & navigate laser gates.</p>
-          <span class="w-full py-1.5 px-3 bg-neonPink/10 border border-neonPink/30 text-neonPink text-xs rounded-xl font-arcade uppercase group-hover:bg-neonPink group-hover:text-black font-semibold transition">Play Now</span>
+          <p class="text-xs text-gray-400 mt-1 mb-3">Easy low gravity flyer through gates.</p>
+          <span class="w-full py-1.5 px-3 bg-neonPink/10 border border-neonPink/30 text-neonPink text-xs rounded-xl font-arcade uppercase group-hover:bg-neonPink group-hover:text-black font-semibold transition">Play Fullscreen</span>
         </button>
 
-        <button onclick="launchGame('memory')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-cyan hover:border-neonYellow transition">
+        <button onclick="launchFullScreenGame('memory')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-cyan hover:border-neonYellow transition">
           <div class="w-16 h-16 rounded-2xl bg-yellow-950/60 border border-neonYellow/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
             <i class="fa-solid fa-brain text-3xl text-neonYellow"></i>
           </div>
           <h3 class="font-arcade text-lg text-white font-bold tracking-wide">MEMORY MATCH</h3>
-          <p class="text-xs text-gray-400 mt-1 mb-3">Flip cards to match emoji pairs quickly.</p>
-          <span class="w-full py-1.5 px-3 bg-neonYellow/10 border border-neonYellow/30 text-neonYellow text-xs rounded-xl font-arcade uppercase group-hover:bg-neonYellow group-hover:text-black font-semibold transition">Play Now</span>
+          <p class="text-xs text-gray-400 mt-1 mb-3">Relaxing emoji pairs matching puzzle.</p>
+          <span class="w-full py-1.5 px-3 bg-neonYellow/10 border border-neonYellow/30 text-neonYellow text-xs rounded-xl font-arcade uppercase group-hover:bg-neonYellow group-hover:text-black font-semibold transition">Play Fullscreen</span>
         </button>
 
-        <button onclick="launchGame('tictactoe')" class="game-selector-card group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-pink hover:border-neonPurple transition">
+        <button onclick="launchFullScreenGame('tictactoe')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:shadow-neon-pink hover:border-neonPurple transition">
           <div class="w-16 h-16 rounded-2xl bg-purple-950/60 border border-neonPurple/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
             <i class="fa-solid fa-xmarks-lines text-3xl text-neonPurple"></i>
           </div>
           <h3 class="font-arcade text-lg text-white font-bold tracking-wide">TIC-TAC-TOE</h3>
-          <p class="text-xs text-gray-400 mt-1 mb-3">Play vs Smart AI or a Friend in 2P mode.</p>
-          <span class="w-full py-1.5 px-3 bg-neonPurple/10 border border-neonPurple/30 text-neonPurple text-xs rounded-xl font-arcade uppercase group-hover:bg-neonPurple group-hover:text-black font-semibold transition">Play Now</span>
+          <p class="text-xs text-gray-400 mt-1 mb-3">Play vs Smart AI or a Friend (2P).</p>
+          <span class="w-full py-1.5 px-3 bg-neonPurple/10 border border-neonPurple/30 text-neonPurple text-xs rounded-xl font-arcade uppercase group-hover:bg-neonPurple group-hover:text-black font-semibold transition">Play Fullscreen</span>
         </button>
-      </div>
-
-      <!-- Arena Container -->
-      <div class="w-full bg-darkCard/95 border-2 border-gray-800 rounded-3xl p-4 sm:p-6 shadow-2xl relative overflow-hidden" id="arenaContainer">
-        <div class="flex flex-wrap items-center justify-between border-b border-gray-800 pb-4 mb-4 gap-4">
-          <div>
-            <span class="text-xs uppercase font-arcade tracking-widest text-neonCyan" id="gameCategory">ARCADE CLASSIC</span>
-            <h2 class="text-2xl sm:text-3xl font-arcade font-extrabold text-white flex items-center gap-3" id="activeGameTitle">SNAKE RETRO</h2>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="bg-gray-900 px-4 py-2 rounded-xl border border-gray-700 text-center min-w-[90px]">
-              <div class="text-[10px] tracking-widest text-gray-400 font-arcade">SCORE</div>
-              <div class="text-xl font-arcade font-bold text-neonGreen" id="currentScoreDisplay">0</div>
-            </div>
-            <div class="bg-gray-900 px-4 py-2 rounded-xl border border-gray-700 text-center min-w-[90px]">
-              <div class="text-[10px] tracking-widest text-gray-400 font-arcade">HIGH SCORE</div>
-              <div class="text-xl font-arcade font-bold text-neonYellow" id="highScoreDisplay">0</div>
-            </div>
-            <button onclick="restartCurrentGame()" class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-xl text-sm font-arcade tracking-wider transition active:scale-95 flex items-center gap-2">
-              <i class="fa-solid fa-rotate-right"></i>
-              <span class="hidden sm:inline">RESET</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="relative w-full flex flex-col items-center justify-center min-h-[440px] bg-black/60 rounded-2xl border border-gray-800/80 p-2 sm:p-4 overflow-hidden">
-          <!-- Game 1: Snake -->
-          <div id="gameView-snake" class="game-view w-full flex flex-col items-center">
-            <div class="flex items-center gap-2 mb-3 bg-gray-900/90 px-3 py-1.5 rounded-xl border border-gray-700 text-xs font-arcade">
-              <span class="text-gray-400">SPEED:</span>
-              <button id="snakeSpeedSlow" onclick="setSnakeSpeed('slow')" class="px-2.5 py-1 rounded bg-neonGreen text-black font-bold border border-neonGreen transition">SLOW</button>
-              <button id="snakeSpeedNormal" onclick="setSnakeSpeed('normal')" class="px-2.5 py-1 rounded bg-gray-800 text-gray-300 font-bold border border-gray-700 transition">NORMAL</button>
-              <button id="snakeSpeedFast" onclick="setSnakeSpeed('fast')" class="px-2.5 py-1 rounded bg-gray-800 text-gray-300 font-bold border border-gray-700 transition">FAST</button>
-            </div>
-            <canvas id="snakeCanvas" width="400" height="400" class="max-w-full bg-[#070b14] rounded-2xl border-2 border-neonCyan/40 shadow-neon-cyan"></canvas>
-            <div class="mt-4 grid grid-cols-3 gap-2 w-48 sm:hidden">
-              <div></div>
-              <button onclick="snakeInput('UP')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-up"></i></button>
-              <div></div>
-              <button onclick="snakeInput('LEFT')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-left"></i></button>
-              <button onclick="snakeInput('DOWN')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-down"></i></button>
-              <button onclick="snakeInput('RIGHT')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold"><i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-          </div>
-
-          <!-- Game 2: Brick -->
-          <div id="gameView-brick" class="game-view hidden w-full flex flex-col items-center">
-            <div class="w-full max-w-[480px] flex justify-between items-center px-2 py-1 text-sm font-arcade text-gray-300">
-              <div>LIVES: <span id="brickLivesDisplay" class="text-neonPink">❤❤❤</span></div>
-              <div>LEVEL: <span class="text-neonCyan">1</span></div>
-            </div>
-            <canvas id="brickCanvas" width="480" height="380" class="max-w-full bg-[#0a0f1d] rounded-xl border border-neonCyan/30 shadow-lg cursor-none"></canvas>
-            <div class="w-full max-w-[480px] flex gap-3 mt-4 sm:hidden">
-              <button id="brickLeftBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> LEFT</button>
-              <button id="brickRightBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold">RIGHT <i class="fa-solid fa-arrow-right ml-2"></i></button>
-            </div>
-          </div>
-
-          <!-- Game 3: Flappy -->
-          <div id="gameView-flappy" class="game-view hidden w-full flex flex-col items-center">
-            <canvas id="flappyCanvas" width="400" height="440" class="max-w-full bg-[#080816] rounded-xl border border-neonPink/30 shadow-lg"></canvas>
-            <div class="mt-4 sm:hidden w-full max-w-[400px]">
-              <button onclick="flapJump()" class="w-full py-4 bg-neonPink text-black font-arcade font-black text-lg rounded-2xl active:scale-95 shadow-neon-pink">TAP / JUMP</button>
-            </div>
-          </div>
-
-          <!-- Game 4: Memory -->
-          <div id="gameView-memory" class="game-view hidden w-full flex flex-col items-center">
-            <div class="flex gap-6 mb-4 font-arcade text-sm">
-              <div>MOVES: <span id="memoryMoves" class="text-neonYellow font-bold">0</span></div>
-              <div>MATCHES: <span id="memoryMatches" class="text-neonGreen font-bold">0 / 8</span></div>
-              <div>TIME: <span id="memoryTimer" class="text-neonCyan font-bold">0s</span></div>
-            </div>
-            <div id="memoryGrid" class="grid grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-sm sm:max-w-md"></div>
-          </div>
-
-          <!-- Game 5: Tic-Tac-Toe -->
-          <div id="gameView-tictactoe" class="game-view hidden w-full flex flex-col items-center">
-            <div class="flex items-center gap-3 mb-4">
-              <span class="text-xs font-arcade text-gray-400">MODE:</span>
-              <button id="tttModeAi" onclick="setTicTacToeMode('ai')" class="px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple transition">VS SMART AI</button>
-              <button id="tttMode2P" onclick="setTicTacToeMode('2p')" class="px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700 transition">2 PLAYERS (P1 vs P2)</button>
-            </div>
-            <div class="text-sm font-arcade tracking-wide mb-3 text-neonCyan" id="tttTurnIndicator">Player X's Turn</div>
-            <div id="tttBoard" class="grid grid-cols-3 gap-2.5 bg-gray-900/90 p-3 rounded-2xl border-2 border-neonPurple/50 shadow-neon-cyan">
-              <button onclick="handleTttClick(0)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-              <button onclick="handleTttClick(1)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-              <button onclick="handleTttClick(2)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-              <button onclick="handleTttClick(3)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-              <button onclick="handleTttClick(4)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-              <button onclick="handleTttClick(5)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-              <button onclick="handleTttClick(6)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-              <button onclick="handleTttClick(7)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-              <button onclick="handleTttClick(8)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
-            </div>
-            <div class="flex gap-6 mt-4 text-xs font-arcade text-gray-400">
-              <div>X WINS: <span id="tttXWins" class="text-neonCyan font-bold">0</span></div>
-              <div>DRAWS: <span id="tttDraws" class="text-gray-300 font-bold">0</span></div>
-              <div>O WINS: <span id="tttOWins" class="text-neonPink font-bold">0</span></div>
-            </div>
-          </div>
-
-          <!-- Game Over Modal -->
-          <div id="gameModal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center z-30 p-4 sm:p-6 text-center">
-            <div id="modalNewHighScoreBadge" class="hidden mb-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-neonYellow via-neonPink to-neonCyan text-black font-arcade font-extrabold text-xs tracking-widest animate-bounce">★ NEW HIGH SCORE! ★</div>
-            <div id="modalIcon" class="text-4xl sm:text-5xl mb-2 text-neonYellow"><i class="fa-solid fa-trophy"></i></div>
-            <h3 id="modalTitle" class="text-2xl sm:text-3xl font-arcade font-black text-white mb-1 tracking-wider">GAME OVER</h3>
-            <p id="modalMsg" class="text-gray-300 text-xs sm:text-sm max-w-sm mb-5">Game finished.</p>
-            <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-xs mb-6">
-              <div class="bg-gray-900/90 border border-neonCyan/50 rounded-2xl p-3 shadow-neon-cyan">
-                <div class="text-[10px] sm:text-xs font-arcade text-neonCyan font-bold tracking-wider uppercase" id="modalScoreLabel">YOUR SCORE</div>
-                <div id="modalYourScore" class="text-2xl sm:text-3xl font-arcade font-black text-white mt-1">0</div>
-              </div>
-              <div class="bg-gray-900/90 border border-neonYellow/50 rounded-2xl p-3 shadow-lg">
-                <div class="text-[10px] sm:text-xs font-arcade text-neonYellow font-bold tracking-wider uppercase" id="modalHighScoreLabel">HIGH SCORE</div>
-                <div id="modalHighScore" class="text-2xl sm:text-3xl font-arcade font-black text-neonYellow mt-1">0</div>
-              </div>
-            </div>
-            <div class="flex flex-wrap justify-center gap-3 w-full max-w-xs">
-              <button onclick="hideModalAndRestart()" class="flex-1 py-3 px-4 bg-gradient-to-r from-neonCyan to-blue-600 text-black font-arcade font-bold text-xs sm:text-sm rounded-xl shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-rotate-right"></i> PLAY AGAIN
-              </button>
-              <button onclick="goToAllGames()" class="flex-1 py-3 px-4 bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-200 font-arcade font-bold text-xs sm:text-sm rounded-xl transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-border-all"></i> ALL GAMES
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-4 pt-4 border-t border-gray-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400 gap-2">
-          <div id="instructionsBar"><i class="fa-solid fa-circle-info text-neonCyan mr-1"></i> Control snake with arrow keys or swipe. Food gives +10 pts.</div>
-          <div>Powered by HTML5 Canvas & Web Audio API</div>
-        </div>
       </div>
     </main>
 
@@ -732,9 +595,142 @@
     </footer>
   </div>
 
+  <!-- 4. FULLSCREEN GAME ARENA (गेम पर क्लिक करते ही पूरी स्क्रीन पर यह खुलेगा) -->
+  <div id="fullscreen-game-arena" style="display: none; position: fixed; inset: 0; z-index: 10000; background: #070913; flex-direction: column; overflow-y: auto;">
+    
+    <!-- Top Action Bar -->
+    <div class="w-full bg-black/80 border-b border-gray-800 px-4 py-3 flex items-center justify-between backdrop-blur-md">
+      <button onclick="exitFullScreenGame()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-neonCyan border border-gray-700 rounded-xl text-xs font-arcade font-bold flex items-center gap-2 transition active:scale-95">
+        <i class="fa-solid fa-arrow-left"></i> ALL GAMES
+      </button>
+
+      <div class="text-center">
+        <span class="text-[10px] uppercase font-arcade tracking-widest text-neonPink" id="fsGameCategory">ARCADE</span>
+        <h2 class="text-xl sm:text-2xl font-arcade font-extrabold text-white" id="fsActiveGameTitle">SNAKE RETRO</h2>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="bg-gray-900 px-3 py-1.5 rounded-xl border border-gray-700 text-center">
+          <div class="text-[9px] font-arcade text-gray-400">SCORE</div>
+          <div class="text-base sm:text-lg font-arcade font-bold text-neonGreen" id="fsCurrentScoreDisplay">0</div>
+        </div>
+        <div class="bg-gray-900 px-3 py-1.5 rounded-xl border border-gray-700 text-center">
+          <div class="text-[9px] font-arcade text-gray-400">HIGH</div>
+          <div class="text-base sm:text-lg font-arcade font-bold text-neonYellow" id="fsHighScoreDisplay">0</div>
+        </div>
+        <button onclick="restartCurrentGame()" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl text-xs text-gray-300 font-arcade" title="Restart">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Fullscreen Playground -->
+    <div class="flex-1 w-full max-w-4xl mx-auto flex flex-col items-center justify-center p-3 sm:p-6 relative">
+      
+      <!-- GAME 1: SNAKE -->
+      <div id="gameView-snake" class="game-view w-full flex flex-col items-center">
+        <canvas id="snakeCanvas" width="400" height="400" class="max-w-full bg-[#070b14] rounded-2xl border-2 border-neonCyan/40 shadow-neon-cyan"></canvas>
+        <div class="mt-4 grid grid-cols-3 gap-2 w-52 sm:hidden">
+          <div></div>
+          <button onclick="snakeInput('UP')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold text-lg"><i class="fa-solid fa-arrow-up"></i></button>
+          <div></div>
+          <button onclick="snakeInput('LEFT')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold text-lg"><i class="fa-solid fa-arrow-left"></i></button>
+          <button onclick="snakeInput('DOWN')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold text-lg"><i class="fa-solid fa-arrow-down"></i></button>
+          <button onclick="snakeInput('RIGHT')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold text-lg"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 hidden sm:block">Control with Arrow Keys or W, A, S, D</p>
+      </div>
+
+      <!-- GAME 2: BRICK -->
+      <div id="gameView-brick" class="game-view hidden w-full flex flex-col items-center">
+        <div class="w-full max-w-[480px] flex justify-between items-center px-2 py-1 text-sm font-arcade text-gray-300 mb-2">
+          <div>LIVES: <span id="brickLivesDisplay" class="text-neonPink">❤❤❤</span></div>
+          <div class="text-neonCyan text-xs">SLOW & EASY MODE</div>
+        </div>
+        <canvas id="brickCanvas" width="480" height="380" class="max-w-full bg-[#0a0f1d] rounded-xl border border-neonCyan/30 shadow-lg cursor-none"></canvas>
+        <div class="w-full max-w-[480px] flex gap-3 mt-4 sm:hidden">
+          <button id="brickLeftBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> LEFT</button>
+          <button id="brickRightBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold">RIGHT <i class="fa-solid fa-arrow-right ml-2"></i></button>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 hidden sm:block">Move Mouse or Arrow Left / Right to glide the paddle</p>
+      </div>
+
+      <!-- GAME 3: FLAPPY -->
+      <div id="gameView-flappy" class="game-view hidden w-full flex flex-col items-center">
+        <canvas id="flappyCanvas" width="400" height="440" class="max-w-full bg-[#080816] rounded-xl border border-neonPink/30 shadow-lg"></canvas>
+        <div class="mt-4 sm:hidden w-full max-w-[400px]">
+          <button onclick="flapJump()" class="w-full py-4 bg-neonPink text-black font-arcade font-black text-lg rounded-2xl active:scale-95 shadow-neon-pink">TAP / JUMP</button>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 hidden sm:block">Click inside canvas or press Spacebar to boost</p>
+      </div>
+
+      <!-- GAME 4: MEMORY -->
+      <div id="gameView-memory" class="game-view hidden w-full flex flex-col items-center">
+        <div class="flex gap-6 mb-4 font-arcade text-sm">
+          <div>MOVES: <span id="memoryMoves" class="text-neonYellow font-bold">0</span></div>
+          <div>MATCHES: <span id="memoryMatches" class="text-neonGreen font-bold">0 / 8</span></div>
+          <div>TIME: <span id="memoryTimer" class="text-neonCyan font-bold">0s</span></div>
+        </div>
+        <div id="memoryGrid" class="grid grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-sm sm:max-w-md"></div>
+      </div>
+
+      <!-- GAME 5: TIC-TAC-TOE -->
+      <div id="gameView-tictactoe" class="game-view hidden w-full flex flex-col items-center">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="text-xs font-arcade text-gray-400">MODE:</span>
+          <button id="tttModeAi" onclick="setTicTacToeMode('ai')" class="px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple transition">VS AI</button>
+          <button id="tttMode2P" onclick="setTicTacToeMode('2p')" class="px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700 transition">2 PLAYERS</button>
+        </div>
+        <div class="text-sm font-arcade tracking-wide mb-3 text-neonCyan" id="tttTurnIndicator">Player X's Turn</div>
+        <div id="tttBoard" class="grid grid-cols-3 gap-2.5 bg-gray-900/90 p-3 rounded-2xl border-2 border-neonPurple/50 shadow-neon-cyan">
+          <button onclick="handleTttClick(0)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+          <button onclick="handleTttClick(1)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+          <button onclick="handleTttClick(2)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+          <button onclick="handleTttClick(3)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+          <button onclick="handleTttClick(4)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+          <button onclick="handleTttClick(5)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+          <button onclick="handleTttClick(6)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+          <button onclick="handleTttClick(7)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+          <button onclick="handleTttClick(8)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95"></button>
+        </div>
+        <div class="flex gap-6 mt-4 text-xs font-arcade text-gray-400">
+          <div>X WINS: <span id="tttXWins" class="text-neonCyan font-bold">0</span></div>
+          <div>DRAWS: <span id="tttDraws" class="text-gray-300 font-bold">0</span></div>
+          <div>O WINS: <span id="tttOWins" class="text-neonPink font-bold">0</span></div>
+        </div>
+      </div>
+
+      <!-- Game Over Modal -->
+      <div id="gameModal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center z-30 p-4 sm:p-6 text-center">
+        <div id="modalIcon" class="text-4xl sm:text-5xl mb-2 text-neonYellow"><i class="fa-solid fa-trophy"></i></div>
+        <h3 id="modalTitle" class="text-2xl sm:text-3xl font-arcade font-black text-white mb-1 tracking-wider">GAME OVER</h3>
+        <p id="modalMsg" class="text-gray-300 text-xs sm:text-sm max-w-sm mb-5">Game finished.</p>
+        <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-xs mb-6">
+          <div class="bg-gray-900/90 border border-neonCyan/50 rounded-2xl p-3 shadow-neon-cyan">
+            <div class="text-[10px] sm:text-xs font-arcade text-neonCyan font-bold uppercase">SCORE</div>
+            <div id="modalYourScore" class="text-2xl sm:text-3xl font-arcade font-black text-white mt-1">0</div>
+          </div>
+          <div class="bg-gray-900/90 border border-neonYellow/50 rounded-2xl p-3 shadow-lg">
+            <div class="text-[10px] sm:text-xs font-arcade text-neonYellow font-bold uppercase">HIGH SCORE</div>
+            <div id="modalHighScore" class="text-2xl sm:text-3xl font-arcade font-black text-neonYellow mt-1">0</div>
+          </div>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3 w-full max-w-xs">
+          <button onclick="hideModalAndRestart()" class="flex-1 py-3 px-4 bg-gradient-to-r from-neonCyan to-blue-600 text-black font-arcade font-bold text-xs sm:text-sm rounded-xl transition active:scale-95">
+            <i class="fa-solid fa-rotate-right"></i> PLAY AGAIN
+          </button>
+          <button onclick="exitFullScreenGame()" class="flex-1 py-3 px-4 bg-gray-800 border border-gray-600 text-gray-200 font-arcade font-bold text-xs sm:text-sm rounded-xl transition active:scale-95">
+            <i class="fa-solid fa-border-all"></i> ALL GAMES
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 <script>
 /* ============================================================
-   1. DAILY OTP GATEKEEPER (SWITCHES TO WEATHER OR TO GAME PORTAL)
+   1. DAILY OTP LOGIC
    ============================================================ */
 function getTodayOtp() {
   const now = new Date();
@@ -755,24 +751,18 @@ function verifyDailyOtp() {
   overlay.style.display = 'none';
 
   if (entered === correct) {
-    // सही कोड: सीक्रेट वेदर रडार खोलें
     appRoot.style.display = 'block';
   } else {
-    // गलत कोड: बैकग्राउंड को गेम स्टाइल में बदलें और गेम पोर्टल लोड कर दें
+    // गलत OTP: गेम पोर्टल खोलें
     pageBody.style.background = '#070913';
     pageBody.style.backgroundImage = 'radial-gradient(ellipse at top, rgba(157, 78, 221, 0.15), transparent 60%), radial-gradient(ellipse at bottom, rgba(0, 247, 255, 0.1), transparent 60%)';
     gamePortal.style.display = 'flex';
-    
-    // गेम इंजन इनिशियलाइज़ करें
     updateTotalPortalScore();
-    launchGame('snake');
   }
 }
 
 document.getElementById('gate-otp').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    verifyDailyOtp();
-  }
+  if (e.key === 'Enter') verifyDailyOtp();
 });
 
 /* ============================================================
@@ -939,9 +929,7 @@ function loadFullFeatureApp(authToken) {
     if (el) {
       el.classList.add('disappearing');
       setTimeout(() => {
-        if (el && el.parentNode) {
-          el.parentNode.removeChild(el);
-        }
+        if (el && el.parentNode) el.parentNode.removeChild(el);
       }, 300);
     }
   }
@@ -984,13 +972,11 @@ function loadFullFeatureApp(authToken) {
   socket.onmessage = async (event) => {
     try {
       const data = JSON.parse(event.data);
-      
       if (data.type === 'force-logout') {
         cleanupCall(false);
         window.location.reload();
         return;
       }
-
       if (data.type === 'presence-ready') {
         partnerPresent = true;
         setControls(true);
@@ -1007,9 +993,7 @@ function loadFullFeatureApp(authToken) {
         const id = data.id || ('m-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4));
         appendMessage(data.text, false, data.time || '', id);
       } else if (data.type === 'delete-msg') {
-        if (data.id) {
-          removeMessageElement(data.id);
-        }
+        if (data.id) removeMessageElement(data.id);
       } else if (data.type === 'call-offer') {
         pendingOffer = data;
         callKind = data.kind || 'audio';
@@ -1144,7 +1128,7 @@ function loadFullFeatureApp(authToken) {
 }
 
 /* ============================================================
-   3. ARCADE GAME ENGINE (SOUNDS & GAME LOGIC)
+   3. FULLSCREEN ARCADE GAME ENGINE (SUPER SLOW & RELAXED)
    ============================================================ */
 let audioCtx = null;
 let soundEnabled = true;
@@ -1154,9 +1138,7 @@ function initAudio() {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     audioCtx = new AudioContext();
   }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
 }
 
 function toggleAudio() {
@@ -1184,75 +1166,97 @@ function playSound(type) {
     gain.connect(audioCtx.destination);
 
     if (type === 'beep') {
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(440, now);
-      gain.gain.setValueAtTime(0.15, now);
+      osc.type = 'sine'; osc.frequency.setValueAtTime(440, now);
+      gain.gain.setValueAtTime(0.12, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-      osc.start(now);
-      osc.stop(now + 0.1);
+      osc.start(now); osc.stop(now + 0.1);
     } else if (type === 'eat' || type === 'point') {
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(320, now);
-      osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-      osc.start(now);
-      osc.stop(now + 0.12);
-    } else if (type === 'hit') {
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(220, now);
-      osc.frequency.linearRampToValueAtTime(110, now + 0.08);
-      gain.gain.setValueAtTime(0.15, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-      osc.start(now);
-      osc.stop(now + 0.08);
+      osc.type = 'triangle'; osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(700, now + 0.15);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.start(now); osc.stop(now + 0.15);
     } else if (type === 'bounce') {
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(500, now);
-      osc.frequency.exponentialRampToValueAtTime(260, now + 0.08);
-      gain.gain.setValueAtTime(0.15, now);
+      osc.type = 'sine'; osc.frequency.setValueAtTime(400, now);
+      osc.frequency.exponentialRampToValueAtTime(220, now + 0.08);
+      gain.gain.setValueAtTime(0.12, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-      osc.start(now);
-      osc.stop(now + 0.08);
+      osc.start(now); osc.stop(now + 0.08);
     } else if (type === 'over') {
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(300, now);
-      osc.frequency.exponentialRampToValueAtTime(80, now + 0.35);
-      gain.gain.setValueAtTime(0.25, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-      osc.start(now);
-      osc.stop(now + 0.35);
-    } else if (type === 'win') {
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(350, now);
-      osc.frequency.setValueAtTime(520, now + 0.1);
-      osc.frequency.setValueAtTime(700, now + 0.2);
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(260, now);
+      osc.frequency.exponentialRampToValueAtTime(80, now + 0.3);
       gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.start(now); osc.stop(now + 0.3);
+    } else if (type === 'win') {
+      osc.type = 'triangle'; osc.frequency.setValueAtTime(350, now);
+      osc.frequency.setValueAtTime(520, now + 0.1);
+      osc.frequency.setValueAtTime(680, now + 0.2);
+      gain.gain.setValueAtTime(0.18, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-      osc.start(now);
-      osc.stop(now + 0.35);
+      osc.start(now); osc.stop(now + 0.35);
     }
   } catch (e) {}
 }
 
 let activeGame = 'snake';
 const gameMetadata = {
-  snake: { title: 'SNAKE RETRO', category: 'ARCADE SURVIVAL', instructions: '<i class="fa-solid fa-arrows-up-down-left-right text-neonCyan mr-1"></i> Use Arrow keys or WASD to navigate. Eat glowing energy spheres to expand.', scoreKey: 'og_highscore_snake' },
-  brick: { title: 'BRICK BREAKER', category: 'ACTION BREAKOUT', instructions: '<i class="fa-solid fa-gamepad text-neonCyan mr-1"></i> Slide mouse or use Left/Right keys to bounce ball and smash all neon bricks.', scoreKey: 'og_highscore_brick' },
-  flappy: { title: 'SPACE FLAPPER', category: 'PRECISION TAPPER', instructions: '<i class="fa-solid fa-hand-pointer text-neonCyan mr-1"></i> Click canvas or press Spacebar to fire boosters through energy gates.', scoreKey: 'og_highscore_flappy' },
-  memory: { title: 'MEMORY MATCH', category: 'PUZZLE & RECALL', instructions: '<i class="fa-solid fa-eye text-neonCyan mr-1"></i> Uncover matching pairs of gaming glyphs in minimum moves and quickest time.', scoreKey: 'og_highscore_memory' },
-  tictactoe: { title: 'TIC-TAC-TOE', category: 'STRATEGY ARENA', instructions: '<i class="fa-solid fa-trophy text-neonCyan mr-1"></i> Place 3 consecutive markers horizontally, vertically, or diagonally.', scoreKey: 'og_highscore_ttt' }
+  snake: { title: 'SNAKE RETRO', category: 'ARCADE SURVIVAL', scoreKey: 'og_hs_snake' },
+  brick: { title: 'BRICK BREAKER', category: 'ACTION BREAKOUT', scoreKey: 'og_hs_brick' },
+  flappy: { title: 'SPACE FLAPPER', category: 'PRECISION TAPPER', scoreKey: 'og_hs_flappy' },
+  memory: { title: 'MEMORY MATCH', category: 'PUZZLE & RECALL', scoreKey: 'og_hs_memory' },
+  tictactoe: { title: 'TIC-TAC-TOE', category: 'STRATEGY ARENA', scoreKey: 'og_hs_ttt' }
 };
 
+function launchFullScreenGame(gameKey) {
+  stopActiveGameLoops();
+  activeGame = gameKey;
+
+  document.getElementById('fsActiveGameTitle').innerText = gameMetadata[gameKey].title;
+  document.getElementById('fsGameCategory').innerText = gameMetadata[gameKey].category;
+
+  document.querySelectorAll('#fullscreen-game-arena .game-view').forEach(el => el.classList.add('hidden'));
+  const activeEl = document.getElementById(`gameView-${gameKey}`);
+  if (activeEl) activeEl.classList.remove('hidden');
+
+  document.getElementById('gameModal').classList.add('hidden');
+  const hs = parseInt(localStorage.getItem(gameMetadata[gameKey].scoreKey) || '0', 10);
+  document.getElementById('fsHighScoreDisplay').innerText = hs;
+  document.getElementById('fsCurrentScoreDisplay').innerText = '0';
+
+  // Show full screen arena
+  document.getElementById('fullscreen-game-arena').style.display = 'flex';
+
+  if (gameKey === 'snake') initSnake();
+  else if (gameKey === 'brick') initBrick();
+  else if (gameKey === 'flappy') initFlappy();
+  else if (gameKey === 'memory') initMemory();
+  else if (gameKey === 'tictactoe') initTicTacToe();
+
+  playSound('beep');
+}
+
+function exitFullScreenGame() {
+  stopActiveGameLoops();
+  document.getElementById('fullscreen-game-arena').style.display = 'none';
+  document.getElementById('gameModal').classList.add('hidden');
+  updateTotalPortalScore();
+  playSound('beep');
+}
+
+function restartCurrentGame() {
+  launchFullScreenGame(activeGame);
+}
+
 function updateScoreboard(currentScore) {
-  document.getElementById('currentScoreDisplay').innerText = currentScore;
+  document.getElementById('fsCurrentScoreDisplay').innerText = currentScore;
   const key = gameMetadata[activeGame].scoreKey;
   let hs = parseInt(localStorage.getItem(key) || '0', 10);
   if (currentScore > hs) {
     hs = currentScore;
     localStorage.setItem(key, hs);
   }
-  document.getElementById('highScoreDisplay').innerText = hs;
+  document.getElementById('fsHighScoreDisplay').innerText = hs;
   updateTotalPortalScore();
 }
 
@@ -1264,49 +1268,18 @@ function updateTotalPortalScore() {
   document.getElementById('portalTotalHighScores').innerText = total;
 }
 
-function launchGame(gameKey) {
-  stopActiveGameLoops();
-  activeGame = gameKey;
-  document.getElementById('activeGameTitle').innerText = gameMetadata[gameKey].title;
-  document.getElementById('gameCategory').innerText = gameMetadata[gameKey].category;
-  document.getElementById('instructionsBar').innerHTML = gameMetadata[gameKey].instructions;
-
-  document.querySelectorAll('.game-view').forEach(el => el.classList.add('hidden'));
-  const activeEl = document.getElementById(`gameView-${gameKey}`);
-  if (activeEl) activeEl.classList.remove('hidden');
-
-  document.getElementById('gameModal').classList.add('hidden');
-  const hs = parseInt(localStorage.getItem(gameMetadata[gameKey].scoreKey) || '0', 10);
-  document.getElementById('highScoreDisplay').innerText = hs;
-  document.getElementById('currentScoreDisplay').innerText = '0';
-
-  if (gameKey === 'snake') initSnake();
-  else if (gameKey === 'brick') initBrick();
-  else if (gameKey === 'flappy') initFlappy();
-  else if (gameKey === 'memory') initMemory();
-  else if (gameKey === 'tictactoe') initTicTacToe();
-
-  playSound('beep');
-}
-
-function restartCurrentGame() {
-  launchGame(activeGame);
-}
-
 function showGameOverModal(title, message, score, options = {}) {
   const key = gameMetadata[activeGame].scoreKey;
   const prevHighScore = parseInt(localStorage.getItem(key) || '0', 10);
-  const isNewHighScore = typeof score === 'number' && score > prevHighScore && score > 0;
-
   if (typeof score === 'number' && score > prevHighScore) {
     localStorage.setItem(key, score);
-    document.getElementById('highScoreDisplay').innerText = score;
+    document.getElementById('fsHighScoreDisplay').innerText = score;
     updateTotalPortalScore();
   }
 
   const currentHighScore = parseInt(localStorage.getItem(key) || '0', 10);
 
-  if (isNewHighScore || options.isWin) {
+  if (options.isWin || (typeof score === 'number' && score > prevHighScore)) {
     playSound('win');
   } else {
     playSound('over');
@@ -1315,28 +1288,8 @@ function showGameOverModal(title, message, score, options = {}) {
   const modal = document.getElementById('gameModal');
   document.getElementById('modalTitle').innerText = title;
   document.getElementById('modalMsg').innerText = message;
-  document.getElementById('modalScoreLabel').innerText = options.scoreLabel || 'YOUR SCORE';
-  document.getElementById('modalHighScoreLabel').innerText = options.highScoreLabel || 'HIGH SCORE';
-  document.getElementById('modalYourScore').innerText = options.yourScoreDisplay !== undefined ? options.yourScoreDisplay : score;
-  document.getElementById('modalHighScore').innerText = options.highScoreDisplay !== undefined ? options.highScoreDisplay : currentHighScore;
-
-  const iconContainer = document.getElementById('modalIcon');
-  if (options.icon) {
-    iconContainer.innerHTML = options.icon;
-  } else if (isNewHighScore) {
-    iconContainer.innerHTML = '<i class="fa-solid fa-crown text-neonYellow"></i>';
-  } else if (options.isWin) {
-    iconContainer.innerHTML = '<i class="fa-solid fa-trophy text-neonGreen"></i>';
-  } else {
-    iconContainer.innerHTML = '<i class="fa-solid fa-skull text-neonPink"></i>';
-  }
-
-  const badge = document.getElementById('modalNewHighScoreBadge');
-  if (isNewHighScore) {
-    badge.classList.remove('hidden');
-  } else {
-    badge.classList.add('hidden');
-  }
+  document.getElementById('modalYourScore').innerText = score;
+  document.getElementById('modalHighScore').innerText = currentHighScore;
 
   modal.classList.remove('hidden');
 }
@@ -1344,13 +1297,6 @@ function showGameOverModal(title, message, score, options = {}) {
 function hideModalAndRestart() {
   document.getElementById('gameModal').classList.add('hidden');
   restartCurrentGame();
-}
-
-function goToAllGames() {
-  document.getElementById('gameModal').classList.add('hidden');
-  stopActiveGameLoops();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  playSound('beep');
 }
 
 function stopActiveGameLoops() {
@@ -1361,48 +1307,28 @@ function stopActiveGameLoops() {
   if (memoryTimerInterval) clearInterval(memoryTimerInterval);
 }
 
-/* --- SNAKE LOGIC --- */
-let snakeCanvas, snakeCtx, snake = [], snakeFood = { x: 0, y: 0, type: 'apple' };
+/* ============================================================
+   SNAKE: ULTRA SLOW & EASY SPEED (260ms per tick)
+   ============================================================ */
+let snakeCanvas, snakeCtx, snake = [], snakeFood = { x: 0, y: 0 };
 let snakeDx = 20, snakeDy = 0, snakeScore = 0, snakeInterval = null, snakeAnimFrameId = null;
-let snakeChangingDirection = false, snakeGridSize = 20, snakeSpeedMode = 'slow';
-const snakeSpeedIntervals = { slow: 190, normal: 130, fast: 85 };
-let snakeParticles = [], snakePopups = [], snakeChompTimer = 0, snakePulseWave = -1, snakeFrameTick = 0;
+let snakeChangingDirection = false, snakeGridSize = 20;
 
-const snakeRainbowHues = [
-  { fill: '#00f7ff', glow: '#00f7ff' },
-  { fill: '#00e5ff', glow: '#00e5ff' },
-  { fill: '#00ffb7', glow: '#00ffb7' },
-  { fill: '#00ff66', glow: '#00ff66' },
-  { fill: '#76ff03', glow: '#76ff03' },
-  { fill: '#ffea00', glow: '#ffea00' },
-  { fill: '#ff9100', glow: '#ff9100' },
-  { fill: '#ff007f', glow: '#ff007f' },
-  { fill: '#d500f9', glow: '#d500f9' }
-];
-
-function setSnakeSpeed(mode) {
-  snakeSpeedMode = mode;
-  ['slow', 'normal', 'fast'].forEach(m => {
-    const btn = document.getElementById(`snakeSpeed${m.charAt(0).toUpperCase() + m.slice(1)}`);
-    if (btn) btn.className = m === mode ? 'px-2.5 py-1 rounded bg-neonGreen text-black font-bold border border-neonGreen transition' : 'px-2.5 py-1 rounded bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
-  });
-  if (activeGame === 'snake' && snakeInterval) {
-    clearInterval(snakeInterval);
-    snakeInterval = setInterval(snakeLogicStep, snakeSpeedIntervals[snakeSpeedMode]);
-  }
-}
+const snakeRainbowColors = ['#00f7ff', '#00ff66', '#ffea00', '#ff007f', '#9d4edd'];
 
 function initSnake() {
   snakeCanvas = document.getElementById('snakeCanvas');
   snakeCtx = snakeCanvas.getContext('2d');
   snake = [{ x: 160, y: 200 }, { x: 140, y: 200 }, { x: 120, y: 200 }, { x: 100, y: 200 }];
   snakeDx = 20; snakeDy = 0; snakeScore = 0; snakeChangingDirection = false;
-  snakeParticles = []; snakePopups = []; snakeChompTimer = 0; snakePulseWave = -1; snakeFrameTick = 0;
   updateScoreboard(0);
   spawnSnakeFood();
+
   if (snakeInterval) clearInterval(snakeInterval);
   if (snakeAnimFrameId) cancelAnimationFrame(snakeAnimFrameId);
-  snakeInterval = setInterval(snakeLogicStep, snakeSpeedIntervals[snakeSpeedMode]);
+
+  // बहुत धीमी और आरामदायक गति (260ms)
+  snakeInterval = setInterval(snakeLogicStep, 260);
   snakeRenderLoop();
 }
 
@@ -1410,8 +1336,6 @@ function spawnSnakeFood() {
   const maxX = (snakeCanvas.width / snakeGridSize) - 1;
   const maxY = (snakeCanvas.height / snakeGridSize) - 1;
   let valid = false;
-  const treats = ['apple', 'gem', 'star', 'berry'];
-  snakeFood.type = treats[Math.floor(Math.random() * treats.length)];
   while (!valid) {
     snakeFood.x = Math.floor(Math.random() * maxX) * snakeGridSize;
     snakeFood.y = Math.floor(Math.random() * maxY) * snakeGridSize;
@@ -1420,124 +1344,86 @@ function spawnSnakeFood() {
 }
 
 function snakeLogicStep() {
-  if (checkSnakeCollision()) {
+  const head = { x: snake[0].x + snakeDx, y: snake[0].y + snakeDy };
+
+  // Collision Check
+  if (head.x < 0 || head.x >= snakeCanvas.width || head.y < 0 || head.y >= snakeCanvas.height) {
     clearInterval(snakeInterval);
     if (snakeAnimFrameId) cancelAnimationFrame(snakeAnimFrameId);
-    showGameOverModal('SNAKE CRASHED!', 'You ran into a barrier or your own body.', snakeScore);
+    showGameOverModal('SNAKE CRASHED!', 'You ran into the wall.', snakeScore);
     return;
   }
+  for (let i = 1; i < snake.length; i++) {
+    if (head.x === snake[i].x && head.y === snake[i].y) {
+      clearInterval(snakeInterval);
+      if (snakeAnimFrameId) cancelAnimationFrame(snakeAnimFrameId);
+      showGameOverModal('SNAKE CRASHED!', 'You collided with yourself.', snakeScore);
+      return;
+    }
+  }
+
   snakeChangingDirection = false;
-  const head = { x: snake[0].x + snakeDx, y: snake[0].y + snakeDy };
   snake.unshift(head);
 
   if (head.x === snakeFood.x && head.y === snakeFood.y) {
     snakeScore += 10;
     updateScoreboard(snakeScore);
     playSound('eat');
-    snakeChompTimer = 10;
-    snakePulseWave = 0;
-    createFoodExplosion(snakeFood.x + snakeGridSize / 2, snakeFood.y + snakeGridSize / 2);
     spawnSnakeFood();
   } else {
     snake.pop();
-  }
-  if (snakePulseWave >= 0) {
-    snakePulseWave++;
-    if (snakePulseWave > snake.length + 3) snakePulseWave = -1;
   }
 }
 
 function snakeRenderLoop() {
   if (activeGame !== 'snake') return;
-  snakeFrameTick++;
   snakeCtx.fillStyle = '#070b14';
   snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
 
-  // Draw Food
-  const cx = snakeFood.x + snakeGridSize / 2;
-  const cy = snakeFood.y + snakeGridSize / 2;
+  // Food
   snakeCtx.fillStyle = '#ff007f';
-  snakeCtx.shadowColor = '#ff007f';
-  snakeCtx.shadowBlur = 12;
   snakeCtx.beginPath();
-  snakeCtx.arc(cx, cy, 7, 0, Math.PI * 2);
+  snakeCtx.arc(snakeFood.x + 10, snakeFood.y + 10, 7.5, 0, Math.PI * 2);
   snakeCtx.fill();
-  snakeCtx.shadowBlur = 0;
 
-  // Draw Body
+  // Body
   for (let i = snake.length - 1; i >= 1; i--) {
-    const seg = snake[i];
-    const colorObj = snakeRainbowHues[i % snakeRainbowHues.length];
-    snakeCtx.fillStyle = colorObj.fill;
-    snakeCtx.shadowColor = colorObj.glow;
-    snakeCtx.shadowBlur = 8;
+    snakeCtx.fillStyle = snakeRainbowColors[i % snakeRainbowColors.length];
     snakeCtx.beginPath();
-    snakeCtx.arc(seg.x + snakeGridSize / 2, seg.y + snakeGridSize / 2, 7, 0, Math.PI * 2);
+    snakeCtx.arc(snake[i].x + 10, snake[i].y + 10, 7, 0, Math.PI * 2);
     snakeCtx.fill();
   }
-  snakeCtx.shadowBlur = 0;
 
-  // Draw Head
+  // Head
   if (snake.length > 0) {
-    const head = snake[0];
     snakeCtx.fillStyle = '#00f7ff';
-    snakeCtx.shadowColor = '#00f7ff';
-    snakeCtx.shadowBlur = 12;
     snakeCtx.beginPath();
-    snakeCtx.arc(head.x + snakeGridSize / 2, head.y + snakeGridSize / 2, 9, 0, Math.PI * 2);
+    snakeCtx.arc(snake[0].x + 10, snake[0].y + 10, 9, 0, Math.PI * 2);
     snakeCtx.fill();
-    snakeCtx.shadowBlur = 0;
-  }
 
-  // Draw explosion particles
-  for (let i = snakeParticles.length - 1; i >= 0; i--) {
-    const p = snakeParticles[i];
-    p.x += p.vx; p.y += p.vy; p.alpha -= 0.04;
-    if (p.alpha <= 0) { snakeParticles.splice(i, 1); continue; }
-    snakeCtx.fillStyle = p.color;
+    // Eyes
+    snakeCtx.fillStyle = '#000';
     snakeCtx.beginPath();
-    snakeCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    snakeCtx.arc(snake[0].x + 10, snake[0].y + 7, 2, 0, Math.PI * 2);
+    snakeCtx.arc(snake[0].x + 10, snake[0].y + 13, 2, 0, Math.PI * 2);
     snakeCtx.fill();
   }
 
   snakeAnimFrameId = requestAnimationFrame(snakeRenderLoop);
 }
 
-function createFoodExplosion(x, y) {
-  const colors = ['#00f7ff', '#ff007f', '#00ff66', '#ffea00'];
-  for (let i = 0; i < 16; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const speed = Math.random() * 3 + 1;
-    snakeParticles.push({
-      x: x, y: y,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      size: Math.random() * 3 + 1.5,
-      alpha: 1
-    });
-  }
-}
-
-function checkSnakeCollision() {
-  const head = { x: snake[0].x + snakeDx, y: snake[0].y + snakeDy };
-  if (head.x < 0 || head.x >= snakeCanvas.width || head.y < 0 || head.y >= snakeCanvas.height) return true;
-  for (let i = 1; i < snake.length; i++) {
-    if (head.x === snake[i].x && head.y === snake[i].y) return true;
-  }
-  return false;
-}
-
-function snakeInput(direction) {
+function snakeInput(dir) {
   if (snakeChangingDirection) return;
-  if (direction === 'UP' && snakeDy === 0) { snakeDx = 0; snakeDy = -snakeGridSize; snakeChangingDirection = true; }
-  else if (direction === 'DOWN' && snakeDy === 0) { snakeDx = 0; snakeDy = snakeGridSize; snakeChangingDirection = true; }
-  else if (direction === 'LEFT' && snakeDx === 0) { snakeDx = -snakeGridSize; snakeDy = 0; snakeChangingDirection = true; }
-  else if (direction === 'RIGHT' && snakeDx === 0) { snakeDx = snakeGridSize; snakeDy = 0; snakeChangingDirection = true; }
+  if (dir === 'UP' && snakeDy === 0) { snakeDx = 0; snakeDy = -snakeGridSize; snakeChangingDirection = true; }
+  else if (dir === 'DOWN' && snakeDy === 0) { snakeDx = 0; snakeDy = snakeGridSize; snakeChangingDirection = true; }
+  else if (dir === 'LEFT' && snakeDx === 0) { snakeDx = -snakeGridSize; snakeDy = 0; snakeChangingDirection = true; }
+  else if (dir === 'RIGHT' && snakeDx === 0) { snakeDx = snakeGridSize; snakeDy = 0; snakeChangingDirection = true; }
 }
 
-/* --- BRICK BREAKER LOGIC --- */
-let brickCanvas, brickCtx, brickAnimationId, brickPaddleW = 85, brickPaddleH = 12, brickPaddleX = 190;
+/* ============================================================
+   BRICK BREAKER: GENTLE & SLOW BALL (Speed ~1.8)
+   ============================================================ */
+let brickCanvas, brickCtx, brickAnimationId, brickPaddleW = 95, brickPaddleH = 12, brickPaddleX = 190;
 let brickBallX, brickBallY, brickBallDx, brickBallDy, brickBallR = 7;
 let brickRows = 4, brickCols = 6, brickW, brickH = 18, brickPadding = 8, brickOffsetTop = 40, brickOffsetLeft = 20;
 let bricks = [], brickScore = 0, brickLives = 3;
@@ -1559,7 +1445,9 @@ function initBrick() {
       bricks[r][c] = { x: 0, y: 0, status: 1, color: colors[r % colors.length] };
     }
   }
+
   resetBrickBall();
+
   brickCanvas.onmousemove = (e) => {
     const rect = brickCanvas.getBoundingClientRect();
     brickPaddleX = Math.max(0, Math.min(brickCanvas.width - brickPaddleW, e.clientX - rect.left - (brickPaddleW / 2)));
@@ -1574,8 +1462,9 @@ function initBrick() {
 function resetBrickBall() {
   brickBallX = brickCanvas.width / 2;
   brickBallY = brickCanvas.height - 40;
-  brickBallDx = (Math.random() > 0.5 ? 3.5 : -3.5);
-  brickBallDy = -3.8;
+  // धीमी स्पीड: आसानी से कैच करने लायक
+  brickBallDx = (Math.random() > 0.5 ? 2.0 : -2.0);
+  brickBallDy = -2.2;
 }
 
 function brickLoop() {
@@ -1653,7 +1542,9 @@ function brickLoop() {
   brickAnimationId = requestAnimationFrame(brickLoop);
 }
 
-/* --- FLAPPY BIRD LOGIC --- */
+/* ============================================================
+   SPACE FLAPPER: LOW GRAVITY & SMOOTH FLYING
+   ============================================================ */
 let flappyCanvas, flappyCtx, flappyAnimationId, birdY, birdVelocity, pipes = [], pipeTimer = 0, flappyScore = 0;
 
 function initFlappy() {
@@ -1668,7 +1559,7 @@ function initFlappy() {
 }
 
 function flapJump() {
-  birdVelocity = -6.2;
+  birdVelocity = -4.8; // जेंटल जंप
   playSound('point');
 }
 
@@ -1676,7 +1567,7 @@ function flappyLoop() {
   flappyCtx.fillStyle = '#080816';
   flappyCtx.fillRect(0, 0, flappyCanvas.width, flappyCanvas.height);
 
-  birdVelocity += 0.35;
+  birdVelocity += 0.22; // बहुत हल्की ग्रैविटी
   birdY += birdVelocity;
 
   flappyCtx.fillStyle = '#00f7ff';
@@ -1685,21 +1576,22 @@ function flappyLoop() {
   flappyCtx.fill();
 
   pipeTimer++;
-  if (pipeTimer % 95 === 0) {
-    const gap = 110, topH = Math.floor(Math.random() * (flappyCanvas.height - gap - 100)) + 50;
+  if (pipeTimer % 130 === 0) { // गेट्स के बीच में भरपूर दूरी
+    const gap = 135; // चौड़ा रास्ता
+    const topH = Math.floor(Math.random() * (flappyCanvas.height - gap - 90)) + 45;
     pipes.push({ x: flappyCanvas.width, top: topH, bottom: flappyCanvas.height - topH - gap, passed: false });
   }
 
   for (let i = pipes.length - 1; i >= 0; i--) {
     const p = pipes[i];
-    p.x -= 2.6;
+    p.x -= 1.8; // धीमी गति से आगे बढ़ना
     flappyCtx.fillStyle = '#1e1b4b';
     flappyCtx.fillRect(p.x, 0, 48, p.top);
     flappyCtx.fillRect(p.x, flappyCanvas.height - p.bottom, 48, p.bottom);
 
-    if (70 + 12 > p.x && 70 - 12 < p.x + 48) {
-      if (birdY - 12 < p.top || birdY + 12 > flappyCanvas.height - p.bottom) {
-        showGameOverModal('SYSTEM COLLISION!', 'Spacecraft crashed.', flappyScore);
+    if (70 + 11 > p.x && 70 - 11 < p.x + 48) {
+      if (birdY - 11 < p.top || birdY + 11 > flappyCanvas.height - p.bottom) {
+        showGameOverModal('SYSTEM COLLISION!', 'Spacecraft hit barrier.', flappyScore);
         return;
       }
     }
@@ -1720,7 +1612,9 @@ function flappyLoop() {
   flappyAnimationId = requestAnimationFrame(flappyLoop);
 }
 
-/* --- MEMORY MATCH LOGIC --- */
+/* ============================================================
+   MEMORY MATCH LOGIC
+   ============================================================ */
 const emojis = ['👾', '🕹️', '⚡', '🚀', '💎', '🔥', '👑', '🔮'];
 let flippedCards = [], matchedCount = 0, memoryMovesCount = 0, memorySeconds = 0, memoryTimerInterval = null, isMemoryBusy = false;
 
@@ -1740,7 +1634,7 @@ function initMemory() {
   }, 1000);
 
   const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
-  cardValues.forEach((val, idx) => {
+  cardValues.forEach((val) => {
     const card = document.createElement('div');
     card.className = 'w-full h-20 sm:h-24 bg-gray-900 border-2 border-gray-700 hover:border-neonYellow rounded-xl flex items-center justify-center text-3xl cursor-pointer select-none transition-all duration-300';
     card.dataset.value = val;
@@ -1794,7 +1688,9 @@ function flipMemoryCard(card) {
   }
 }
 
-/* --- TIC-TAC-TOE LOGIC --- */
+/* ============================================================
+   TIC-TAC-TOE LOGIC
+   ============================================================ */
 let tttBoardState = Array(9).fill(null), tttTurn = 'X', tttMode = 'ai', tttWinsX = 0, tttWinsO = 0, tttDrawsCount = 0, tttGameOver = false;
 
 function initTicTacToe() {
