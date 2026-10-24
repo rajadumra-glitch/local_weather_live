@@ -314,9 +314,15 @@
   .msg-row {
     display: flex;
     width: 100%;
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
   .msg-row.me { justify-content: flex-end; }
   .msg-row.them { justify-content: flex-start; }
+
+  .msg-row.disappearing {
+    opacity: 0;
+    transform: scale(0.8);
+  }
 
   .bubble {
     max-width: 78%;
@@ -326,6 +332,8 @@
     word-break: break-word;
     position: relative;
     box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    cursor: pointer;
+    user-select: none;
   }
 
   .msg-row.me .bubble {
@@ -421,7 +429,7 @@
     </div>
   </div>
 
-  <!-- Camouflage Weather UI (OTP के बाद ही दिखेगा) -->
+  <!-- Camouflage Weather UI -->
   <main id="app-root" class="weather-card" style="display: none;">
     <form id="access-form" class="search-bar">
       <input id="search-code" type="text" autocomplete="off" placeholder="Search city or location…" class="weather-input" required>
@@ -685,14 +693,38 @@ function loadFullFeatureApp(authToken) {
     $('msg-input').placeholder = enabled ? "Type a message…" : "Partner offline. Waiting…";
   }
 
-  function appendMessage(text, isMe, time) {
+  // मैसेज हटाने का फंक्शन
+  function removeMessageElement(msgId) {
+    const el = document.getElementById(msgId);
+    if (el) {
+      el.classList.add('disappearing');
+      setTimeout(() => {
+        if (el && el.parentNode) {
+          el.parentNode.removeChild(el);
+        }
+      }, 300);
+    }
+  }
+
+  // मैसेज स्क्रीन पर जोड़ना
+  function appendMessage(text, isMe, time, msgId) {
     const box = $('chat-box');
     const row = document.createElement('div');
+    row.id = msgId;
     row.className = `msg-row ${isMe ? 'me' : 'them'}`;
 
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
     bubble.textContent = text;
+    bubble.title = "पढ़ने के बाद मिटाने के लिए टैप करें";
+
+    // टैप करते ही दोनों तरफ से डिलीट होने का लॉजिक
+    bubble.onclick = () => {
+      removeMessageElement(msgId);
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: 'delete-msg', id: msgId }));
+      }
+    };
 
     const footer = document.createElement('div');
     footer.className = 'bubble-footer';
@@ -734,7 +766,13 @@ function loadFullFeatureApp(authToken) {
         setStatus(`Last seen at ${exitTime}`, '#ef4444');
         $('call-status').textContent = 'Partner disconnected.';
       } else if (data.type === 'message') {
-        appendMessage(data.text, false, data.time || '');
+        const id = data.id || ('m-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4));
+        appendMessage(data.text, false, data.time || '', id);
+      } else if (data.type === 'delete-msg') {
+        // पार्टनर ने टैप करके मैसेज डिलीट किया तो आपकी स्क्रीन से भी हटेगा
+        if (data.id) {
+          removeMessageElement(data.id);
+        }
       } else if (data.type === 'call-offer') {
         pendingOffer = data;
         callKind = data.kind || 'audio';
@@ -828,6 +866,7 @@ function loadFullFeatureApp(authToken) {
     setCallState('idle');
   }
 
+  // Lock बटन: सारा डेटा साफ़ करके वापस OTP स्क्रीन पर
   $('hide-btn').onclick = () => {
     cleanupCall(false);
     window.location.reload();
@@ -854,8 +893,10 @@ function loadFullFeatureApp(authToken) {
     const val = $('msg-input').value.trim();
     if (!val || socket.readyState !== WebSocket.OPEN) return;
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    socket.send(JSON.stringify({ type: 'message', text: val, time }));
-    appendMessage(val, true, time);
+    const msgId = 'msg-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+
+    socket.send(JSON.stringify({ type: 'message', text: val, time, id: msgId }));
+    appendMessage(val, true, time, msgId);
     $('msg-input').value = '';
   };
 
