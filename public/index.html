@@ -44,12 +44,6 @@
   
   body {
     background-color: #070913;
-    background-image: 
-      radial-gradient(ellipse at top, rgba(157, 78, 221, 0.15), transparent 60%),
-      radial-gradient(ellipse at bottom, rgba(0, 247, 255, 0.1), transparent 60%),
-      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
     color: #f8fafc;
     font-family: 'Rajdhani', sans-serif;
     min-height: 100vh;
@@ -58,6 +52,43 @@
     align-items: center;
     justify-content: center;
     overflow-x: hidden;
+    position: relative;
+  }
+
+  /* --- Genuine Arcade Gaming Background with Logo for Login Screen --- */
+  .arcade-bg-scene {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    background-image: 
+      radial-gradient(ellipse at top, rgba(157, 78, 221, 0.25), transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(0, 247, 255, 0.2), transparent 60%),
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+  }
+
+  .bg-watermark-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(220px, 40vw, 360px);
+    color: rgba(0, 247, 255, 0.05);
+    filter: drop-shadow(0 0 50px rgba(255, 0, 127, 0.15));
+    user-select: none;
+  }
+
+  .floating-glyph {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.1);
+    animation: floatIcon 6s ease-in-out infinite alternate;
+  }
+  @keyframes floatIcon {
+    from { transform: translateY(0px) rotate(0deg); }
+    to { transform: translateY(-20px) rotate(10deg); }
   }
 
   .neon-text-glow {
@@ -74,7 +105,7 @@
     transform: translateY(-4px);
   }
 
-  /* Universal Popups */
+  /* Universal Popups Backdrop */
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -87,7 +118,7 @@
     padding: 16px;
   }
 
-  /* Weather UI */
+  /* Weather UI Card */
   .weather-card {
     background: rgba(17, 24, 39, 0.85);
     backdrop-filter: blur(20px);
@@ -98,6 +129,8 @@
     padding: 24px 20px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
     margin: 16px;
+    position: relative;
+    z-index: 20;
   }
 
   .weather-input {
@@ -126,6 +159,7 @@
     flex-direction: column;
     background: #0b0f19;
     position: relative;
+    z-index: 20;
   }
 
   .chat-header {
@@ -138,6 +172,7 @@
     justify-content: space-between;
     padding: 0 16px;
     flex-shrink: 0;
+    z-index: 30;
   }
 
   .avatar {
@@ -150,6 +185,37 @@
     justify-content: center;
     font-size: 18px;
     border: 1.5px solid #38bdf8;
+  }
+
+  .online-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #eab308;
+    display: inline-block;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+
+  #call-tray {
+    display: none;
+    background: rgba(15, 23, 42, 0.98);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 14px;
+    flex-shrink: 0;
+    z-index: 25;
+  }
+
+  #chat-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #070a12;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
 
   .msg-row { display: flex; width: 100%; transition: opacity 0.3s ease; }
@@ -165,6 +231,7 @@
     word-break: break-word;
     border-radius: 18px;
     cursor: pointer;
+    user-select: none;
   }
 
   .msg-row.me .bubble {
@@ -180,6 +247,40 @@
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
 
+  .chat-footer {
+    min-height: 64px;
+    background: rgba(15, 23, 42, 0.9);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .msg-input-field {
+    flex: 1;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 12px 18px;
+    color: #fff;
+    font-size: 14.5px;
+    outline: none;
+  }
+
+  .send-circle-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #059669, #10b981);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .tool-btn {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -189,24 +290,34 @@
     font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
+    transition: 0.2s;
   }
 </style>
 </head>
 <body id="page-body">
 
-  <!-- ==================== 1. MAIN PASSCODE GATEKEEPER ==================== -->
+  <!-- ==================== 1. ARCADE BACKGROUND WATERMARK ==================== -->
+  <div id="arcade-bg" class="arcade-bg-scene">
+    <i class="fa-solid fa-gamepad bg-watermark-logo"></i>
+    <i class="fa-solid fa-ghost floating-glyph text-4xl top-16 left-12" style="animation-delay: 0s;"></i>
+    <i class="fa-solid fa-rocket floating-glyph text-5xl top-24 right-16 text-neonPink/20" style="animation-delay: 1.5s;"></i>
+    <i class="fa-solid fa-dice-d20 floating-glyph text-3xl bottom-24 left-20 text-neonGreen/20" style="animation-delay: 2.5s;"></i>
+    <i class="fa-solid fa-trophy floating-glyph text-4xl top-1/3 right-10 text-neonCyan/20" style="animation-delay: 2s;"></i>
+  </div>
+
+  <!-- ==================== 2. MAIN LOGIN GATE ==================== -->
   <div id="otp-overlay" class="modal-backdrop">
-    <div class="relative bg-darkCard/95 border-2 border-neonCyan p-8 rounded-3xl max-w-sm w-full text-center shadow-neon-cyan">
+    <div class="relative bg-darkCard/95 border-2 border-neonCyan p-8 rounded-3xl max-w-sm w-full text-center shadow-neon-cyan z-20">
       
       <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-neonPink to-neonPurple mx-auto flex items-center justify-center mb-4 shadow-neon-pink">
         <i class="fa-solid fa-gamepad text-3xl text-white"></i>
       </div>
       
       <h2 class="text-2xl font-black font-arcade text-white tracking-wider uppercase mb-1">ONLINE GAME</h2>
-      <p class="text-xs text-neonCyan font-arcade tracking-widest uppercase mb-4">Retro Arcade Hub</p>
+      <p class="text-xs text-neonCyan font-arcade tracking-widest uppercase mb-4">Arcade Retro Hub</p>
 
       <div class="bg-gray-900/90 border border-neonYellow/40 rounded-xl p-2.5 mb-5 text-xs font-arcade text-neonYellow">
-        ⚡ फ्री गेम खेलने के लिए कृपया <b>123456</b> दबाएं
+        ⚡ फ्री गेम खेलने के लिए कृपया <b>123456</b> दर्ज करें
       </div>
 
       <input type="password" id="gate-otp" placeholder="••••••" maxlength="10" autofocus autocomplete="off"
@@ -219,7 +330,7 @@
     </div>
   </div>
 
-  <!-- POPUP A: ACCESS DENIED -->
+  <!-- POPUP: ACCESS DENIED (लाल नीयन पॉप-अप) -->
   <div id="access-denied-popup" class="modal-backdrop" style="display: none;">
     <div class="bg-gray-900 border-2 border-neonPink p-6 rounded-2xl max-w-xs w-full text-center shadow-neon-pink">
       <div class="text-5xl mb-3 text-neonPink animate-bounce">
@@ -233,26 +344,22 @@
     </div>
   </div>
 
-  <!-- POPUP B: DORAEMON 5-SECOND LOVE POPUP -->
+  <!-- POPUP: DORAEMON 5-SECOND LOVE POPUP -->
   <div id="doraemon-popup" class="modal-backdrop" style="display: none;">
-    <div class="bg-gradient-to-b from-blue-900 to-indigo-950 border-2 border-sky-400 p-6 rounded-3xl max-w-sm w-full text-center shadow-2xl relative overflow-hidden animate-pulse">
-      
-      <!-- Doraemon Logo Avatar -->
+    <div class="bg-gradient-to-b from-blue-900 to-indigo-950 border-2 border-sky-400 p-6 rounded-3xl max-w-sm w-full text-center shadow-2xl relative overflow-hidden">
       <div class="w-24 h-24 mx-auto mb-3 rounded-full bg-sky-400 border-4 border-white flex items-center justify-center shadow-lg relative">
         <span class="text-5xl">🐱</span>
         <span class="absolute -bottom-1 -right-1 text-2xl animate-bounce">❤️</span>
       </div>
-
       <div class="text-3xl text-rose-500 mb-2 animate-ping">💖</div>
-
-      <h3 class="text-2xl font-black font-arcade text-white tracking-wider mb-2 text-shadow">
+      <h3 class="text-2xl font-black font-arcade text-white tracking-wider mb-2">
         Doremon I Love You Hamesha
       </h3>
       <p class="text-xs text-sky-200 font-arcade tracking-widest">Opening Secure Chamber in 5s…</p>
     </div>
   </div>
 
-  <!-- POPUP C: WRONG CITY POPUP -->
+  <!-- POPUP: WRONG CITY POPUP -->
   <div id="wrong-city-popup" class="modal-backdrop" style="display: none;">
     <div class="bg-gray-900 border-2 border-rose-500 p-6 rounded-2xl max-w-xs w-full text-center shadow-2xl">
       <div class="text-4xl mb-2 text-rose-500">❌</div>
@@ -264,13 +371,28 @@
     </div>
   </div>
 
-  <!-- ==================== 2. WEATHER CAMOUFLAGE UI ==================== -->
+  <!-- POPUP: AREA NAME PROMPT (मौसम पेज पर सर्च पर क्लिक करते ही खुलने वाला) -->
+  <div id="area-prompt-popup" class="modal-backdrop" style="display: none;">
+    <div class="bg-slate-900 border-2 border-sky-400 p-6 rounded-2xl max-w-sm w-full text-center shadow-2xl">
+      <div class="text-3xl mb-2">🌤️</div>
+      <h3 class="text-lg font-bold text-white mb-2">मौसम खोज</h3>
+      <p class="text-sm text-sky-200 mb-4 font-body">मौसम की जानकारी के लिए अपने जगह का नाम डालें (Enter Your Area Name)</p>
+      <input type="text" id="area-prompt-input" placeholder="शहर / क्षेत्र का नाम या सीक्रेट कोड..." 
+             class="w-full py-2.5 px-3 bg-slate-800 border border-slate-600 focus:border-sky-400 text-white rounded-xl text-sm outline-none mb-4 text-center">
+      <div class="flex gap-2">
+        <button onclick="submitAreaPrompt()" class="flex-1 py-2 bg-sky-500 text-white font-bold text-xs rounded-xl">खोजें</button>
+        <button onclick="document.getElementById('area-prompt-popup').style.display='none'" class="py-2 px-3 bg-slate-700 text-gray-300 text-xs rounded-xl">बंद करें</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 3. WEATHER CAMOUFLAGE UI ==================== -->
   <main id="app-root" class="weather-card" style="display: none;">
     <form id="access-form" class="search-bar relative">
       <input id="search-code" type="text" autocomplete="off" 
-             placeholder="Search city or location…" 
-             class="weather-input" required>
-      <button type="submit" class="absolute right-3 top-2.5 text-sky-400 text-lg">🔍</button>
+             placeholder="मौसम की जानकारी के लिए अपने जगह का नाम डाले" 
+             class="weather-input" required readonly onclick="openAreaPrompt()">
+      <button type="button" onclick="openAreaPrompt()" class="absolute right-3 top-2.5 text-sky-400 text-lg">🔍</button>
     </form>
     
     <div class="flex justify-between items-start mb-3">
@@ -309,8 +431,8 @@
     </div>
   </main>
 
-  <!-- ==================== 3. DECOY GAME HUB ==================== -->
-  <div id="game-portal-root" style="display: none; width: 100%; min-height: 100vh; flex-direction: column; justify-content: space-between;" class="text-gray-100 font-body">
+  <!-- ==================== 4. DECOY GAME HUB ==================== -->
+  <div id="game-portal-root" style="display: none; width: 100%; min-height: 100vh; flex-direction: column; justify-content: space-between; position: relative; z-index: 20;" class="text-gray-100 font-body">
     <header class="pt-6 pb-4 px-4 text-center border-b border-gray-800 bg-black/40 backdrop-blur-md sticky top-0 z-40">
       <div class="max-w-6xl mx-auto flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -330,31 +452,31 @@
 
     <main class="max-w-6xl w-full mx-auto px-4 py-8 flex-grow">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-        <button onclick="launchFullScreenGame('snake')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-emerald-500/30">
+        <button onclick="launchFullScreenGame('snake')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-emerald-500/30 hover:border-emerald-400">
           <i class="fa-solid fa-staff-snake text-3xl text-neonGreen mb-3"></i>
           <h3 class="font-arcade text-base font-bold">SNAKE RETRO</h3>
           <span class="mt-4 py-1 px-3 bg-neonGreen/10 text-neonGreen text-xs rounded-xl font-arcade">Play Now</span>
         </button>
 
-        <button onclick="launchFullScreenGame('brick')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-cyan-500/30">
+        <button onclick="launchFullScreenGame('brick')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-cyan-500/30 hover:border-cyan-400">
           <i class="fa-solid fa-shapes text-3xl text-neonCyan mb-3"></i>
           <h3 class="font-arcade text-base font-bold">BRICK BREAKER</h3>
           <span class="mt-4 py-1 px-3 bg-neonCyan/10 text-neonCyan text-xs rounded-xl font-arcade">Play Now</span>
         </button>
 
-        <button onclick="launchFullScreenGame('flappy')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-pink-500/30">
+        <button onclick="launchFullScreenGame('flappy')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-pink-500/30 hover:border-pink-400">
           <i class="fa-solid fa-rocket text-3xl text-neonPink mb-3"></i>
           <h3 class="font-arcade text-base font-bold">SPACE FLAPPER</h3>
           <span class="mt-4 py-1 px-3 bg-neonPink/10 text-neonPink text-xs rounded-xl font-arcade">Play Now</span>
         </button>
 
-        <button onclick="launchFullScreenGame('memory')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-yellow-500/30">
+        <button onclick="launchFullScreenGame('memory')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-yellow-500/30 hover:border-yellow-400">
           <i class="fa-solid fa-brain text-3xl text-neonYellow mb-3"></i>
           <h3 class="font-arcade text-base font-bold">MEMORY MATCH</h3>
           <span class="mt-4 py-1 px-3 bg-neonYellow/10 text-neonYellow text-xs rounded-xl font-arcade">Play Now</span>
         </button>
 
-        <button onclick="launchFullScreenGame('tictactoe')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-purple-500/30">
+        <button onclick="launchFullScreenGame('tictactoe')" class="bg-darkCard p-5 rounded-2xl flex flex-col items-center border border-purple-500/30 hover:border-purple-400">
           <i class="fa-solid fa-xmarks-lines text-3xl text-neonPurple mb-3"></i>
           <h3 class="font-arcade text-base font-bold">TIC-TAC-TOE</h3>
           <span class="mt-4 py-1 px-3 bg-neonPurple/10 text-neonPurple text-xs rounded-xl font-arcade">Play Now</span>
@@ -363,7 +485,7 @@
     </main>
   </div>
 
-  <!-- 4. FULLSCREEN GAME ARENA -->
+  <!-- 5. FULLSCREEN RETRO GAME ARENA -->
   <div id="fullscreen-game-arena" style="display: none; position: fixed; inset: 0; z-index: 10000; background: #070913; flex-direction: column;">
     <div class="w-full bg-black/80 border-b border-gray-800 px-4 py-3 flex items-center justify-between">
       <button onclick="document.getElementById('fullscreen-game-arena').style.display='none'" class="px-3 py-1.5 bg-gray-800 text-neonCyan rounded-xl text-xs font-arcade">
@@ -411,7 +533,7 @@ function getTodayOtp() {
   const dd = String(now.getDate()).padStart(2, '0');
   const mm = String(now.getMonth() + 1).padStart(2, '0');
   const yy = String(now.getFullYear()).slice(-2);
-  return dd + mm + yy; // DDMMYY (e.g. 241026)
+  return dd + mm + yy; 
 }
 
 function verifyGateCode() {
@@ -419,15 +541,17 @@ function verifyGateCode() {
   const todayOtp = getTodayOtp();
 
   if (entered === '123456') {
-    // 123456 -> Direct Game Hub
+    // 123456 -> Game Page
     document.getElementById('otp-overlay').style.display = 'none';
+    document.getElementById('arcade-bg').style.display = 'none';
     showGamePortal();
   } else if (entered === todayOtp) {
-    // Current Date DDMMYY -> Weather Page
+    // DDMMYY -> Weather Page
     document.getElementById('otp-overlay').style.display = 'none';
+    document.getElementById('arcade-bg').style.display = 'none';
     document.getElementById('app-root').style.display = 'block';
   } else {
-    // Wrong Password -> Attractive Access Denied Popup
+    // Wrong Code -> Access Denied Popup
     document.getElementById('access-denied-popup').style.display = 'flex';
   }
 }
@@ -443,27 +567,60 @@ document.getElementById('gate-otp').addEventListener('keydown', (e) => {
 });
 
 /* ============================================================
-   2. WEATHER SEARCH ENGINE & SECRET CODE TRIGGER
+   2. WEATHER RADAR ENGINE & AREA POPUP LOGIC
    ============================================================ */
-const searchInput = document.getElementById('search-code');
+function openAreaPrompt() {
+  document.getElementById('area-prompt-popup').style.display = 'flex';
+  const inp = document.getElementById('area-prompt-input');
+  inp.value = '';
+  inp.type = 'text';
+  inp.focus();
+}
 
-// On click, show the exact hint requested
-searchInput.addEventListener('focus', () => {
-  searchInput.placeholder = "मौसम की जानकारी के लिए अपने जगह का नाम डाले";
-});
-searchInput.addEventListener('blur', () => {
-  if (!searchInput.value) searchInput.placeholder = "Search city or location…";
-});
-
-// Auto-masking: numbers/symbols turn to password (••••)
-searchInput.addEventListener('input', (e) => {
+// Auto masking in popup: if digits/symbols, turn to password (••••)
+document.getElementById('area-prompt-input').addEventListener('input', (e) => {
   const val = e.target.value;
   if (/[\d@#$%^&*()_+={}\[\]:;<>,.?~\\/-]/.test(val)) {
-    searchInput.type = 'password';
+    e.target.type = 'password';
   } else {
-    searchInput.type = 'text';
+    e.target.type = 'text';
   }
 });
+
+document.getElementById('area-prompt-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') submitAreaPrompt();
+});
+
+async function submitAreaPrompt() {
+  const val = document.getElementById('area-prompt-input').value.trim();
+  if (!val) return;
+  document.getElementById('area-prompt-popup').style.display = 'none';
+
+  // 1. Check Secret Code with Server for Chat
+  try {
+    const res = await fetch('/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: val })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.token) {
+        triggerDoraemonTransition(data.token);
+        return;
+      }
+    }
+  } catch (_) {}
+
+  // 2. Allow Daily OTP or Hardcoded Secret Code to trigger Chat
+  if (val === getTodayOtp()) {
+    triggerDoraemonTransition('token-' + val);
+    return;
+  }
+
+  // 3. Otherwise Search Weather or show "आपने गलत जगह दिया है"
+  await searchWeather(val);
+}
 
 async function searchWeather(place) {
   try {
@@ -486,38 +643,7 @@ async function searchWeather(place) {
   }
 }
 
-document.getElementById('access-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const val = searchInput.value.trim();
-  if (!val) return;
-
-  // 1. Verify Secret Code with Server
-  try {
-    const res = await fetch('/api/verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: val })
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success && data.token) {
-        triggerDoraemonTransition(data.token);
-        return;
-      }
-    }
-  } catch (_) {}
-
-  // 2. Also allow Daily OTP to unlock Chat
-  if (val === getTodayOtp()) {
-    triggerDoraemonTransition('token-' + val);
-    return;
-  }
-
-  // 3. Otherwise Search Weather or show "आपने गलत जगह दिया है"
-  await searchWeather(val);
-});
-
-// 5-Second Doraemon Popup before Chat Room opens
+// 5-Second Doraemon Transition Popup
 function triggerDoraemonTransition(authToken) {
   document.getElementById('doraemon-popup').style.display = 'flex';
   setTimeout(() => {
@@ -528,7 +654,7 @@ function triggerDoraemonTransition(authToken) {
 }
 
 /* ============================================================
-   3. FULL CHAT & CALLING ROOM (WITH INSTANT LOCK & END)
+   3. FULL CHAT & COMPLETE WEBRTC CALLING SYSTEM
    ============================================================ */
 function loadFullFeatureApp(authToken) {
   document.body.innerHTML = `
@@ -538,75 +664,100 @@ function loadFullFeatureApp(authToken) {
           <div class="avatar">🔒</div>
           <div>
             <div style="font-size: 14.5px; font-weight: 600; color: #fff;">Private Partner</div>
-            <div id="status-txt" style="font-size: 11px; color: #94a3b8;">Connecting…</div>
+            <div style="font-size: 11px; display: flex; align-items: center; margin-top: 2px;">
+              <span id="dot" class="online-indicator"></span>
+              <span id="status-txt" style="color: #94a3b8;">Connecting…</span>
+            </div>
           </div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 6px;">
-          <button id="toggle-calls-btn" class="tool-btn">📞</button>
-          <!-- LOCK: Direct to Games without confirmation -->
-          <button id="hide-btn" class="tool-btn" style="background:#334155;">🔒 Lock</button>
-          <!-- END: Direct to Main Page without confirmation -->
-          <button id="end-chat-btn" class="tool-btn" style="background:#be123c; color:#fff;">🔴 End</button>
+          <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:14px; padding: 7px 11px;">📞</button>
+          <!-- LOCK BUTTON: Sends directly to Game Page -->
+          <button id="hide-btn" type="button" class="tool-btn" style="background:#334155;">🔒 Lock</button>
+          <!-- EXIT / END BUTTON: Sends directly to Main OTP Page -->
+          <button id="end-chat-btn" type="button" class="tool-btn" style="background:#be123c; color:#fff; border:none;">🔴 End</button>
         </div>
       </header>
 
-      <section id="call-tray" style="display:none; padding:10px 14px; background:#101725; border-bottom:1px solid #1f2a3e;">
-        <div style="display: flex; gap: 8px;">
-          <button id="audio-call" disabled class="tool-btn" style="background:#059669; color:#fff;">📞 Voice</button>
-          <button id="video-call" disabled class="tool-btn" style="background:#2563eb; color:#fff;">🎥 Video</button>
-          <button id="answer-call" class="tool-btn" style="background:#0284c7; color:#fff; display:none;">Answer</button>
-          <button id="call-end-btn" class="tool-btn" style="background:#dc2626; color:#fff; display:none;">End Call</button>
+      <!-- Fully Functional Call Tray -->
+      <section id="call-tray">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <button id="audio-call" type="button" disabled class="tool-btn" style="background:#059669; color:#fff;">📞 Voice Call</button>
+          <button id="video-call" type="button" disabled class="tool-btn" style="background:#2563eb; color:#fff;">🎥 Video Call</button>
+          <button id="answer-call" type="button" class="tool-btn" style="background:#0284c7; color:#fff; display:none;">✅ Answer</button>
+          <button id="call-end-btn" type="button" class="tool-btn" style="background:#dc2626; color:#fff; display:none;">🔴 End Call</button>
         </div>
-        <div id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 6px;">Call standby</div>
-        <div id="video-wrap" style="display: none; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px;">
-          <video id="local-video" autoplay muted playsinline style="width:100%; max-height:110px; background:#000; border-radius:8px; object-fit:cover;"></video>
-          <video id="remote-video" autoplay playsinline style="width:100%; max-height:110px; background:#000; border-radius:8px; object-fit:cover;"></video>
+        <div id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 8px;">Call standby</div>
+        <div id="video-wrap" style="display: none; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+          <video id="local-video" autoplay muted playsinline style="width:100%; max-height:120px; background:#000; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.1);"></video>
+          <video id="remote-video" autoplay playsinline style="width:100%; max-height:120px; background:#000; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.1);"></video>
         </div>
         <audio id="remote-audio" autoplay playsinline></audio>
       </section>
 
-      <main id="chat-box" style="flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:8px;"></main>
+      <main id="chat-box"></main>
 
-      <form id="message-form" style="padding:10px 14px; background:#131b26; display:flex; gap:8px;">
-        <input id="msg-input" type="text" maxlength="2000" placeholder="Type a message…" class="weather-input" style="border-radius:24px;" required>
-        <button type="submit" style="width:42px; height:42px; border-radius:50%; background:#059669; color:#fff; font-size:16px;">➤</button>
+      <form id="message-form" class="chat-footer">
+        <input id="msg-input" type="text" maxlength="2000" placeholder="Partner offline. Waiting…" autocomplete="off" disabled class="msg-input-field" required>
+        <button id="send-btn" type="submit" disabled class="send-circle-btn">➤</button>
       </form>
     </div>
   `;
 
+  const STUN = [{ urls: 'stun:stun.l.google.com:19302' }];
   const $ = id => document.getElementById(id);
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  
   const socket = new WebSocket(`${proto}//${location.host}?token=${encodeURIComponent(authToken)}`);
 
-  // Instant Lock (Direct to Game Portal)
-  $('hide-btn').onclick = () => {
-    socket.close();
-    showGamePortal();
-  };
+  let pc = null, localStream = null, remoteStream = null;
+  let pendingOffer = null, callKind = 'audio', partnerPresent = false;
 
-  // Instant End (Direct to Main OTP Screen without confirmation)
-  $('end-chat-btn').onclick = () => {
-    socket.close();
-    window.location.reload();
-  };
+  function setCallState(state) {
+    const audioBtn = $('audio-call');
+    const videoBtn = $('video-call');
+    const answerBtn = $('answer-call');
+    const endBtn = $('call-end-btn');
+
+    if (state === 'idle') {
+      audioBtn.style.display = 'inline-block';
+      videoBtn.style.display = 'inline-block';
+      audioBtn.disabled = !partnerPresent;
+      videoBtn.disabled = !partnerPresent;
+      answerBtn.style.display = 'none';
+      endBtn.style.display = 'none';
+    } else if (state === 'incoming') {
+      audioBtn.style.display = 'none';
+      videoBtn.style.display = 'none';
+      answerBtn.style.display = 'inline-block';
+      endBtn.style.display = 'inline-block';
+      endBtn.textContent = '❌ Decline';
+    } else if (state === 'in-call') {
+      audioBtn.style.display = 'none';
+      videoBtn.style.display = 'none';
+      answerBtn.style.display = 'none';
+      endBtn.style.display = 'inline-block';
+      endBtn.textContent = '🔴 End Call';
+    }
+  }
 
   $('toggle-calls-btn').onclick = () => {
     const tray = $('call-tray');
     tray.style.display = tray.style.display === 'block' ? 'none' : 'block';
   };
 
-  $('message-form').onsubmit = e => {
-    e.preventDefault();
-    const val = $('msg-input').value.trim();
-    if (!val || socket.readyState !== WebSocket.OPEN) return;
-    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const msgId = 'msg-' + Date.now();
+  function setStatus(text, color) {
+    $('status-txt').textContent = text;
+    $('dot').style.background = color;
+  }
 
-    socket.send(JSON.stringify({ type: 'message', text: val, time, id: msgId }));
-    appendChatMessage(val, true, time, msgId);
-    $('msg-input').value = '';
-  };
+  function setControls(enabled) {
+    $('msg-input').disabled = !enabled;
+    $('send-btn').disabled = !enabled;
+    setCallState('idle');
+    $('msg-input').placeholder = enabled ? "Type a message…" : "Partner offline. Waiting…";
+  }
 
   function appendChatMessage(text, isMe, time, msgId) {
     const box = $('chat-box');
@@ -637,19 +788,163 @@ function loadFullFeatureApp(authToken) {
     box.scrollTop = box.scrollHeight;
   }
 
-  socket.onmessage = event => {
-    const data = JSON.parse(event.data);
-    if (data.type === 'message') {
-      appendChatMessage(data.text, false, data.time || '', data.id || 'm-' + Date.now());
-    } else if (data.type === 'delete-msg') {
-      const el = document.getElementById(data.id);
-      if (el) el.remove();
+  $('msg-input').addEventListener('focus', () => {
+    setTimeout(() => { $('chat-box').scrollTop = $('chat-box').scrollHeight; }, 250);
+  });
+
+  socket.onmessage = async (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      if (data.type === 'force-logout') {
+        cleanupCall(false);
+        window.location.reload();
+        return;
+      }
+      if (data.type === 'presence-ready') {
+        partnerPresent = true;
+        setControls(true);
+        setStatus('Online', '#10b981');
+        $('call-status').textContent = 'Partner connected.';
+      } else if (data.type === 'presence-left') {
+        partnerPresent = false;
+        setControls(false);
+        cleanupCall(false);
+        const exitTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        setStatus(`Last seen at ${exitTime}`, '#ef4444');
+        $('call-status').textContent = 'Partner disconnected.';
+      } else if (data.type === 'message') {
+        appendChatMessage(data.text, false, data.time || '', data.id || 'm-' + Date.now());
+      } else if (data.type === 'delete-msg') {
+        const el = document.getElementById(data.id);
+        if (el) el.remove();
+      } else if (data.type === 'call-offer') {
+        pendingOffer = data;
+        callKind = data.kind || 'audio';
+        $('call-tray').style.display = 'block';
+        setCallState('incoming');
+        $('call-status').textContent = `Incoming ${callKind} call…`;
+      } else if (data.type === 'call-answer' && pc) {
+        await pc.setRemoteDescription(data.sdp);
+        setCallState('in-call');
+        $('call-status').textContent = 'Call connected.';
+      } else if (data.type === 'ice' && pc && data.candidate) {
+        try { await pc.addIceCandidate(data.candidate); } catch (_) {}
+      } else if (data.type === 'call-end' && (pc || pendingOffer)) {
+        await cleanupCall(false);
+        $('call-status').textContent = 'Call ended.';
+      }
+    } catch (_) {}
+  };
+
+  async function setupPeer(kind) {
+    pc = new RTCPeerConnection({ iceServers: STUN });
+    remoteStream = new MediaStream();
+    $('remote-video').srcObject = remoteStream;
+    $('remote-audio').srcObject = remoteStream;
+
+    pc.ontrack = event => event.streams[0].getTracks().forEach(t => remoteStream.addTrack(t));
+    pc.onicecandidate = event => {
+      if (event.candidate && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: 'ice', candidate: event.candidate }));
+      }
+    };
+
+    localStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true },
+      video: kind === 'video'
+    });
+
+    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+    $('local-video').srcObject = localStream;
+    $('video-wrap').style.display = kind === 'video' ? 'grid' : 'none';
+  }
+
+  async function startCall(kind) {
+    if (!partnerPresent) return;
+    try {
+      if (pc) await cleanupCall(false);
+      callKind = kind;
+      await setupPeer(kind);
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      socket.send(JSON.stringify({ type: 'call-offer', kind, sdp: pc.localDescription }));
+      setCallState('in-call');
+      $('call-status').textContent = `Calling partner (${kind})…`;
+    } catch (e) {
+      $('call-status').textContent = 'Call error: ' + e.message;
+      await cleanupCall(false);
     }
+  }
+
+  async function answerCall() {
+    if (!pendingOffer) return;
+    const offer = pendingOffer;
+    pendingOffer = null;
+    try {
+      callKind = offer.kind || 'audio';
+      await setupPeer(callKind);
+      await pc.setRemoteDescription(offer.sdp);
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      socket.send(JSON.stringify({ type: 'call-answer', sdp: pc.localDescription }));
+      setCallState('in-call');
+      $('call-status').textContent = 'Call connected.';
+    } catch (e) {
+      $('call-status').textContent = 'Answer error: ' + e.message;
+      await cleanupCall(false);
+    }
+  }
+
+  async function cleanupCall(notifyPeer = true) {
+    if (notifyPeer && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: 'call-end' }));
+    }
+    pendingOffer = null;
+    if (pc) { pc.ontrack = null; pc.onicecandidate = null; pc.close(); pc = null; }
+    if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+    remoteStream = null;
+    $('local-video').srcObject = null;
+    $('remote-video').srcObject = null;
+    $('remote-audio').srcObject = null;
+    $('video-wrap').style.display = 'none';
+    setCallState('idle');
+  }
+
+  // LOCK दबाने पर सीधे GAME PAGE (बिना कन्फर्मेशन)
+  $('hide-btn').onclick = () => {
+    cleanupCall(false);
+    if (socket) socket.close();
+    showGamePortal();
+  };
+
+  // 🔴 END / EXIT दबाने पर सीधे MAIN OTP PAGE (बिना कन्फर्मेशन)
+  $('end-chat-btn').onclick = () => {
+    cleanupCall(false);
+    if (socket) socket.close();
+    window.location.reload();
+  };
+
+  $('audio-call').onclick = () => startCall('audio');
+  $('video-call').onclick = () => startCall('video');
+  $('answer-call').onclick = answerCall;
+  $('call-end-btn').onclick = () => cleanupCall(true);
+
+  $('message-form').onsubmit = e => {
+    e.preventDefault();
+    if (!partnerPresent) return;
+    const val = $('msg-input').value.trim();
+    if (!val || socket.readyState !== WebSocket.OPEN) return;
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const msgId = 'msg-' + Date.now();
+
+    socket.send(JSON.stringify({ type: 'message', text: val, time, id: msgId }));
+    appendChatMessage(val, true, time, msgId);
+    $('msg-input').value = '';
   };
 }
 
 /* ============================================================
-   4. DECOY GAME HUB ENGINE
+   4. DECOY GAME HUB ENGINE & CONTROLS
    ============================================================ */
 function showGamePortal() {
   document.body.innerHTML = '';
@@ -675,7 +970,7 @@ function initSnake() {
   snakeDx = 20; snakeDy = 0;
   snakeFood = { x: 80, y: 80 };
   if (snakeInterval) clearInterval(snakeInterval);
-  snakeInterval = setInterval(snakeStep, 260); // Slow & Relaxed speed
+  snakeInterval = setInterval(snakeStep, 260);
 }
 
 function snakeStep() {
