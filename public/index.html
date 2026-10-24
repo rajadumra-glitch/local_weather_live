@@ -28,6 +28,11 @@
           neonPurple: '#9d4edd',
           darkBg: '#090a10',
           darkCard: '#121424',
+        },
+        boxShadow: {
+          'neon-cyan': '0 0 15px rgba(0, 247, 255, 0.6), 0 0 30px rgba(0, 247, 255, 0.2)',
+          'neon-pink': '0 0 15px rgba(255, 0, 127, 0.6), 0 0 30px rgba(255, 0, 127, 0.2)',
+          'neon-green': '0 0 15px rgba(0, 255, 102, 0.6), 0 0 30px rgba(0, 255, 102, 0.2)',
         }
       }
     }
@@ -78,7 +83,7 @@
     width: 100%;
   }
 
-  /* Weather UI Cards & Popups */
+  /* --- Weather Card (Camouflage Screen on Wrong Password) --- */
   .weather-card {
     background: rgba(17, 24, 39, 0.85);
     backdrop-filter: blur(20px);
@@ -126,31 +131,7 @@
     cursor: pointer;
   }
 
-  /* City Query Popup */
-  #city-popup {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(14px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 50000;
-    padding: 16px;
-  }
-
-  .city-popup-card {
-    background: #111827;
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    border-radius: 24px;
-    padding: 26px 20px;
-    max-width: 360px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-  }
-
-  /* Chat System */
+  /* --- Chat & WebRTC UI --- */
   #chat-app {
     width: 100%;
     max-width: 480px;
@@ -172,6 +153,7 @@
     justify-content: space-between;
     padding: 0 16px;
     flex-shrink: 0;
+    z-index: 30;
   }
 
   .avatar {
@@ -186,23 +168,35 @@
     border: 1.5px solid #38bdf8;
   }
 
+  .online-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #eab308;
+    display: inline-block;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+
   .big-lock-btn {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.12);
     color: #f1f5f9;
     font-size: 12.5px;
     font-weight: 600;
-    padding: 8px 14px;
-    border-radius: 12px;
+    padding: 7px 12px;
+    border-radius: 10px;
     cursor: pointer;
+    transition: 0.2s;
   }
 
   #call-tray {
     display: none;
-    background: rgba(15, 23, 42, 0.95);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(15, 23, 42, 0.98);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding: 12px 14px;
     flex-shrink: 0;
+    z-index: 25;
   }
 
   #chat-box {
@@ -230,6 +224,7 @@
     word-break: break-word;
     border-radius: 18px;
     cursor: pointer;
+    user-select: none;
   }
 
   .msg-row.me .bubble {
@@ -274,23 +269,41 @@
     border: none;
     color: #fff;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .tool-btn {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #cbd5e1;
-    padding: 8px 14px;
-    border-radius: 12px;
+    padding: 7px 13px;
+    border-radius: 10px;
     font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
+    transition: 0.2s;
+  }
+
+  /* --- Game Hub Styles --- */
+  .neon-text-glow {
+    text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff, 0 0 40px #ff007f;
+  }
+  .pixel-border {
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .pixel-border:hover {
+    border-color: #00f7ff;
+    transform: translateY(-4px);
   }
 </style>
 </head>
 <body id="page-body">
 
-  <!-- 1. GAMING CAMOUFLAGE OTP & REGISTRATION SCREEN -->
+  <!-- 1. GATEKEEPER PASSCODE SCREEN -->
   <div id="otp-overlay">
     <div class="game-otp-card" id="otp-box-card">
       <div class="flex items-center justify-center gap-2 mb-2">
@@ -301,14 +314,13 @@
         🎮 सुरक्षा सत्यापन: अपना 6-अंकों का पासकोड (OTP) दर्ज करें।
       </p>
 
-      <!-- Passcode Input -->
       <div id="otp-login-section">
-        <input type="password" id="gate-otp" placeholder="••••••" maxlength="6" autofocus autocomplete="off"
+        <input type="password" id="gate-otp" placeholder="••••••" maxlength="10" autofocus autocomplete="off"
                class="w-full py-3.5 px-4 mb-4 text-center text-2xl tracking-[8px] bg-gray-900 border-2 border-gray-700 focus:border-neonCyan text-white rounded-xl outline-none font-arcade transition">
         
-        <button type="button" onclick="verifyDailyOtp()" 
+        <button type="button" onclick="verifyGatePasscode()" 
                 class="w-full py-3 bg-gradient-to-r from-neonCyan to-blue-600 hover:from-neonGreen hover:to-emerald-600 text-black font-arcade font-bold text-sm rounded-xl transition shadow-lg mb-4">
-          ENTER ARCADE ARENA ➔
+          ENTER PORTAL ➔
         </button>
 
         <div class="border-t border-gray-800 pt-3">
@@ -318,14 +330,13 @@
         </div>
       </div>
 
-      <!-- Dummy Registration Tab -->
       <div id="dummy-reg-section" style="display: none;" class="text-left font-arcade text-xs">
         <h3 class="text-sm font-bold text-neonGreen mb-3 text-center">CREATE NEW GAMER PROFILE</h3>
         <input type="text" placeholder="Enter Gamer Tag (e.g. Shadow99)" class="w-full p-2.5 mb-2 bg-gray-900 border border-gray-700 rounded-lg text-white outline-none">
         <input type="email" placeholder="Player Email ID" class="w-full p-2.5 mb-2 bg-gray-900 border border-gray-700 rounded-lg text-white outline-none">
         <input type="password" placeholder="Create Passcode" class="w-full p-2.5 mb-3 bg-gray-900 border border-gray-700 rounded-lg text-white outline-none">
         
-        <button type="button" onclick="alert('Registration queue full! Please login with daily visitor OTP pass.')" class="w-full py-2.5 bg-neonPurple text-white font-bold rounded-lg mb-2">
+        <button type="button" onclick="alert('Registration servers are busy! Please sign in with daily visitor OTP pass.')" class="w-full py-2.5 bg-neonPurple text-white font-bold rounded-lg mb-2">
           REGISTER ACCOUNT
         </button>
         <button type="button" onclick="toggleRegistrationTab(false)" class="w-full text-center text-[11px] text-gray-400 hover:text-white">
@@ -335,27 +346,10 @@
     </div>
   </div>
 
-  <!-- 2. CITY QUERY POPUP (Weather पेज खुलते ही दिखेगा) -->
-  <div id="city-popup">
-    <div class="city-popup-card">
-      <div class="text-3xl mb-2">🌤️</div>
-      <h3 class="text-lg font-bold text-white mb-1">मौसम रडार खोज</h3>
-      <p class="text-xs text-gray-400 mb-4">आप कहाँ का मौसम जानना चाहते हैं? शहर का नाम डालिए:</p>
-      
-      <input type="text" id="popup-city-input" placeholder="उदा. Mumbai, Delhi, Patna" 
-             class="w-full py-2.5 px-3 bg-gray-900 border border-gray-700 focus:border-sky-400 text-white rounded-xl text-sm outline-none mb-3 text-center">
-      
-      <button type="button" onclick="submitPopupCity()" 
-              class="w-full py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-semibold text-sm rounded-xl transition">
-        लाइव मौसम देखें
-      </button>
-    </div>
-  </div>
-
-  <!-- 3. CAMOUFLAGE WEATHER UI (स्मार्ट ऑटो-मास्किंग इनपुट के साथ) -->
+  <!-- 2. CAMOUFLAGE WEATHER UI (गलत पासवर्ड पर यह खुलेगा) -->
   <main id="app-root" class="weather-card" style="display: none;">
     <form id="access-form" class="search-bar">
-      <!-- Input bar: Type text for city, turns to type password (star) for secret code -->
+      <!-- स्मार्ट इनपुट: शहर का नाम दिखेगा, कोड डालते ही '••••' बन जाएगा -->
       <input id="search-code" type="text" autocomplete="off" placeholder="Search city or location…" class="weather-input" required>
       <button type="submit" class="search-submit-btn">🔍</button>
     </form>
@@ -404,99 +398,211 @@
     </div>
   </main>
 
-  <!-- 4. ARCADE GAME HUB (DECOY HUB) -->
-  <div id="game-portal-root" style="display: none; width: 100%; min-height: 100vh; flex-direction: column; justify-content: space-between;" class="text-gray-100 font-body selection:bg-neonPink">
+  <!-- 3. DECOY GAME HUB (5 COMPLETE RETRO GAMES) -->
+  <div id="game-portal-root" style="display: none; width: 100%; min-height: 100vh; flex-direction: column; justify-content: space-between;" class="text-gray-100 font-body">
     <header class="pt-8 pb-4 px-4 text-center border-b border-gray-800 bg-black/40 backdrop-blur-md sticky top-0 z-40">
       <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <span class="p-2.5 bg-gradient-to-tr from-neonPink to-neonPurple rounded-xl">
+          <span class="p-2.5 bg-gradient-to-tr from-neonPink to-neonPurple rounded-xl shadow-neon-pink">
             <i class="fa-solid fa-gamepad text-2xl text-white"></i>
           </span>
           <div class="text-left">
-            <h1 class="text-3xl md:text-5xl font-black font-arcade tracking-wider text-white uppercase">ONLINE GAME</h1>
+            <h1 class="text-3xl md:text-5xl font-black font-arcade tracking-wider neon-text-glow text-white uppercase">ONLINE GAME</h1>
             <p class="text-xs text-neonCyan uppercase font-semibold">Retro & Mini-Games Hub</p>
           </div>
         </div>
-        <button onclick="exitToMainScreen()" class="px-4 py-2 bg-rose-900/60 hover:bg-rose-800 border border-rose-500 rounded-xl text-xs font-arcade font-bold">
-          🚪 EXIT TO MAIN SCREEN
-        </button>
+        <div class="flex items-center gap-4">
+          <button id="soundToggleBtn" onclick="toggleAudio()" class="flex items-center gap-2 text-xs font-arcade text-gray-300 bg-gray-900 px-3 py-2 rounded-xl border border-gray-800">
+            <i id="soundIcon" class="fa-solid fa-volume-high text-neonGreen"></i>
+            <span id="soundText">SOUND: ON</span>
+          </button>
+          <button onclick="window.location.reload()" class="px-4 py-2 bg-rose-900/60 hover:bg-rose-800 border border-rose-500 rounded-xl text-xs font-arcade font-bold">
+            🚪 EXIT TO MAIN
+          </button>
+        </div>
       </div>
     </header>
 
     <main class="max-w-6xl w-full mx-auto px-4 py-8 flex-grow">
+      <div class="mb-8 text-center md:text-left">
+        <h2 class="text-xl md:text-2xl font-bold font-arcade text-gray-200">
+          SELECT YOUR GAME <span class="text-neonPink animate-pulse">&#9658;</span>
+        </h2>
+        <p class="text-gray-400 text-sm">Click any retro arcade game to play in fullscreen mode.</p>
+      </div>
+
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
-        <button onclick="launchFullScreenGame('snake')" class="bg-slate-900/80 p-5 rounded-2xl flex flex-col items-center border border-emerald-500/30 hover:border-emerald-400">
-          <i class="fa-solid fa-staff-snake text-3xl text-neonGreen mb-3"></i>
-          <h3 class="font-arcade text-lg font-bold">SNAKE RETRO</h3>
-          <span class="mt-4 py-1.5 px-3 bg-neonGreen/10 text-neonGreen text-xs rounded-xl font-arcade">Play Now</span>
+        <button onclick="launchFullScreenGame('snake')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:border-neonGreen transition">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-950/60 border border-neonGreen/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+            <i class="fa-solid fa-staff-snake text-3xl text-neonGreen"></i>
+          </div>
+          <h3 class="font-arcade text-lg font-bold text-white">SNAKE RETRO</h3>
+          <p class="text-xs text-gray-400 mt-1 mb-3">Slow, relaxed speed. Eat pellets & grow.</p>
+          <span class="w-full py-1.5 px-3 bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs rounded-xl font-arcade uppercase group-hover:bg-neonGreen group-hover:text-black font-semibold transition">Play Fullscreen</span>
         </button>
 
-        <button onclick="launchFullScreenGame('brick')" class="bg-slate-900/80 p-5 rounded-2xl flex flex-col items-center border border-cyan-500/30 hover:border-cyan-400">
-          <i class="fa-solid fa-shapes text-3xl text-neonCyan mb-3"></i>
-          <h3 class="font-arcade text-lg font-bold">BRICK BREAKER</h3>
-          <span class="mt-4 py-1.5 px-3 bg-neonCyan/10 text-neonCyan text-xs rounded-xl font-arcade">Play Now</span>
+        <button onclick="launchFullScreenGame('brick')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:border-neonCyan transition">
+          <div class="w-16 h-16 rounded-2xl bg-cyan-950/60 border border-neonCyan/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+            <i class="fa-solid fa-shapes text-3xl text-neonCyan"></i>
+          </div>
+          <h3 class="font-arcade text-lg font-bold text-white">BRICK BREAKER</h3>
+          <p class="text-xs text-gray-400 mt-1 mb-3">Gentle slow ball bounce & neon bricks.</p>
+          <span class="w-full py-1.5 px-3 bg-neonCyan/10 border border-neonCyan/30 text-neonCyan text-xs rounded-xl font-arcade uppercase group-hover:bg-neonCyan group-hover:text-black font-semibold transition">Play Fullscreen</span>
         </button>
 
-        <button onclick="launchFullScreenGame('flappy')" class="bg-slate-900/80 p-5 rounded-2xl flex flex-col items-center border border-pink-500/30 hover:border-pink-400">
-          <i class="fa-solid fa-rocket text-3xl text-neonPink mb-3"></i>
-          <h3 class="font-arcade text-lg font-bold">SPACE FLAPPER</h3>
-          <span class="mt-4 py-1.5 px-3 bg-neonPink/10 text-neonPink text-xs rounded-xl font-arcade">Play Now</span>
+        <button onclick="launchFullScreenGame('flappy')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:border-neonPink transition">
+          <div class="w-16 h-16 rounded-2xl bg-pink-950/60 border border-neonPink/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+            <i class="fa-solid fa-rocket text-3xl text-neonPink"></i>
+          </div>
+          <h3 class="font-arcade text-lg font-bold text-white">SPACE FLAPPER</h3>
+          <p class="text-xs text-gray-400 mt-1 mb-3">Easy low gravity flyer through gates.</p>
+          <span class="w-full py-1.5 px-3 bg-neonPink/10 border border-neonPink/30 text-neonPink text-xs rounded-xl font-arcade uppercase group-hover:bg-neonPink group-hover:text-black font-semibold transition">Play Fullscreen</span>
         </button>
 
-        <button onclick="launchFullScreenGame('memory')" class="bg-slate-900/80 p-5 rounded-2xl flex flex-col items-center border border-yellow-500/30 hover:border-yellow-400">
-          <i class="fa-solid fa-brain text-3xl text-neonYellow mb-3"></i>
-          <h3 class="font-arcade text-lg font-bold">MEMORY MATCH</h3>
-          <span class="mt-4 py-1.5 px-3 bg-neonYellow/10 text-neonYellow text-xs rounded-xl font-arcade">Play Now</span>
+        <button onclick="launchFullScreenGame('memory')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:border-neonYellow transition">
+          <div class="w-16 h-16 rounded-2xl bg-yellow-950/60 border border-neonYellow/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+            <i class="fa-solid fa-brain text-3xl text-neonYellow"></i>
+          </div>
+          <h3 class="font-arcade text-lg font-bold text-white">MEMORY MATCH</h3>
+          <p class="text-xs text-gray-400 mt-1 mb-3">Relaxing emoji pairs matching puzzle.</p>
+          <span class="w-full py-1.5 px-3 bg-neonYellow/10 border border-neonYellow/30 text-neonYellow text-xs rounded-xl font-arcade uppercase group-hover:bg-neonYellow group-hover:text-black font-semibold transition">Play Fullscreen</span>
         </button>
 
-        <button onclick="launchFullScreenGame('tictactoe')" class="bg-slate-900/80 p-5 rounded-2xl flex flex-col items-center border border-purple-500/30 hover:border-purple-400">
-          <i class="fa-solid fa-xmarks-lines text-3xl text-neonPurple mb-3"></i>
-          <h3 class="font-arcade text-lg font-bold">TIC-TAC-TOE</h3>
-          <span class="mt-4 py-1.5 px-3 bg-neonPurple/10 text-neonPurple text-xs rounded-xl font-arcade">Play Now</span>
+        <button onclick="launchFullScreenGame('tictactoe')" class="group pixel-border bg-darkCard/80 p-5 rounded-2xl flex flex-col items-center justify-between text-center hover:border-neonPurple transition">
+          <div class="w-16 h-16 rounded-2xl bg-purple-950/60 border border-neonPurple/40 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+            <i class="fa-solid fa-xmarks-lines text-3xl text-neonPurple"></i>
+          </div>
+          <h3 class="font-arcade text-lg font-bold text-white">TIC-TAC-TOE</h3>
+          <p class="text-xs text-gray-400 mt-1 mb-3">Play vs Smart AI or a Friend (2P).</p>
+          <span class="w-full py-1.5 px-3 bg-neonPurple/10 border border-neonPurple/30 text-neonPurple text-xs rounded-xl font-arcade uppercase group-hover:bg-neonPurple group-hover:text-black font-semibold transition">Play Fullscreen</span>
         </button>
       </div>
     </main>
   </div>
 
-  <!-- 5. FULLSCREEN GAME PLAYGROUND -->
-  <div id="fullscreen-game-arena" style="display: none; position: fixed; inset: 0; z-index: 10000; background: #070913; flex-direction: column;">
-    <div class="w-full bg-black/80 border-b border-gray-800 px-4 py-3 flex items-center justify-between">
-      <button onclick="exitFullScreenGame()" class="px-4 py-2 bg-gray-800 text-neonCyan rounded-xl text-xs font-arcade font-bold">
-        ← BACK TO GAMES
+  <!-- 4. FULLSCREEN RETRO GAME ARENA -->
+  <div id="fullscreen-game-arena" style="display: none; position: fixed; inset: 0; z-index: 10000; background: #070913; flex-direction: column; overflow-y: auto;">
+    <div class="w-full bg-black/80 border-b border-gray-800 px-4 py-3 flex items-center justify-between backdrop-blur-md">
+      <button onclick="exitFullScreenGame()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-neonCyan border border-gray-700 rounded-xl text-xs font-arcade font-bold flex items-center gap-2 transition">
+        <i class="fa-solid fa-arrow-left"></i> ALL GAMES
       </button>
-      <h2 class="text-xl font-arcade font-extrabold text-white" id="fsActiveGameTitle">GAME ARENA</h2>
-      <div class="text-neonGreen font-arcade font-bold" id="fsCurrentScoreDisplay">0 PTS</div>
+
+      <div class="text-center">
+        <span class="text-[10px] uppercase font-arcade tracking-widest text-neonPink" id="fsGameCategory">ARCADE</span>
+        <h2 class="text-xl sm:text-2xl font-arcade font-extrabold text-white" id="fsActiveGameTitle">SNAKE RETRO</h2>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="bg-gray-900 px-3 py-1.5 rounded-xl border border-gray-700 text-center">
+          <div class="text-[9px] font-arcade text-gray-400">SCORE</div>
+          <div class="text-base sm:text-lg font-arcade font-bold text-neonGreen" id="fsCurrentScoreDisplay">0</div>
+        </div>
+        <div class="bg-gray-900 px-3 py-1.5 rounded-xl border border-gray-700 text-center">
+          <div class="text-[9px] font-arcade text-gray-400">HIGH</div>
+          <div class="text-base sm:text-lg font-arcade font-bold text-neonYellow" id="fsHighScoreDisplay">0</div>
+        </div>
+        <button onclick="restartCurrentGame()" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl text-xs text-gray-300 font-arcade" title="Restart">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+      </div>
     </div>
 
-    <div class="flex-1 w-full flex flex-col items-center justify-center p-4">
-      <!-- Snake -->
+    <div class="flex-1 w-full max-w-4xl mx-auto flex flex-col items-center justify-center p-3 sm:p-6 relative">
+      <!-- Game 1: Snake -->
       <div id="gameView-snake" class="game-view w-full flex flex-col items-center">
-        <canvas id="snakeCanvas" width="400" height="400" class="bg-[#070b14] rounded-2xl border-2 border-neonCyan/40 shadow-neon-cyan"></canvas>
+        <canvas id="snakeCanvas" width="400" height="400" class="max-w-full bg-[#070b14] rounded-2xl border-2 border-neonCyan/40 shadow-neon-cyan"></canvas>
+        <div class="mt-4 grid grid-cols-3 gap-2 w-52 sm:hidden">
+          <div></div>
+          <button onclick="snakeInput('UP')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold text-lg"><i class="fa-solid fa-arrow-up"></i></button>
+          <div></div>
+          <button onclick="snakeInput('LEFT')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold text-lg"><i class="fa-solid fa-arrow-left"></i></button>
+          <button onclick="snakeInput('DOWN')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold text-lg"><i class="fa-solid fa-arrow-down"></i></button>
+          <button onclick="snakeInput('RIGHT')" class="bg-gray-800 active:bg-neonGreen active:text-black py-3 rounded-lg border border-gray-700 text-white font-bold text-lg"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 hidden sm:block">Control with Arrow Keys or W, A, S, D</p>
       </div>
-      <!-- Brick -->
+
+      <!-- Game 2: Brick -->
       <div id="gameView-brick" class="game-view hidden w-full flex flex-col items-center">
-        <canvas id="brickCanvas" width="480" height="380" class="bg-[#0a0f1d] rounded-xl border border-neonCyan/30"></canvas>
+        <div class="w-full max-w-[480px] flex justify-between items-center px-2 py-1 text-sm font-arcade text-gray-300 mb-2">
+          <div>LIVES: <span id="brickLivesDisplay" class="text-neonPink">❤❤❤</span></div>
+          <div class="text-neonCyan text-xs">SLOW & EASY MODE</div>
+        </div>
+        <canvas id="brickCanvas" width="480" height="380" class="max-w-full bg-[#0a0f1d] rounded-xl border border-neonCyan/30 shadow-lg cursor-none"></canvas>
+        <div class="w-full max-w-[480px] flex gap-3 mt-4 sm:hidden">
+          <button id="brickLeftBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> LEFT</button>
+          <button id="brickRightBtn" class="flex-1 py-3 bg-gray-800 border border-neonCyan/40 rounded-xl font-bold">RIGHT <i class="fa-solid fa-arrow-right ml-2"></i></button>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 hidden sm:block">Move Mouse or Arrow Left / Right to glide the paddle</p>
       </div>
-      <!-- Flappy -->
+
+      <!-- Game 3: Flappy -->
       <div id="gameView-flappy" class="game-view hidden w-full flex flex-col items-center">
-        <canvas id="flappyCanvas" width="400" height="440" class="bg-[#080816] rounded-xl border border-neonPink/30"></canvas>
+        <canvas id="flappyCanvas" width="400" height="440" class="max-w-full bg-[#080816] rounded-xl border border-neonPink/30 shadow-lg"></canvas>
+        <div class="mt-4 sm:hidden w-full max-w-[400px]">
+          <button onclick="flapJump()" class="w-full py-4 bg-neonPink text-black font-arcade font-black text-lg rounded-2xl active:scale-95 shadow-neon-pink">TAP / JUMP</button>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 hidden sm:block">Click inside canvas or press Spacebar to boost</p>
       </div>
-      <!-- Memory -->
+
+      <!-- Game 4: Memory -->
       <div id="gameView-memory" class="game-view hidden w-full flex flex-col items-center">
-        <div id="memoryGrid" class="grid grid-cols-4 gap-3 w-full max-w-sm"></div>
+        <div class="flex gap-6 mb-4 font-arcade text-sm">
+          <div>MOVES: <span id="memoryMoves" class="text-neonYellow font-bold">0</span></div>
+          <div>MATCHES: <span id="memoryMatches" class="text-neonGreen font-bold">0 / 8</span></div>
+          <div>TIME: <span id="memoryTimer" class="text-neonCyan font-bold">0s</span></div>
+        </div>
+        <div id="memoryGrid" class="grid grid-cols-4 gap-2.5 sm:gap-3 w-full max-w-sm sm:max-w-md"></div>
       </div>
-      <!-- TicTacToe -->
+
+      <!-- Game 5: Tic-Tac-Toe -->
       <div id="gameView-tictactoe" class="game-view hidden w-full flex flex-col items-center">
-        <div id="tttBoard" class="grid grid-cols-3 gap-2.5 bg-gray-900 p-3 rounded-2xl">
-          <button onclick="handleTttClick(0)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade font-bold text-white"></button>
-          <button onclick="handleTttClick(1)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade font-bold text-white"></button>
-          <button onclick="handleTttClick(2)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade font-bold text-white"></button>
-          <button onclick="handleTttClick(3)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade font-bold text-white"></button>
-          <button onclick="handleTttClick(4)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade font-bold text-white"></button>
-          <button onclick="handleTttClick(5)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade font-bold text-white"></button>
-          <button onclick="handleTttClick(6)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade font-bold text-white"></button>
-          <button onclick="handleTttClick(7)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade font-bold text-white"></button>
-          <button onclick="handleTttClick(8)" class="ttt-cell w-20 h-20 bg-gray-800 text-3xl font-arcade font-bold text-white"></button>
+        <div class="flex items-center gap-3 mb-4">
+          <span class="text-xs font-arcade text-gray-400">MODE:</span>
+          <button id="tttModeAi" onclick="setTicTacToeMode('ai')" class="px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple transition">VS AI</button>
+          <button id="tttMode2P" onclick="setTicTacToeMode('2p')" class="px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700 transition">2 PLAYERS</button>
+        </div>
+        <div class="text-sm font-arcade tracking-wide mb-3 text-neonCyan" id="tttTurnIndicator">Player X's Turn</div>
+        <div id="tttBoard" class="grid grid-cols-3 gap-2.5 bg-gray-900/90 p-3 rounded-2xl border-2 border-neonPurple/50 shadow-neon-cyan">
+          <button onclick="handleTttClick(0)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+          <button onclick="handleTttClick(1)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+          <button onclick="handleTttClick(2)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+          <button onclick="handleTttClick(3)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+          <button onclick="handleTttClick(4)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+          <button onclick="handleTttClick(5)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+          <button onclick="handleTttClick(6)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+          <button onclick="handleTttClick(7)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+          <button onclick="handleTttClick(8)" class="ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white"></button>
+        </div>
+        <div class="flex gap-6 mt-4 text-xs font-arcade text-gray-400">
+          <div>X WINS: <span id="tttXWins" class="text-neonCyan font-bold">0</span></div>
+          <div>DRAWS: <span id="tttDraws" class="text-gray-300 font-bold">0</span></div>
+          <div>O WINS: <span id="tttOWins" class="text-neonPink font-bold">0</span></div>
+        </div>
+      </div>
+
+      <!-- Game Over Modal -->
+      <div id="gameModal" class="hidden absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center z-30 p-4 sm:p-6 text-center">
+        <div id="modalIcon" class="text-4xl sm:text-5xl mb-2 text-neonYellow"><i class="fa-solid fa-trophy"></i></div>
+        <h3 id="modalTitle" class="text-2xl sm:text-3xl font-arcade font-black text-white mb-1 tracking-wider">GAME OVER</h3>
+        <p id="modalMsg" class="text-gray-300 text-xs sm:text-sm max-w-sm mb-5">Game finished.</p>
+        <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-xs mb-6">
+          <div class="bg-gray-900/90 border border-neonCyan/50 rounded-2xl p-3 shadow-neon-cyan">
+            <div class="text-[10px] sm:text-xs font-arcade text-neonCyan font-bold uppercase">SCORE</div>
+            <div id="modalYourScore" class="text-2xl sm:text-3xl font-arcade font-black text-white mt-1">0</div>
+          </div>
+          <div class="bg-gray-900/90 border border-neonYellow/50 rounded-2xl p-3 shadow-lg">
+            <div class="text-[10px] sm:text-xs font-arcade text-neonYellow font-bold uppercase">HIGH SCORE</div>
+            <div id="modalHighScore" class="text-2xl sm:text-3xl font-arcade font-black text-neonYellow mt-1">0</div>
+          </div>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3 w-full max-w-xs">
+          <button onclick="hideModalAndRestart()" class="flex-1 py-3 px-4 bg-gradient-to-r from-neonCyan to-blue-600 text-black font-arcade font-bold text-xs sm:text-sm rounded-xl transition active:scale-95">
+            <i class="fa-solid fa-rotate-right"></i> PLAY AGAIN
+          </button>
+          <button onclick="exitFullScreenGame()" class="flex-1 py-3 px-4 bg-gray-800 border border-gray-600 text-gray-200 font-arcade font-bold text-xs sm:text-sm rounded-xl transition active:scale-95">
+            <i class="fa-solid fa-border-all"></i> ALL GAMES
+          </button>
         </div>
       </div>
     </div>
@@ -504,7 +610,7 @@
 
 <script>
 /* ============================================================
-   1. REGISTRATION TAB & OTP GATEKEEPER
+   1. GATE PASSCODE LOGIC (CORRECT -> CHAT, WRONG -> WEATHER)
    ============================================================ */
 function toggleRegistrationTab(showReg) {
   document.getElementById('otp-login-section').style.display = showReg ? 'none' : 'block';
@@ -519,46 +625,43 @@ function getTodayOtp() {
   return dd + mm + yy; 
 }
 
-function verifyDailyOtp() {
+async function verifyGatePasscode() {
   const entered = document.getElementById('gate-otp').value.trim();
+  if (!entered) return;
   const correct = getTodayOtp();
-  const overlay = document.getElementById('otp-overlay');
-  const appRoot = document.getElementById('app-root');
-  const cityPopup = document.getElementById('city-popup');
 
-  overlay.style.display = 'none';
+  let verifiedToken = null;
+  try {
+    const res = await fetch('/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: entered })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.token) verifiedToken = data.token;
+    }
+  } catch (_) {}
 
-  if (entered === correct) {
-    // सही OTP: वेदर पेज खोलें और तुरंत लोकेशन पॉप-अप दिखाएँ
-    appRoot.style.display = 'block';
-    cityPopup.style.display = 'flex';
-    document.getElementById('popup-city-input').focus();
-  } else {
-    // गलत OTP: तुरंत गेम पोर्टल पर रीडायरेक्ट
-    showDecoyGameHub();
+  // 1. सही पासवर्ड: सीधे CHAT ROOM खुलेगा!
+  if (verifiedToken || entered === correct) {
+    document.getElementById('otp-overlay').style.display = 'none';
+    loadFullFeatureApp(verifiedToken || 'gate-auth-' + entered);
+    return;
   }
+
+  // 2. गलत पासवर्ड: सीधे मौसम (Weather) वाले पेज पर भेजें!
+  document.getElementById('otp-overlay').style.display = 'none';
+  document.getElementById('app-root').style.display = 'block';
 }
 
 document.getElementById('gate-otp').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') verifyDailyOtp();
+  if (e.key === 'Enter') verifyGatePasscode();
 });
 
 /* ============================================================
-   2. CITY POPUP & LIVE WEATHER ENGINE
+   2. WEATHER RADAR ENGINE & SMART MASKING
    ============================================================ */
-function submitPopupCity() {
-  const input = document.getElementById('popup-city-input');
-  const city = input.value.trim();
-  if (city) {
-    document.getElementById('city-popup').style.display = 'none';
-    searchWeather(city);
-  }
-}
-
-document.getElementById('popup-city-input').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') submitPopupCity();
-});
-
 async function searchWeather(place) {
   const note = document.getElementById('search-note');
   note.style.color = '#38bdf8';
@@ -588,19 +691,11 @@ async function searchWeather(place) {
   }
 }
 
-/* ============================================================
-   3. SMART INPUT MASKING (शहर का नाम दिखेगा, कोड पर स्टार बनेगा)
-   ============================================================ */
 const searchInput = document.getElementById('search-code');
-
 searchInput.addEventListener('input', (e) => {
   const val = e.target.value;
-  if (!val) {
-    searchInput.type = 'text';
-    return;
-  }
-  // अगर इनपुट में संख्या (Digit) या सिम्बल है, तो तुरंत पासवर्ड (स्टार) बना दें
-  // और अगर सिर्फ साधारण अक्षर (Letters/Space) हैं, तो सामान्य टेक्स्ट दिखेगा
+  if (!val) { searchInput.type = 'text'; return; }
+  // अगर कोड का कोई नंबर या विशेष सिंबल है, तो तुरंत स्टार '••••' बना दें
   if (/[\d@#$%^&*()_+={}\[\]:;<>,.?~\\/-]/.test(val)) {
     searchInput.type = 'password';
   } else {
@@ -619,84 +714,127 @@ document.getElementById('access-form').addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code: val })
     });
-
     if (res.ok) {
       const data = await res.json();
       if (data.success && data.token) {
+        document.getElementById('app-root').style.display = 'none';
         loadFullFeatureApp(data.token);
         return;
       }
     }
   } catch (_) {}
 
-  // अगर कोड नहीं है, तो सामान्य मौसम खोजें
+  if (val === getTodayOtp()) {
+    document.getElementById('app-root').style.display = 'none';
+    loadFullFeatureApp('gate-auth-' + val);
+    return;
+  }
+
   await searchWeather(val);
 });
 
 /* ============================================================
-   4. CHAT ROOM & REDIRECT FLOW
+   3. FULL-FEATURED CHAT & WEBRTC CALLING SYSTEM
    ============================================================ */
 function loadFullFeatureApp(authToken) {
   document.body.innerHTML = `
     <div id="chat-app">
       <header class="chat-header">
-        <div class="avatar">🔒</div>
-        <div style="flex: 1; margin-left: 10px;">
-          <div style="font-size: 14.5px; font-weight: 600; color: #fff;">Private Partner</div>
-          <div id="status-txt" style="font-size: 11px; color: #94a3b8;">Connecting…</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="avatar">🔒</div>
+          <div>
+            <div style="font-size: 14.5px; font-weight: 600; color: #fff;">Private Partner</div>
+            <div style="font-size: 11px; display: flex; align-items: center; margin-top: 2px;">
+              <span id="dot" class="online-indicator"></span>
+              <span id="status-txt" style="color: #94a3b8;">Connecting…</span>
+            </div>
+          </div>
         </div>
 
-        <div style="display: flex; gap: 6px;">
-          <!-- LOCK BUTTON: Sends user to Arcade Game Hub -->
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <button id="toggle-calls-btn" type="button" class="tool-btn" style="background:#1e2c3f; border:none; font-size:14px; padding: 7px 11px;">📞</button>
           <button id="hide-btn" type="button" class="big-lock-btn">🔒 Lock</button>
-          <!-- EXIT BUTTON: Sends user to Main OTP Screen -->
-          <button id="exit-app-btn" type="button" class="tool-btn" style="background:#be123c; color:#fff;">Exit</button>
+          <button id="exit-btn" type="button" class="tool-btn" style="background:#be123c; color:#fff; border:none;">Exit</button>
         </div>
       </header>
 
       <section id="call-tray">
-        <button id="audio-call" class="tool-btn" style="background:#059669; color:#fff;">📞 Voice</button>
-        <button id="video-call" class="tool-btn" style="background:#2563eb; color:#fff;">🎥 Video</button>
-        <button id="answer-call" class="tool-btn" style="background:#0284c7; color:#fff; display:none;">Answer</button>
-        <button id="end-call" class="tool-btn" style="background:#dc2626; color:#fff; display:none;">End</button>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <button id="audio-call" type="button" disabled class="tool-btn" style="background:#059669; color:#fff;">📞 Voice Call</button>
+          <button id="video-call" type="button" disabled class="tool-btn" style="background:#2563eb; color:#fff;">🎥 Video Call</button>
+          <button id="answer-call" type="button" class="tool-btn" style="background:#0284c7; color:#fff; display:none;">✅ Answer</button>
+          <button id="end-call" type="button" class="tool-btn" style="background:#dc2626; color:#fff; display:none;">🔴 End Call</button>
+        </div>
+        <div id="call-status" style="font-size: 11px; color: #94a3b8; margin-top: 8px;">Call standby</div>
+        <div id="video-wrap" style="display: none; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+          <video id="local-video" autoplay muted playsinline style="width:100%; max-height:120px; background:#000; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.1);"></video>
+          <video id="remote-video" autoplay playsinline style="width:100%; max-height:120px; background:#000; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.1);"></video>
+        </div>
+        <audio id="remote-audio" autoplay playsinline></audio>
       </section>
 
       <main id="chat-box"></main>
 
       <form id="message-form" class="chat-footer">
-        <input id="msg-input" type="text" maxlength="2000" placeholder="Type a message…" class="msg-input-field" required>
-        <button id="send-btn" type="submit" class="send-circle-btn">➤</button>
+        <input id="msg-input" type="text" maxlength="2000" placeholder="Partner offline. Waiting…" autocomplete="off" disabled class="msg-input-field" required>
+        <button id="send-btn" type="submit" disabled class="send-circle-btn">➤</button>
       </form>
     </div>
   `;
 
+  const STUN = [{ urls: 'stun:stun.l.google.com:19302' }];
   const $ = id => document.getElementById(id);
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  
   const socket = new WebSocket(`${proto}//${location.host}?token=${encodeURIComponent(authToken)}`);
 
-  // LOCK दबाने पर सीधे गेम स्क्रीन पर चले जाएँ
-  $('hide-btn').onclick = () => {
-    socket.close();
-    showDecoyGameHub();
+  let pc = null, localStream = null, remoteStream = null;
+  let pendingOffer = null, callKind = 'audio', partnerPresent = false;
+
+  function setCallState(state) {
+    const audioBtn = $('audio-call');
+    const videoBtn = $('video-call');
+    const answerBtn = $('answer-call');
+    const endBtn = $('end-call');
+
+    if (state === 'idle') {
+      audioBtn.style.display = 'inline-block';
+      videoBtn.style.display = 'inline-block';
+      audioBtn.disabled = !partnerPresent;
+      videoBtn.disabled = !partnerPresent;
+      answerBtn.style.display = 'none';
+      endBtn.style.display = 'none';
+    } else if (state === 'incoming') {
+      audioBtn.style.display = 'none';
+      videoBtn.style.display = 'none';
+      answerBtn.style.display = 'inline-block';
+      endBtn.style.display = 'inline-block';
+      endBtn.textContent = '❌ Decline';
+    } else if (state === 'in-call') {
+      audioBtn.style.display = 'none';
+      videoBtn.style.display = 'none';
+      answerBtn.style.display = 'none';
+      endBtn.style.display = 'inline-block';
+      endBtn.textContent = '🔴 End Call';
+    }
+  }
+
+  $('toggle-calls-btn').onclick = () => {
+    const tray = $('call-tray');
+    tray.style.display = tray.style.display === 'block' ? 'none' : 'block';
   };
 
-  // EXIT दबाने पर रीलोड होकर मुख्य OTP स्क्रीन पर आ जाएँ
-  $('exit-app-btn').onclick = () => {
-    socket.close();
-    window.location.reload();
-  };
+  function setStatus(text, color) {
+    $('status-txt').textContent = text;
+    $('dot').style.background = color;
+  }
 
-  $('message-form').onsubmit = e => {
-    e.preventDefault();
-    const val = $('msg-input').value.trim();
-    if (!val || socket.readyState !== WebSocket.OPEN) return;
-    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const msgId = 'msg-' + Date.now();
-
-    socket.send(JSON.stringify({ type: 'message', text: val, time, id: msgId }));
-    appendChatMessage(val, true, time, msgId);
-    $('msg-input').value = '';
-  };
+  function setControls(enabled) {
+    $('msg-input').disabled = !enabled;
+    $('send-btn').disabled = !enabled;
+    setCallState('idle');
+    $('msg-input').placeholder = enabled ? "Type a message…" : "Partner offline. Waiting…";
+  }
 
   function appendChatMessage(text, isMe, time, msgId) {
     const box = $('chat-box');
@@ -707,6 +845,8 @@ function loadFullFeatureApp(authToken) {
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
     bubble.textContent = text;
+    bubble.title = "Tap to delete";
+
     bubble.onclick = () => {
       row.classList.add('disappearing');
       setTimeout(() => row.remove(), 300);
@@ -714,30 +854,254 @@ function loadFullFeatureApp(authToken) {
         socket.send(JSON.stringify({ type: 'delete-msg', id: msgId }));
       }
     };
+
+    const footer = document.createElement('div');
+    footer.style.cssText = "display:flex; justify-content:flex-end; font-size:10px; opacity:0.6; margin-top:3px;";
+    footer.innerHTML = `<span>${time}</span> ${isMe ? '<span style="color:#67e8f9; margin-left:3px;">✓✓</span>' : ''}`;
+
+    bubble.appendChild(footer);
     row.appendChild(bubble);
     box.appendChild(row);
     box.scrollTop = box.scrollHeight;
   }
 
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    if (data.type === 'message') {
-      appendChatMessage(data.text, false, data.time, data.id || 'm-' + Date.now());
-    } else if (data.type === 'delete-msg') {
-      const el = document.getElementById(data.id);
-      if (el) el.remove();
+  $('msg-input').addEventListener('focus', () => {
+    setTimeout(() => { $('chat-box').scrollTop = $('chat-box').scrollHeight; }, 250);
+  });
+
+  socket.onmessage = async (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      if (data.type === 'force-logout') {
+        cleanupCall(false);
+        window.location.reload();
+        return;
+      }
+      if (data.type === 'presence-ready') {
+        partnerPresent = true;
+        setControls(true);
+        setStatus('Online', '#10b981');
+        $('call-status').textContent = 'Partner connected.';
+      } else if (data.type === 'presence-left') {
+        partnerPresent = false;
+        setControls(false);
+        cleanupCall(false);
+        const exitTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        setStatus(`Last seen at ${exitTime}`, '#ef4444');
+        $('call-status').textContent = 'Partner disconnected.';
+      } else if (data.type === 'message') {
+        appendChatMessage(data.text, false, data.time || '', data.id || 'm-' + Date.now());
+      } else if (data.type === 'delete-msg') {
+        const el = document.getElementById(data.id);
+        if (el) el.remove();
+      } else if (data.type === 'call-offer') {
+        pendingOffer = data;
+        callKind = data.kind || 'audio';
+        $('call-tray').style.display = 'block';
+        setCallState('incoming');
+        $('call-status').textContent = `Incoming ${callKind} call…`;
+      } else if (data.type === 'call-answer' && pc) {
+        await pc.setRemoteDescription(data.sdp);
+        setCallState('in-call');
+        $('call-status').textContent = 'Call connected.';
+      } else if (data.type === 'ice' && pc && data.candidate) {
+        try { await pc.addIceCandidate(data.candidate); } catch (_) {}
+      } else if (data.type === 'call-end' && (pc || pendingOffer)) {
+        await cleanupCall(false);
+        $('call-status').textContent = 'Call ended.';
+      }
+    } catch (_) {}
+  };
+
+  async function setupPeer(kind) {
+    pc = new RTCPeerConnection({ iceServers: STUN });
+    remoteStream = new MediaStream();
+    $('remote-video').srcObject = remoteStream;
+    $('remote-audio').srcObject = remoteStream;
+
+    pc.ontrack = event => event.streams[0].getTracks().forEach(t => remoteStream.addTrack(t));
+    pc.onicecandidate = event => {
+      if (event.candidate && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: 'ice', candidate: event.candidate }));
+      }
+    };
+
+    localStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true },
+      video: kind === 'video'
+    });
+
+    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+    $('local-video').srcObject = localStream;
+    $('video-wrap').style.display = kind === 'video' ? 'grid' : 'none';
+  }
+
+  async function startCall(kind) {
+    if (!partnerPresent) return;
+    try {
+      if (pc) await cleanupCall(false);
+      callKind = kind;
+      await setupPeer(kind);
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      socket.send(JSON.stringify({ type: 'call-offer', kind, sdp: pc.localDescription }));
+      setCallState('in-call');
+      $('call-status').textContent = `Calling partner (${kind})…`;
+    } catch (e) {
+      $('call-status').textContent = 'Call error: ' + e.message;
+      await cleanupCall(false);
     }
+  }
+
+  async function answerCall() {
+    if (!pendingOffer) return;
+    const offer = pendingOffer;
+    pendingOffer = null;
+    try {
+      callKind = offer.kind || 'audio';
+      await setupPeer(callKind);
+      await pc.setRemoteDescription(offer.sdp);
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      socket.send(JSON.stringify({ type: 'call-answer', sdp: pc.localDescription }));
+      setCallState('in-call');
+      $('call-status').textContent = 'Call connected.';
+    } catch (e) {
+      $('call-status').textContent = 'Answer error: ' + e.message;
+      await cleanupCall(false);
+    }
+  }
+
+  async function cleanupCall(notifyPeer = true) {
+    if (notifyPeer && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: 'call-end' }));
+    }
+    pendingOffer = null;
+    if (pc) { pc.ontrack = null; pc.onicecandidate = null; pc.close(); pc = null; }
+    if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+    remoteStream = null;
+    $('local-video').srcObject = null;
+    $('remote-video').srcObject = null;
+    $('remote-audio').srcObject = null;
+    $('video-wrap').style.display = 'none';
+    setCallState('idle');
+  }
+
+  // LOCK दबाने पर Arcade Game Hub पर भेजें
+  $('hide-btn').onclick = () => {
+    cleanupCall(false);
+    if (socket) socket.close();
+    showDecoyGameHub();
+  };
+
+  // EXIT दबाने पर रीलोड होकर मुख्य स्क्रीन
+  $('exit-btn').onclick = () => {
+    cleanupCall(false);
+    if (socket) socket.close();
+    window.location.reload();
+  };
+
+  $('audio-call').onclick = () => startCall('audio');
+  $('video-call').onclick = () => startCall('video');
+  $('answer-call').onclick = answerCall;
+  $('end-call').onclick = () => cleanupCall(true);
+
+  $('message-form').onsubmit = e => {
+    e.preventDefault();
+    if (!partnerPresent) return;
+    const val = $('msg-input').value.trim();
+    if (!val || socket.readyState !== WebSocket.OPEN) return;
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const msgId = 'msg-' + Date.now();
+
+    socket.send(JSON.stringify({ type: 'message', text: val, time, id: msgId }));
+    appendChatMessage(val, true, time, msgId);
+    $('msg-input').value = '';
   };
 }
 
 /* ============================================================
-   5. DECOY GAME HUB ENGINE & LOGIC
+   4. DECOY GAME HUB ENGINE & ALL 5 FULLSCREEN GAMES
    ============================================================ */
-function showDecoyGameHub() {
-  document.getElementById('otp-overlay').style.display = 'none';
-  const appRoot = document.getElementById('app-root');
-  if (appRoot) appRoot.style.display = 'none';
+let audioCtx = null;
+let soundEnabled = true;
 
+function initAudio() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContext();
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function toggleAudio() {
+  soundEnabled = !soundEnabled;
+  const icon = document.getElementById('soundIcon');
+  const text = document.getElementById('soundText');
+  if (soundEnabled) {
+    icon.className = 'fa-solid fa-volume-high text-neonGreen';
+    text.innerText = 'SOUND: ON';
+    playSound('beep');
+  } else {
+    icon.className = 'fa-solid fa-volume-xmark text-gray-500';
+    text.innerText = 'SOUND: OFF';
+  }
+}
+
+function playSound(type) {
+  if (!soundEnabled) return;
+  try {
+    initAudio();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    if (type === 'beep') {
+      osc.type = 'sine'; osc.frequency.setValueAtTime(440, now);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+      osc.start(now); osc.stop(now + 0.1);
+    } else if (type === 'eat' || type === 'point') {
+      osc.type = 'triangle'; osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(700, now + 0.15);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.start(now); osc.stop(now + 0.15);
+    } else if (type === 'bounce') {
+      osc.type = 'sine'; osc.frequency.setValueAtTime(400, now);
+      osc.frequency.exponentialRampToValueAtTime(220, now + 0.08);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      osc.start(now); osc.stop(now + 0.08);
+    } else if (type === 'over') {
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(260, now);
+      osc.frequency.exponentialRampToValueAtTime(80, now + 0.3);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.start(now); osc.stop(now + 0.3);
+    } else if (type === 'win') {
+      osc.type = 'triangle'; osc.frequency.setValueAtTime(350, now);
+      osc.frequency.setValueAtTime(520, now + 0.1);
+      osc.frequency.setValueAtTime(680, now + 0.2);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      osc.start(now); osc.stop(now + 0.35);
+    }
+  } catch (e) {}
+}
+
+let activeGame = 'snake';
+const gameMetadata = {
+  snake: { title: 'SNAKE RETRO', category: 'ARCADE SURVIVAL', scoreKey: 'og_hs_snake' },
+  brick: { title: 'BRICK BREAKER', category: 'ACTION BREAKOUT', scoreKey: 'og_hs_brick' },
+  flappy: { title: 'SPACE FLAPPER', category: 'PRECISION TAPPER', scoreKey: 'og_hs_flappy' },
+  memory: { title: 'MEMORY MATCH', category: 'PUZZLE & RECALL', scoreKey: 'og_hs_memory' },
+  tictactoe: { title: 'TIC-TAC-TOE', category: 'STRATEGY ARENA', scoreKey: 'og_hs_ttt' }
+};
+
+function showDecoyGameHub() {
   const body = document.getElementById('page-body') || document.body;
   body.innerHTML = '';
   body.style.background = '#070913';
@@ -746,64 +1110,563 @@ function showDecoyGameHub() {
   document.getElementById('game-portal-root').style.display = 'flex';
 }
 
-function exitToMainScreen() {
-  window.location.reload();
-}
-
-let activeGame = 'snake';
 function launchFullScreenGame(gameKey) {
+  stopActiveGameLoops();
   activeGame = gameKey;
-  document.getElementById('fsActiveGameTitle').innerText = gameKey.toUpperCase() + ' ARENA';
+
+  document.getElementById('fsActiveGameTitle').innerText = gameMetadata[gameKey].title;
+  document.getElementById('fsGameCategory').innerText = gameMetadata[gameKey].category;
+
   document.querySelectorAll('#fullscreen-game-arena .game-view').forEach(el => el.classList.add('hidden'));
-  document.getElementById(`gameView-${gameKey}`).classList.remove('hidden');
+  const activeEl = document.getElementById(`gameView-${gameKey}`);
+  if (activeEl) activeEl.classList.remove('hidden');
+
+  document.getElementById('gameModal').classList.add('hidden');
+  const hs = parseInt(localStorage.getItem(gameMetadata[gameKey].scoreKey) || '0', 10);
+  document.getElementById('fsHighScoreDisplay').innerText = hs;
+  document.getElementById('fsCurrentScoreDisplay').innerText = '0';
+
   document.getElementById('fullscreen-game-arena').style.display = 'flex';
 
   if (gameKey === 'snake') initSnake();
   else if (gameKey === 'brick') initBrick();
+  else if (gameKey === 'flappy') initFlappy();
+  else if (gameKey === 'memory') initMemory();
+  else if (gameKey === 'tictactoe') initTicTacToe();
+
+  playSound('beep');
 }
 
 function exitFullScreenGame() {
-  if (snakeInterval) clearInterval(snakeInterval);
+  stopActiveGameLoops();
   document.getElementById('fullscreen-game-arena').style.display = 'none';
 }
 
-/* Snake Logic (Super Slow 260ms) */
-let snakeCanvas, snakeCtx, snake = [], snakeFood = { x: 0, y: 0 }, snakeDx = 20, snakeDy = 0, snakeInterval = null;
+function restartCurrentGame() {
+  launchFullScreenGame(activeGame);
+}
+
+function updateScoreboard(currentScore) {
+  document.getElementById('fsCurrentScoreDisplay').innerText = currentScore;
+  const key = gameMetadata[activeGame].scoreKey;
+  let hs = parseInt(localStorage.getItem(key) || '0', 10);
+  if (currentScore > hs) {
+    hs = currentScore;
+    localStorage.setItem(key, hs);
+  }
+  document.getElementById('fsHighScoreDisplay').innerText = hs;
+}
+
+function showGameOverModal(title, message, score, options = {}) {
+  const key = gameMetadata[activeGame].scoreKey;
+  const prevHighScore = parseInt(localStorage.getItem(key) || '0', 10);
+  if (typeof score === 'number' && score > prevHighScore) {
+    localStorage.setItem(key, score);
+    document.getElementById('fsHighScoreDisplay').innerText = score;
+  }
+
+  const currentHighScore = parseInt(localStorage.getItem(key) || '0', 10);
+  if (options.isWin || (typeof score === 'number' && score > prevHighScore)) {
+    playSound('win');
+  } else {
+    playSound('over');
+  }
+
+  const modal = document.getElementById('gameModal');
+  document.getElementById('modalTitle').innerText = title;
+  document.getElementById('modalMsg').innerText = message;
+  document.getElementById('modalYourScore').innerText = score;
+  document.getElementById('modalHighScore').innerText = currentHighScore;
+
+  modal.classList.remove('hidden');
+}
+
+function hideModalAndRestart() {
+  document.getElementById('gameModal').classList.add('hidden');
+  restartCurrentGame();
+}
+
+function stopActiveGameLoops() {
+  if (snakeInterval) clearInterval(snakeInterval);
+  if (snakeAnimFrameId) cancelAnimationFrame(snakeAnimFrameId);
+  if (brickAnimationId) cancelAnimationFrame(brickAnimationId);
+  if (flappyAnimationId) cancelAnimationFrame(flappyAnimationId);
+  if (memoryTimerInterval) clearInterval(memoryTimerInterval);
+}
+
+/* ============================================================
+   GAME 1: SNAKE RETRO (SLOW 260ms TICK)
+   ============================================================ */
+let snakeCanvas, snakeCtx, snake = [], snakeFood = { x: 0, y: 0 };
+let snakeDx = 20, snakeDy = 0, snakeScore = 0, snakeInterval = null, snakeAnimFrameId = null;
+let snakeChangingDirection = false, snakeGridSize = 20;
+const snakeRainbowColors = ['#00f7ff', '#00ff66', '#ffea00', '#ff007f', '#9d4edd'];
+
 function initSnake() {
   snakeCanvas = document.getElementById('snakeCanvas');
   snakeCtx = snakeCanvas.getContext('2d');
-  snake = [{ x: 160, y: 200 }, { x: 140, y: 200 }];
-  snakeDx = 20; snakeDy = 0;
-  snakeFood = { x: 80, y: 80 };
+  snake = [{ x: 160, y: 200 }, { x: 140, y: 200 }, { x: 120, y: 200 }, { x: 100, y: 200 }];
+  snakeDx = 20; snakeDy = 0; snakeScore = 0; snakeChangingDirection = false;
+  updateScoreboard(0);
+  spawnSnakeFood();
+
   if (snakeInterval) clearInterval(snakeInterval);
-  snakeInterval = setInterval(snakeStep, 260);
+  if (snakeAnimFrameId) cancelAnimationFrame(snakeAnimFrameId);
+
+  snakeInterval = setInterval(snakeLogicStep, 260); // Slow & Relaxed speed
+  snakeRenderLoop();
 }
 
-function snakeStep() {
-  const head = { x: snake[0].x + snakeDx, y: snake[0].y + snakeDy };
-  if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400) {
-    initSnake(); return;
+function spawnSnakeFood() {
+  const maxX = (snakeCanvas.width / snakeGridSize) - 1;
+  const maxY = (snakeCanvas.height / snakeGridSize) - 1;
+  let valid = false;
+  while (!valid) {
+    snakeFood.x = Math.floor(Math.random() * maxX) * snakeGridSize;
+    snakeFood.y = Math.floor(Math.random() * maxY) * snakeGridSize;
+    valid = !snake.some(part => part.x === snakeFood.x && part.y === snakeFood.y);
   }
+}
+
+function snakeLogicStep() {
+  const head = { x: snake[0].x + snakeDx, y: snake[0].y + snakeDy };
+
+  if (head.x < 0 || head.x >= snakeCanvas.width || head.y < 0 || head.y >= snakeCanvas.height) {
+    clearInterval(snakeInterval);
+    if (snakeAnimFrameId) cancelAnimationFrame(snakeAnimFrameId);
+    showGameOverModal('SNAKE CRASHED!', 'You ran into the wall.', snakeScore);
+    return;
+  }
+  for (let i = 1; i < snake.length; i++) {
+    if (head.x === snake[i].x && head.y === snake[i].y) {
+      clearInterval(snakeInterval);
+      if (snakeAnimFrameId) cancelAnimationFrame(snakeAnimFrameId);
+      showGameOverModal('SNAKE CRASHED!', 'You collided with yourself.', snakeScore);
+      return;
+    }
+  }
+
+  snakeChangingDirection = false;
   snake.unshift(head);
+
   if (head.x === snakeFood.x && head.y === snakeFood.y) {
-    snakeFood = { x: Math.floor(Math.random() * 19) * 20, y: Math.floor(Math.random() * 19) * 20 };
+    snakeScore += 10;
+    updateScoreboard(snakeScore);
+    playSound('eat');
+    spawnSnakeFood();
   } else {
     snake.pop();
   }
-  snakeCtx.fillStyle = '#070b14';
-  snakeCtx.fillRect(0, 0, 400, 400);
-  snakeCtx.fillStyle = '#ff007f';
-  snakeCtx.fillRect(snakeFood.x, snakeFood.y, 18, 18);
-  snakeCtx.fillStyle = '#00f7ff';
-  snake.forEach(p => snakeCtx.fillRect(p.x, p.y, 18, 18));
 }
 
-window.addEventListener('keydown', e => {
+function snakeRenderLoop() {
+  if (activeGame !== 'snake') return;
+  snakeCtx.fillStyle = '#070b14';
+  snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+  // Food
+  snakeCtx.fillStyle = '#ff007f';
+  snakeCtx.beginPath();
+  snakeCtx.arc(snakeFood.x + 10, snakeFood.y + 10, 7.5, 0, Math.PI * 2);
+  snakeCtx.fill();
+
+  // Body
+  for (let i = snake.length - 1; i >= 1; i--) {
+    snakeCtx.fillStyle = snakeRainbowColors[i % snakeRainbowColors.length];
+    snakeCtx.beginPath();
+    snakeCtx.arc(snake[i].x + 10, snake[i].y + 10, 7, 0, Math.PI * 2);
+    snakeCtx.fill();
+  }
+
+  // Head
+  if (snake.length > 0) {
+    snakeCtx.fillStyle = '#00f7ff';
+    snakeCtx.beginPath();
+    snakeCtx.arc(snake[0].x + 10, snake[0].y + 10, 9, 0, Math.PI * 2);
+    snakeCtx.fill();
+
+    snakeCtx.fillStyle = '#000';
+    snakeCtx.beginPath();
+    snakeCtx.arc(snake[0].x + 10, snake[0].y + 7, 2, 0, Math.PI * 2);
+    snakeCtx.arc(snake[0].x + 10, snake[0].y + 13, 2, 0, Math.PI * 2);
+    snakeCtx.fill();
+  }
+
+  snakeAnimFrameId = requestAnimationFrame(snakeRenderLoop);
+}
+
+function snakeInput(dir) {
+  if (snakeChangingDirection) return;
+  if (dir === 'UP' && snakeDy === 0) { snakeDx = 0; snakeDy = -snakeGridSize; snakeChangingDirection = true; }
+  else if (dir === 'DOWN' && snakeDy === 0) { snakeDx = 0; snakeDy = snakeGridSize; snakeChangingDirection = true; }
+  else if (dir === 'LEFT' && snakeDx === 0) { snakeDx = -snakeGridSize; snakeDy = 0; snakeChangingDirection = true; }
+  else if (dir === 'RIGHT' && snakeDx === 0) { snakeDx = snakeGridSize; snakeDy = 0; snakeChangingDirection = true; }
+}
+
+/* ============================================================
+   GAME 2: BRICK BREAKER (SLOW SPEED)
+   ============================================================ */
+let brickCanvas, brickCtx, brickAnimationId, brickPaddleW = 95, brickPaddleH = 12, brickPaddleX = 190;
+let brickBallX, brickBallY, brickBallDx, brickBallDy, brickBallR = 7;
+let brickRows = 4, brickCols = 6, brickW, brickH = 18, brickPadding = 8, brickOffsetTop = 40, brickOffsetLeft = 20;
+let bricks = [], brickScore = 0, brickLives = 3;
+
+function initBrick() {
+  brickCanvas = document.getElementById('brickCanvas');
+  brickCtx = brickCanvas.getContext('2d');
+  brickPaddleX = (brickCanvas.width - brickPaddleW) / 2;
+  brickScore = 0; brickLives = 3;
+  updateScoreboard(0);
+  document.getElementById('brickLivesDisplay').innerText = '❤❤❤';
+  brickW = Math.floor((brickCanvas.width - (brickOffsetLeft * 2) - ((brickCols - 1) * brickPadding)) / brickCols);
+
+  const colors = ['#ff007f', '#9d4edd', '#00f7ff', '#00ff66'];
+  bricks = [];
+  for (let r = 0; r < brickRows; r++) {
+    bricks[r] = [];
+    for (let c = 0; c < brickCols; c++) {
+      bricks[r][c] = { x: 0, y: 0, status: 1, color: colors[r % colors.length] };
+    }
+  }
+
+  resetBrickBall();
+
+  brickCanvas.onmousemove = (e) => {
+    const rect = brickCanvas.getBoundingClientRect();
+    brickPaddleX = Math.max(0, Math.min(brickCanvas.width - brickPaddleW, e.clientX - rect.left - (brickPaddleW / 2)));
+  };
+  document.getElementById('brickLeftBtn').onmousedown = () => { brickPaddleX = Math.max(0, brickPaddleX - 35); };
+  document.getElementById('brickRightBtn').onmousedown = () => { brickPaddleX = Math.min(brickCanvas.width - brickPaddleW, brickPaddleX + 35); };
+
+  if (brickAnimationId) cancelAnimationFrame(brickAnimationId);
+  brickLoop();
+}
+
+function resetBrickBall() {
+  brickBallX = brickCanvas.width / 2;
+  brickBallY = brickCanvas.height - 40;
+  brickBallDx = (Math.random() > 0.5 ? 2.0 : -2.0); // Gentle ball speed
+  brickBallDy = -2.2;
+}
+
+function brickLoop() {
+  brickCtx.fillStyle = '#0a0f1d';
+  brickCtx.fillRect(0, 0, brickCanvas.width, brickCanvas.height);
+
+  let remaining = 0;
+  for (let r = 0; r < brickRows; r++) {
+    for (let c = 0; c < brickCols; c++) {
+      const b = bricks[r][c];
+      if (b.status === 1) {
+        remaining++;
+        const bx = c * (brickW + brickPadding) + brickOffsetLeft;
+        const by = r * (brickH + brickPadding) + brickOffsetTop;
+        b.x = bx; b.y = by;
+        brickCtx.fillStyle = b.color;
+        brickCtx.fillRect(bx, by, brickW, brickH);
+
+        if (brickBallX + brickBallR > bx && brickBallX - brickBallR < bx + brickW &&
+            brickBallY + brickBallR > by && brickBallY - brickBallR < by + brickH) {
+          brickBallDy = -brickBallDy;
+          b.status = 0;
+          brickScore += 20;
+          updateScoreboard(brickScore);
+          playSound('point');
+        }
+      }
+    }
+  }
+
+  if (remaining === 0) {
+    showGameOverModal('VICTORY!', 'You cleared every brick!', brickScore, { isWin: true });
+    return;
+  }
+
+  brickCtx.fillStyle = '#00f7ff';
+  brickCtx.fillRect(brickPaddleX, brickCanvas.height - brickPaddleH - 8, brickPaddleW, brickPaddleH);
+
+  brickCtx.fillStyle = '#fff';
+  brickCtx.beginPath();
+  brickCtx.arc(brickBallX, brickBallY, brickBallR, 0, Math.PI * 2);
+  brickCtx.fill();
+
+  brickBallX += brickBallDx;
+  brickBallY += brickBallDy;
+
+  if (brickBallX + brickBallR > brickCanvas.width || brickBallX - brickBallR < 0) {
+    brickBallDx = -brickBallDx;
+    playSound('bounce');
+  }
+  if (brickBallY - brickBallR < 0) {
+    brickBallDy = -brickBallDy;
+    playSound('bounce');
+  }
+
+  const pTop = brickCanvas.height - brickPaddleH - 8;
+  if (brickBallY + brickBallR >= pTop && brickBallY - brickBallR <= pTop + brickPaddleH &&
+      brickBallX >= brickPaddleX && brickBallX <= brickPaddleX + brickPaddleW) {
+    brickBallDy = -Math.abs(brickBallDy);
+    playSound('bounce');
+  }
+
+  if (brickBallY - brickBallR > brickCanvas.height) {
+    brickLives--;
+    document.getElementById('brickLivesDisplay').innerText = '❤'.repeat(Math.max(0, brickLives));
+    playSound('hit');
+    if (brickLives <= 0) {
+      showGameOverModal('OUT OF LIVES!', 'The ball dropped past your paddle.', brickScore);
+      return;
+    } else {
+      resetBrickBall();
+    }
+  }
+
+  brickAnimationId = requestAnimationFrame(brickLoop);
+}
+
+/* ============================================================
+   GAME 3: SPACE FLAPPER (EASY GRAVITY)
+   ============================================================ */
+let flappyCanvas, flappyCtx, flappyAnimationId, birdY, birdVelocity, pipes = [], pipeTimer = 0, flappyScore = 0;
+
+function initFlappy() {
+  flappyCanvas = document.getElementById('flappyCanvas');
+  flappyCtx = flappyCanvas.getContext('2d');
+  birdY = flappyCanvas.height / 2;
+  birdVelocity = 0; pipes = []; pipeTimer = 0; flappyScore = 0;
+  updateScoreboard(0);
+  flappyCanvas.onclick = () => flapJump();
+  if (flappyAnimationId) cancelAnimationFrame(flappyAnimationId);
+  flappyLoop();
+}
+
+function flapJump() {
+  birdVelocity = -4.8;
+  playSound('point');
+}
+
+function flappyLoop() {
+  flappyCtx.fillStyle = '#080816';
+  flappyCtx.fillRect(0, 0, flappyCanvas.width, flappyCanvas.height);
+
+  birdVelocity += 0.22;
+  birdY += birdVelocity;
+
+  flappyCtx.fillStyle = '#00f7ff';
+  flappyCtx.beginPath();
+  flappyCtx.arc(70, birdY, 12, 0, Math.PI * 2);
+  flappyCtx.fill();
+
+  pipeTimer++;
+  if (pipeTimer % 130 === 0) {
+    const gap = 135;
+    const topH = Math.floor(Math.random() * (flappyCanvas.height - gap - 90)) + 45;
+    pipes.push({ x: flappyCanvas.width, top: topH, bottom: flappyCanvas.height - topH - gap, passed: false });
+  }
+
+  for (let i = pipes.length - 1; i >= 0; i--) {
+    const p = pipes[i];
+    p.x -= 1.8;
+    flappyCtx.fillStyle = '#1e1b4b';
+    flappyCtx.fillRect(p.x, 0, 48, p.top);
+    flappyCtx.fillRect(p.x, flappyCanvas.height - p.bottom, 48, p.bottom);
+
+    if (70 + 11 > p.x && 70 - 11 < p.x + 48) {
+      if (birdY - 11 < p.top || birdY + 11 > flappyCanvas.height - p.bottom) {
+        showGameOverModal('SYSTEM COLLISION!', 'Spacecraft hit barrier.', flappyScore);
+        return;
+      }
+    }
+    if (!p.passed && p.x + 48 < 70) {
+      p.passed = true;
+      flappyScore++;
+      updateScoreboard(flappyScore);
+      playSound('eat');
+    }
+    if (p.x < -60) pipes.splice(i, 1);
+  }
+
+  if (birdY + 12 > flappyCanvas.height || birdY - 12 < 0) {
+    showGameOverModal('CRASH LANDING!', 'You hit the boundary limits.', flappyScore);
+    return;
+  }
+
+  flappyAnimationId = requestAnimationFrame(flappyLoop);
+}
+
+/* ============================================================
+   GAME 4: MEMORY MATCH
+   ============================================================ */
+const emojis = ['👾', '🕹️', '⚡', '🚀', '💎', '🔥', '👑', '🔮'];
+let flippedCards = [], matchedCount = 0, memoryMovesCount = 0, memorySeconds = 0, memoryTimerInterval = null, isMemoryBusy = false;
+
+function initMemory() {
+  const container = document.getElementById('memoryGrid');
+  container.innerHTML = '';
+  flippedCards = []; matchedCount = 0; memoryMovesCount = 0; memorySeconds = 0; isMemoryBusy = false;
+  document.getElementById('memoryMoves').innerText = '0';
+  document.getElementById('memoryMatches').innerText = '0 / 8';
+  document.getElementById('memoryTimer').innerText = '0s';
+  updateScoreboard(0);
+
+  if (memoryTimerInterval) clearInterval(memoryTimerInterval);
+  memoryTimerInterval = setInterval(() => {
+    memorySeconds++;
+    document.getElementById('memoryTimer').innerText = `${memorySeconds}s`;
+  }, 1000);
+
+  const cardValues = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+  cardValues.forEach((val) => {
+    const card = document.createElement('div');
+    card.className = 'w-full h-20 sm:h-24 bg-gray-900 border-2 border-gray-700 hover:border-neonYellow rounded-xl flex items-center justify-center text-3xl cursor-pointer select-none transition-all duration-300';
+    card.dataset.value = val;
+    card.innerHTML = `<span class="hidden">${val}</span><i class="fa-solid fa-microchip text-gray-600 text-xl pointer-events-none"></i>`;
+    card.onclick = () => flipMemoryCard(card);
+    container.appendChild(card);
+  });
+}
+
+function flipMemoryCard(card) {
+  if (isMemoryBusy || card.classList.contains('matched') || flippedCards.includes(card)) return;
+  card.classList.add('bg-neonPurple/20', 'border-neonCyan');
+  card.querySelector('span').classList.remove('hidden');
+  card.querySelector('i').classList.add('hidden');
+  flippedCards.push(card);
+  playSound('beep');
+
+  if (flippedCards.length === 2) {
+    memoryMovesCount++;
+    document.getElementById('memoryMoves').innerText = memoryMovesCount;
+    isMemoryBusy = true;
+    const [c1, c2] = flippedCards;
+    if (c1.dataset.value === c2.dataset.value) {
+      setTimeout(() => {
+        c1.classList.add('matched', 'border-neonGreen');
+        c2.classList.add('matched', 'border-neonGreen');
+        matchedCount++;
+        document.getElementById('memoryMatches').innerText = `${matchedCount} / 8`;
+        playSound('win');
+        flippedCards = [];
+        isMemoryBusy = false;
+        if (matchedCount === emojis.length) {
+          clearInterval(memoryTimerInterval);
+          const score = Math.max(100, 1000 - (memoryMovesCount * 25) - (memorySeconds * 10));
+          updateScoreboard(score);
+          showGameOverModal('GLORIOUS MEMORY!', `Completed in ${memoryMovesCount} moves!`, score, { isWin: true });
+        }
+      }, 350);
+    } else {
+      setTimeout(() => {
+        c1.classList.remove('border-neonCyan', 'bg-neonPurple/20');
+        c1.querySelector('span').classList.add('hidden');
+        c1.querySelector('i').classList.remove('hidden');
+        c2.classList.remove('border-neonCyan', 'bg-neonPurple/20');
+        c2.querySelector('span').classList.add('hidden');
+        c2.querySelector('i').classList.remove('hidden');
+        flippedCards = [];
+        isMemoryBusy = false;
+      }, 800);
+    }
+  }
+}
+
+/* ============================================================
+   GAME 5: TIC-TAC-TOE
+   ============================================================ */
+let tttBoardState = Array(9).fill(null), tttTurn = 'X', tttMode = 'ai', tttWinsX = 0, tttWinsO = 0, tttDrawsCount = 0, tttGameOver = false;
+
+function initTicTacToe() {
+  tttBoardState = Array(9).fill(null);
+  tttTurn = 'X'; tttGameOver = false;
+  document.getElementById('tttTurnIndicator').innerText = "Player X's Turn";
+  document.querySelectorAll('.ttt-cell').forEach(cell => {
+    cell.innerText = '';
+    cell.className = 'ttt-cell w-20 h-20 sm:w-24 sm:h-24 bg-gray-800/90 hover:bg-gray-700/80 rounded-xl text-3xl sm:text-4xl font-arcade font-black flex items-center justify-center transition active:scale-95 text-white';
+  });
+  updateScoreboard(tttWinsX * 50);
+}
+
+function setTicTacToeMode(mode) {
+  tttMode = mode;
+  document.getElementById('tttModeAi').className = mode === 'ai' ? 'px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple transition' : 'px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
+  document.getElementById('tttMode2P').className = mode === '2p' ? 'px-3 py-1 text-xs font-arcade rounded-lg bg-neonPurple text-white font-bold border border-neonPurple transition' : 'px-3 py-1 text-xs font-arcade rounded-lg bg-gray-800 text-gray-300 font-bold border border-gray-700 transition';
+  initTicTacToe();
+}
+
+function handleTttClick(index) {
+  if (tttGameOver || tttBoardState[index] !== null) return;
+  executeTttMove(index, tttTurn);
+  const win = checkTttWinner(tttBoardState);
+  if (win) { concludeTtt(tttTurn, win); return; }
+  if (!tttBoardState.includes(null)) { concludeTtt('DRAW', null); return; }
+
+  tttTurn = (tttTurn === 'X') ? 'O' : 'X';
+  document.getElementById('tttTurnIndicator').innerText = `Player ${tttTurn}'s Turn`;
+
+  if (tttMode === 'ai' && tttTurn === 'O') {
+    setTimeout(executeAiMove, 300);
+  }
+}
+
+function executeTttMove(index, player) {
+  tttBoardState[index] = player;
+  const cell = document.querySelectorAll('.ttt-cell')[index];
+  cell.innerText = player;
+  cell.classList.add(player === 'X' ? 'text-neonCyan' : 'text-neonPink');
+  playSound(player === 'X' ? 'beep' : 'bounce');
+}
+
+function executeAiMove() {
+  if (tttGameOver) return;
+  const available = tttBoardState.map((v, i) => v === null ? i : null).filter(v => v !== null);
+  const move = available[Math.floor(Math.random() * available.length)];
+  if (move !== undefined) {
+    executeTttMove(move, 'O');
+    const win = checkTttWinner(tttBoardState);
+    if (win) { concludeTtt('O', win); return; }
+    if (!tttBoardState.includes(null)) { concludeTtt('DRAW', null); return; }
+    tttTurn = 'X';
+    document.getElementById('tttTurnIndicator').innerText = "Player X's Turn";
+  }
+}
+
+function checkTttWinner(b) {
+  const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  for (const [x,y,z] of lines) {
+    if (b[x] && b[x] === b[y] && b[x] === b[z]) return [x,y,z];
+  }
+  return null;
+}
+
+function concludeTtt(result, combo) {
+  tttGameOver = true;
+  if (combo) {
+    const cells = document.querySelectorAll('.ttt-cell');
+    combo.forEach(idx => cells[idx].classList.add('bg-neonGreen/30', 'border-2', 'border-neonGreen'));
+  }
+  const score = tttWinsX * 50;
+  if (result === 'X') {
+    tttWinsX++;
+    updateScoreboard(tttWinsX * 50);
+    showGameOverModal('PLAYER X WINS!', 'Victory accomplished.', tttWinsX * 50, { isWin: true });
+  } else if (result === 'O') {
+    showGameOverModal('PLAYER O WINS!', 'Better luck next time!', score, { isWin: false });
+  } else {
+    showGameOverModal('STALEMATE DRAW!', 'Neither player gave up.', score, { isWin: false });
+  }
+}
+
+window.addEventListener('keydown', (e) => {
   if (activeGame === 'snake') {
-    if (e.key === 'ArrowUp' && snakeDy === 0) { snakeDx = 0; snakeDy = -20; }
-    if (e.key === 'ArrowDown' && snakeDy === 0) { snakeDx = 0; snakeDy = 20; }
-    if (e.key === 'ArrowLeft' && snakeDx === 0) { snakeDx = -20; snakeDy = 0; }
-    if (e.key === 'ArrowRight' && snakeDx === 0) { snakeDx = 20; snakeDy = 0; }
+    if (['ArrowUp', 'KeyW'].includes(e.code)) { e.preventDefault(); snakeInput('UP'); }
+    if (['ArrowDown', 'KeyS'].includes(e.code)) { e.preventDefault(); snakeInput('DOWN'); }
+    if (['ArrowLeft', 'KeyA'].includes(e.code)) { e.preventDefault(); snakeInput('LEFT'); }
+    if (['ArrowRight', 'KeyD'].includes(e.code)) { e.preventDefault(); snakeInput('RIGHT'); }
+  } else if (activeGame === 'flappy') {
+    if (['Space', 'ArrowUp', 'KeyW'].includes(e.code)) { e.preventDefault(); flapJump(); }
+  } else if (activeGame === 'brick') {
+    if (['ArrowLeft', 'KeyA'].includes(e.code)) brickPaddleX = Math.max(0, brickPaddleX - 25);
+    if (['ArrowRight', 'KeyD'].includes(e.code)) brickPaddleX = Math.min(brickCanvas.width - brickPaddleW, brickPaddleX + 25);
   }
 });
 </script>
