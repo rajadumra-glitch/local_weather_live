@@ -206,6 +206,33 @@ body.arcade-fullscreen #arenaContainer { display:flex!important; }
 #chat-screen .send-circle-btn { width:40px; height:40px; }
 @media(max-width:380px){#chat-screen #chat-app{width:100%;border:0;}#chat-screen .chat-header{height:56px;min-height:56px;}#chat-screen .bubble{max-width:84%;font-size:13.5px;}#chat-screen #chat-box{padding:11px 8px;}}
 
+
+/* Final requested polish: smaller instruction text, without changing flows/features. */
+#otp-gate-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; margin-bottom:9px!important; letter-spacing:.2px!important; }
+#otp-gate-layer .free-game-hint { font-size:10px!important; line-height:1.35!important; margin-bottom:8px!important; }
+#second-otp-layer .gate-subtitle { font-size:8px!important; line-height:1.35!important; margin-bottom:7px!important; }
+#second-otp-layer .gate-card p { font-size:10px!important; line-height:1.4!important; margin:0 0 8px!important; }
+#otp-gate-layer .gate-card, #second-otp-layer .gate-card { animation:dialogZoomIn .28s cubic-bezier(.2,.8,.2,1) both; }
+/* Chat: polished dark navy + violet/blue, visually distinct sender/receiver, compact viewport. */
+#chat-screen { background:radial-gradient(ellipse at top left,#101d3a 0%,#050b18 52%,#030712 100%)!important; }
+#chat-screen #chat-app { width:min(100%,1000px)!important; max-width:1000px!important; height:100dvh!important; max-height:100dvh!important; background:#061226!important; border:1px solid rgba(59,130,246,.65)!important; border-radius:18px!important; overflow:hidden!important; box-shadow:0 0 42px rgba(37,99,235,.14)!important; }
+#chat-screen .chat-header { height:68px!important; min-height:68px!important; padding:0 16px!important; background:linear-gradient(110deg,#06152d,#0b1b37 58%,#111638)!important; border-bottom:1px solid rgba(59,130,246,.32)!important; }
+#chat-screen .avatar { border:2px solid #38bdf8!important; background:linear-gradient(135deg,#312e81,#0e7490)!important; box-shadow:0 0 12px rgba(56,189,248,.2)!important; }
+#chat-screen .online-indicator { background:#34d399!important; box-shadow:0 0 8px #34d39999!important; }
+#chat-screen #chat-box { padding:18px clamp(10px,3vw,28px)!important; gap:14px!important; background-color:#041022!important; background-image:radial-gradient(rgba(96,165,250,.075) 1px,transparent 1px)!important; background-size:22px 22px!important; }
+#chat-screen .msg-row { align-items:flex-end!important; }
+#chat-screen .bubble { max-width:min(78%,620px)!important; padding:10px 14px 8px!important; font-size:14px!important; line-height:1.45!important; border-radius:17px!important; box-shadow:0 5px 18px rgba(0,0,0,.18)!important; }
+#chat-screen .msg-row.me .bubble { background:linear-gradient(135deg,#4f46e5,#7c3aed 58%,#c026d3)!important; border:1px solid rgba(196,181,253,.28)!important; border-bottom-right-radius:5px!important; color:#fff!important; }
+#chat-screen .msg-row.them .bubble { background:linear-gradient(135deg,#1d3558,#172b49)!important; border:1px solid rgba(96,165,250,.22)!important; border-bottom-left-radius:5px!important; color:#f1f5ff!important; }
+#chat-screen .msg-row.me .sender-label { color:#f5d0fe!important; }
+#chat-screen .msg-row.them .sender-label { color:#93c5fd!important; }
+#chat-screen .chat-footer { min-height:66px!important; padding:10px 14px!important; gap:10px!important; background:linear-gradient(110deg,#07152b,#0c1930)!important; border-top:1px solid rgba(59,130,246,.3)!important; }
+#chat-screen .msg-input-field { border:1px solid rgba(99,102,241,.55)!important; background:#0b1b34!important; border-radius:18px!important; padding:12px 16px!important; }
+#chat-screen .msg-input-field:focus { border-color:#a78bfa!important; box-shadow:0 0 0 3px rgba(139,92,246,.14)!important; }
+#chat-screen .send-circle-btn { background:linear-gradient(135deg,#4f46e5,#a21caf)!important; box-shadow:0 4px 14px rgba(124,58,237,.28)!important; }
+#chat-screen .tool-btn { border-radius:10px!important; }
+@media(max-width:600px){#chat-screen #chat-app{width:100%!important;border-radius:0!important;border:0!important;}#chat-screen .chat-header{padding:0 9px!important;height:58px!important;min-height:58px!important;}#chat-screen .chat-header .tool-btn{padding:6px 7px!important;font-size:10px!important;}#chat-screen .bubble{max-width:86%!important;padding:8px 10px 6px!important;font-size:13px!important;}#chat-screen #chat-box{padding:12px 8px!important;gap:10px!important;}#chat-screen .chat-footer{min-height:58px!important;padding:7px 8px!important;}}
+
 </style>
 </head>
 <body class="text-gray-100 font-body min-h-screen flex flex-col justify-between selection:bg-neonPink selection:text-white">
